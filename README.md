@@ -53,3 +53,238 @@ The goal of the application is to simplify the process of finding and offering a
 | **Registrácia** | Registration | Proces vytvorenia nového používateľského účtu v systéme. |
 | **Autorizácia** | Authorization | Proces overenia a prihlásenia používateľa do systému. |
 | **Test Case** | Test Case | Špecifikácia testovacieho scenára, ktorý definuje vstupné dáta, očakávaný výsledok a kroky potrebné na otestovanie funkcionality systému. |
+
+# Prípady použitia
+
+- **UC-01** Registrácia používateľa
+- **UC-02** Prihlásenie používateľa
+- **UC-03** Vyhľadávanie nehnuteľností
+- **UC-04** Filtrovanie nehnuteľností
+- **UC-05** Zobrazenie detailu nehnuteľnosti
+- **UC-06** Kontaktovanie vlastníka nehnuteľnosti
+- **UC-07** Uloženie inzerátu medzi obľúbené
+- **UC-08** Vytvorenie nového inzerátu
+- **UC-09** Úprava existujúceho inzerátu
+- **UC-10** Odstránenie inzerátu
+- **UC-11** Pridanie fotografií k inzerátu
+- **UC-12** Zmena stavu inzerátu
+
+## UC-03 Vyhľadávanie nehnuteľností
+
+**Účel**  
+Vyhľadať dostupné nehnuteľnosti určené na prenájom alebo predaj.
+
+**Používateľ**  
+Používateľ
+
+**Vstupné podmienky**  
+Systém obsahuje aspoň jeden aktívny inzerát.
+
+**Výstup**  
+Používateľ vidí zoznam nehnuteľností, ktoré zodpovedajú vyhľadávaniu.
+
+**Postup**
+
+1. Používateľ otvorí hlavnú stránku alebo sekciu nehnuteľností.  
+   Systém zobrazí dostupné aktívne inzeráty.
+
+2. Používateľ zadá hľadaný výraz.  
+   Hľadaný výraz môže byť napríklad názov lokality alebo typ nehnuteľnosti.
+
+3. Používateľ potvrdí vyhľadávanie.
+
+4. Systém spracuje zadaný výraz.
+
+5. Systém vyhľadá zodpovedajúce aktívne inzeráty.
+
+6. Systém zobrazí zoznam nájdených nehnuteľností.
+
+**Alternatívny scenár**
+
+2a. Používateľ nezadá žiadny hľadaný výraz.  
+Systém zobrazí všetky aktívne inzeráty.
+
+5a. Systém nenájde žiadne zodpovedajúce nehnuteľnosti.  
+Systém zobrazí informáciu, že neboli nájdené žiadne výsledky.
+
+3a. Používateľ zruší vyhľadávanie.  
+Systém ponechá aktuálny zoznam inzerátov bez zmeny.
+
+## UC-06 Kontaktovanie vlastníka nehnuteľnosti
+
+**Účel**  
+Odoslať správu vlastníkovi vybranej nehnuteľnosti v prípade záujmu.
+
+**Používateľ**  
+Používateľ
+
+**Vstupné podmienky**  
+Používateľ je prihlásený do systému.  
+Vybraná nehnuteľnosť existuje a má aktívny inzerát.
+
+**Výstup**  
+Vlastník dostane správu od používateľa týkajúcu sa vybranej nehnuteľnosti.
+
+**Postup**
+
+1. Používateľ otvorí detail vybranej nehnuteľnosti.  
+   Systém zobrazí detail inzerátu vrátane základných informácií a možnosti kontaktovať vlastníka.
+
+2. Používateľ zvolí možnosť „Kontaktovať vlastníka“.
+
+3. Systém zobrazí formulár na odoslanie správy.
+
+4. Používateľ zadá text správy.
+
+5. Používateľ odošle správu.
+
+6. Systém overí vyplnenie povinných údajov.
+
+7. Systém uloží správu do systému.
+
+8. Systém odošle správu vlastníkovi alebo ju sprístupní v jeho rozhraní.
+
+9. Systém zobrazí potvrdenie o úspešnom odoslaní správy.
+
+**Alternatívny scenár**
+
+2a. Používateľ nie je prihlásený.  
+Systém vyzve používateľa na prihlásenie.
+
+6a. Používateľ nevyplní text správy.  
+Systém zobrazí chybové hlásenie a správu neodošle.
+
+5a. Používateľ zruší odoslanie správy.  
+Systém zavrie formulár a používateľ zostáva na detaile nehnuteľnosti.
+
+## UC-08 Vytvorenie nového inzerátu
+
+**Účel**  
+Vytvoriť nový inzerát nehnuteľnosti určený na prenájom alebo predaj.
+
+**Používateľ**  
+Vlastník
+
+**Vstupné podmienky**  
+Vlastník je prihlásený do systému.
+
+**Výstup**  
+V systéme pribudne nový inzerát nehnuteľnosti.
+
+**Postup**
+
+1. Vlastník otvorí sekciu správy inzerátov.  
+   Systém zobrazí zoznam jeho existujúcich inzerátov a možnosť vytvoriť nový inzerát.
+
+2. Vlastník zvolí možnosť „Pridať inzerát“.
+
+3. Systém zobrazí formulár na zadanie údajov o nehnuteľnosti.
+
+4. Vlastník zadá názov inzerátu.
+
+5. Vlastník zadá popis nehnuteľnosti.
+
+6. Vlastník zadá lokalitu, cenu a typ nehnuteľnosti.
+
+7. Vlastník zvolí, či ide o prenájom alebo predaj.
+
+8. Vlastník môže pridať fotografie nehnuteľnosti.
+
+9. Vlastník potvrdí vytvorenie inzerátu.
+
+10. Systém overí vyplnenie povinných údajov.
+
+11. Systém uloží nový inzerát do databázy.
+
+12. Systém zobrazí vytvorený inzerát vlastníkovi.
+
+**Alternatívny scenár**
+
+8a. Vlastník nevloží fotografie.  
+Systém vytvorí inzerát aj bez fotografií, ak sú ostatné povinné údaje vyplnené.
+
+10a. Niektorý povinný údaj nie je vyplnený.  
+Systém zobrazí chybové hlásenie a neuloží inzerát.
+
+9a. Vlastník zruší vytváranie inzerátu.  
+Systém nevytvorí nový inzerát a vlastník zostáva v sekcii správy inzerátov.
+
+## UC-09 Úprava existujúceho inzerátu
+
+**Účel**  
+Upraviť údaje existujúceho inzerátu.
+
+**Používateľ**  
+Vlastník
+
+**Vstupné podmienky**  
+Vlastník je prihlásený do systému.  
+Inzerát existuje a patrí prihlásenému vlastníkovi.
+
+**Výstup**  
+Údaje inzerátu sú v systéme aktualizované.
+
+**Postup**
+
+1. Vlastník otvorí sekciu správy inzerátov.  
+   Systém zobrazí zoznam jeho inzerátov.
+
+2. Vlastník vyberie konkrétny inzerát.
+
+3. Vlastník zvolí možnosť „Upraviť inzerát“.
+
+4. Systém zobrazí formulár s aktuálnymi údajmi inzerátu.
+
+5. Vlastník upraví požadované údaje.
+
+6. Vlastník potvrdí zmeny.
+
+7. Systém overí správnosť údajov.
+
+8. Systém uloží zmeny do databázy.
+
+9. Systém zobrazí aktualizovaný detail inzerátu.
+
+**Alternatívny scenár**
+
+7a. Niektorý povinný údaj nie je vyplnený správne.  
+Systém zobrazí chybové hlásenie a zmeny neuloží.
+
+6a. Vlastník zruší úpravu inzerátu.  
+Systém neuloží žiadne zmeny a vlastník zostáva na detaile inzerátu.
+
+## UC-07 Uloženie inzerátu medzi obľúbené
+
+**Účel**  
+Uložiť vybraný inzerát medzi obľúbené pre neskoršie zobrazenie.
+
+**Používateľ**  
+Používateľ
+
+**Vstupné podmienky**  
+Používateľ je prihlásený do systému.  
+Inzerát existuje a je aktívny.
+
+**Výstup**  
+Vybraný inzerát je uložený v zozname obľúbených používateľa.
+
+**Postup**
+
+1. Používateľ otvorí detail inzerátu.  
+   Systém zobrazí detail nehnuteľnosti a možnosť uložiť ju medzi obľúbené.
+
+2. Používateľ zvolí možnosť „Pridať medzi obľúbené“.
+
+3. Systém overí, či už inzerát nie je uložený medzi obľúbenými.
+
+4. Systém uloží inzerát do zoznamu obľúbených.
+
+5. Systém zobrazí potvrdenie o úspešnom uložení.
+
+**Alternatívny scenár**
+
+2a. Používateľ nie je prihlásený.  
+Systém vyzve používateľa na prihlásenie.
+
+3a. Inzerát už je uložený medzi obľúbenými.  
+Systém zobrazí informáciu, že inzerát je už v zozname obľúbených.
