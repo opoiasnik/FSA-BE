@@ -1,20 +1,21 @@
 # Property Rental Application
 
-This application will allow users to search for apartments or houses available for rent or sale. Property owners will be able to publish property listings with descriptions, photos, location and price information.
+This application will allow users to search for apartments or houses available for rent or sale. Property owners will be able to publish property listings with descriptions, photos, structured address information and price details.
 
-Users will be able to browse available properties, filter them by location, price or property type and view detailed information about each listing. If a user is interested in a property, they will be able to contact the owner directly through the platform.
+Users will be able to browse available properties, filter them by address, price or property type and view detailed information about each listing, including selected property features such as area, number of rooms, floor, furnishing and parking availability. If a user is interested in a property, they will be able to contact the owner directly through the platform or request a property viewing.
 
-Property owners will also be able to manage their listings by creating, editing or removing property offers.
+Property owners will also be able to manage their listings by creating, editing or removing property offers, updating their price and address information and managing property characteristics.
 
 The goal of the application is to simplify the process of finding and offering accommodation through a centralized online platform.
+
 # Zber požiadaviek
 
 - **RQ01** Používateľ sa môže zaregistrovať do systému pomocou e-mailu.
 - **RQ02** Systém by mal podporovať registráciu a autorizáciu používateľov s rozlíšením rolí (používateľ, vlastník).
 - **RQ03** Používateľ by mal mať možnosť vyhľadávať nehnuteľnosti dostupné na prenájom alebo predaj.
-- **RQ04** Používateľ by mal mať možnosť filtrovať nehnuteľnosti podľa lokality, ceny alebo typu nehnuteľnosti.
+- **RQ04** Používateľ by mal mať možnosť filtrovať nehnuteľnosti podľa adresy, ceny alebo typu nehnuteľnosti.
 - **RQ05** Používateľ by mal mať možnosť zobraziť detail vybranej nehnuteľnosti.
-- **RQ06** Detail nehnuteľnosti by mal obsahovať popis, fotografie, lokalitu a cenu.
+- **RQ06** Detail nehnuteľnosti by mal obsahovať popis, fotografie, adresu, cenu a základné vlastnosti nehnuteľnosti.
 - **RQ07** Používateľ by mal mať možnosť kontaktovať vlastníka nehnuteľnosti v prípade záujmu.
 - **RQ08** Používateľ by mal mať možnosť ukladať nehnuteľnosti medzi obľúbené.
 - **RQ09** Vlastník by mal mať možnosť vytvárať nové inzeráty nehnuteľností.
@@ -28,7 +29,13 @@ The goal of the application is to simplify the process of finding and offering a
 - **RQ17** Vlastník by mal mať možnosť pridať k inzerátu viacero fotografií.
 - **RQ18** Systém by mal umožniť evidenciu stavu inzerátu (aktívny, neaktívny).
 - **RQ19** Používateľ by mal mať možnosť prezerať iba aktívne inzeráty.
-- **RQ20** Cieľom systému je zjednodušiť proces hľadania a ponúkania ubytovania prostredníctvom online platformy.
+- **RQ20** Používateľ by mal mať možnosť požiadať o obhliadku nehnuteľnosti.
+- **RQ21** Vlastník by mal mať možnosť schváliť alebo zamietnuť žiadosť o obhliadku.
+- **RQ22** Systém by mal evidovať stav žiadosti o obhliadku (pending, approved, rejected, cancelled).
+- **RQ23** Inzerát by mal obsahovať štruktúrovanú adresu (ulica, mesto, PSČ, krajina).
+- **RQ24** Cena nehnuteľnosti by mala byť evidovaná ako suma a mena.
+- **RQ25** Inzerát by mal obsahovať základné vlastnosti nehnuteľnosti, napríklad rozlohu, počet izieb, poschodie, informáciu o zariadení a parkovaní.
+- **RQ26** Cieľom systému je zjednodušiť proces hľadania a ponúkania ubytovania prostredníctvom online platformy.
 
 # Slovník pojmov
 
@@ -40,15 +47,19 @@ The goal of the application is to simplify the process of finding and offering a
 | **Inzerát** | Listing | Ponuka nehnuteľnosti zverejnená v systéme s detailnými informáciami. |
 | **Prenájom** | Rental | Forma ponuky, pri ktorej je nehnuteľnosť dostupná na dočasné užívanie za poplatok. |
 | **Predaj** | Sale | Forma ponuky, pri ktorej je nehnuteľnosť určená na odkúpenie. |
-| **Lokalita** | Location | Miesto, kde sa nehnuteľnosť nachádza. |
-| **Cena** | Price | Finančná hodnota nehnuteľnosti uvedená pri prenájme alebo predaji. |
+| **Adresa** | Address | Štruktúrované umiestnenie nehnuteľnosti obsahujúce ulicu, mesto, PSČ a krajinu. |
+| **Cena** | Price | Finančná hodnota nehnuteľnosti evidovaná ako suma a mena. |
 | **Typ nehnuteľnosti** | Property Type | Kategória nehnuteľnosti, napríklad byt, dom alebo izba. |
+| **Vlastnosti nehnuteľnosti** | Property Features | Súbor charakteristík nehnuteľnosti, napríklad rozloha, počet izieb, poschodie, zariadenie a parkovanie. |
 | **Popis** | Description | Textová informácia o vlastnostiach a stave nehnuteľnosti. |
 | **Fotografia** | Photo | Obrázok priradený k inzerátu, ktorý zobrazuje nehnuteľnosť. |
 | **Obľúbené** | Favorites | Zoznam inzerátov, ktoré si používateľ uložil na neskoršie zobrazenie. |
-| **Kontakt** | Contact | Spôsob komunikácie medzi používateľom a vlastníkom nehnuteľnosti. |
+| **Konverzácia** | Conversation | Komunikačné vlákno medzi používateľom a vlastníkom týkajúce sa konkrétneho inzerátu. |
+| **Správa** | Message | Jednotlivá textová správa odoslaná v rámci konverzácie. |
+| **Žiadosť o obhliadku** | Viewing Request | Požiadavka používateľa na obhliadku konkrétnej nehnuteľnosti v navrhnutom termíne. |
+| **Stav žiadosti o obhliadku** | Viewing Status | Informácia o tom, či je žiadosť o obhliadku čakajúca, schválená, zamietnutá alebo zrušená. |
 | **Filter** | Filter | Mechanizmus na obmedzenie výsledkov vyhľadávania podľa vybraných kritérií. |
-| **Detail inzerátu** | Listing Detail | Podrobný pohľad na vybranú nehnuteľnosť vrátane ceny, popisu, fotografie a kontaktu. |
+| **Detail inzerátu** | Listing Detail | Podrobný pohľad na vybranú nehnuteľnosť vrátane ceny, adresy, popisu, fotografie a kontaktu. |
 | **Stav inzerátu** | Listing Status | Informácia o tom, či je inzerát aktívny alebo neaktívny. |
 | **Registrácia** | Registration | Proces vytvorenia nového používateľského účtu v systéme. |
 | **Autorizácia** | Authorization | Proces overenia a prihlásenia používateľa do systému. |
@@ -68,6 +79,9 @@ The goal of the application is to simplify the process of finding and offering a
 - **UC-10** Odstránenie inzerátu
 - **UC-11** Pridanie fotografií k inzerátu
 - **UC-12** Zmena stavu inzerátu
+- **UC-13** Vytvorenie žiadosti o obhliadku
+- **UC-14** Spracovanie žiadosti o obhliadku
+- **UC-15** Zobrazenie vlastností nehnuteľnosti
 
 ## UC-03 Vyhľadávanie nehnuteľností
 
@@ -89,7 +103,7 @@ Používateľ vidí zoznam nehnuteľností, ktoré zodpovedajú vyhľadávaniu.
    Systém zobrazí dostupné aktívne inzeráty.
 
 2. Používateľ zadá hľadaný výraz.  
-   Hľadaný výraz môže byť napríklad názov lokality alebo typ nehnuteľnosti.
+   Hľadaný výraz môže byť napríklad názov mesta, ulice alebo typ nehnuteľnosti.
 
 3. Používateľ potvrdí vyhľadávanie.
 
@@ -140,11 +154,13 @@ Vlastník dostane správu od používateľa týkajúcu sa vybranej nehnuteľnost
 
 6. Systém overí vyplnenie povinných údajov.
 
-7. Systém uloží správu do systému.
+7. Systém vytvorí alebo použije existujúcu konverzáciu pre daný inzerát.
 
-8. Systém odošle správu vlastníkovi alebo ju sprístupní v jeho rozhraní.
+8. Systém uloží správu do systému.
 
-9. Systém zobrazí potvrdenie o úspešnom odoslaní správy.
+9. Systém sprístupní správu vlastníkovi v rámci konverzácie.
+
+10. Systém zobrazí potvrdenie o úspešnom odoslaní správy.
 
 **Alternatívny scenár**
 
@@ -184,29 +200,35 @@ V systéme pribudne nový inzerát nehnuteľnosti.
 
 5. Vlastník zadá popis nehnuteľnosti.
 
-6. Vlastník zadá lokalitu, cenu a typ nehnuteľnosti.
+6. Vlastník zadá adresu nehnuteľnosti.
 
-7. Vlastník zvolí, či ide o prenájom alebo predaj.
+7. Vlastník zadá cenu vrátane meny.
 
-8. Vlastník môže pridať fotografie nehnuteľnosti.
+8. Vlastník vyberie typ nehnuteľnosti.
 
-9. Vlastník potvrdí vytvorenie inzerátu.
+9. Vlastník zadá vlastnosti nehnuteľnosti, napríklad rozlohu, počet izieb, poschodie, zariadenie a parkovanie.
 
-10. Systém overí vyplnenie povinných údajov.
+10. Vlastník zvolí, či ide o prenájom alebo predaj.
 
-11. Systém uloží nový inzerát do databázy.
+11. Vlastník môže pridať fotografie nehnuteľnosti.
 
-12. Systém zobrazí vytvorený inzerát vlastníkovi.
+12. Vlastník potvrdí vytvorenie inzerátu.
+
+13. Systém overí vyplnenie povinných údajov.
+
+14. Systém uloží nový inzerát do databázy.
+
+15. Systém zobrazí vytvorený inzerát vlastníkovi.
 
 **Alternatívny scenár**
 
-8a. Vlastník nevloží fotografie.  
+11a. Vlastník nevloží fotografie.  
 Systém vytvorí inzerát aj bez fotografií, ak sú ostatné povinné údaje vyplnené.
 
-10a. Niektorý povinný údaj nie je vyplnený.  
+13a. Niektorý povinný údaj nie je vyplnený.  
 Systém zobrazí chybové hlásenie a neuloží inzerát.
 
-9a. Vlastník zruší vytváranie inzerátu.  
+12a. Vlastník zruší vytváranie inzerátu.  
 Systém nevytvorí nový inzerát a vlastník zostáva v sekcii správy inzerátov.
 
 ## UC-09 Úprava existujúceho inzerátu
@@ -288,3 +310,52 @@ Systém vyzve používateľa na prihlásenie.
 
 3a. Inzerát už je uložený medzi obľúbenými.  
 Systém zobrazí informáciu, že inzerát je už v zozname obľúbených.
+
+## UC-13 Vytvorenie žiadosti o obhliadku
+
+**Účel**  
+Vytvoriť žiadosť o obhliadku vybranej nehnuteľnosti.
+
+**Používateľ**  
+Používateľ
+
+**Vstupné podmienky**  
+Používateľ je prihlásený do systému.  
+Vybraný inzerát existuje a je aktívny.
+
+**Výstup**  
+V systéme pribudne nová žiadosť o obhliadku so stavom pending.
+
+**Postup**
+
+1. Používateľ otvorí detail vybranej nehnuteľnosti.  
+   Systém zobrazí detail inzerátu a možnosť požiadať o obhliadku.
+
+2. Používateľ zvolí možnosť „Požiadať o obhliadku“.
+
+3. Systém zobrazí formulár žiadosti o obhliadku.
+
+4. Používateľ zadá navrhovaný termín obhliadky.
+
+5. Používateľ môže pridať poznámku k žiadosti.
+
+6. Používateľ odošle žiadosť.
+
+7. Systém overí vyplnenie povinných údajov.
+
+8. Systém uloží žiadosť o obhliadku so stavom pending.
+
+9. Systém sprístupní žiadosť vlastníkovi nehnuteľnosti.
+
+10. Systém zobrazí potvrdenie o úspešnom odoslaní žiadosti.
+
+**Alternatívny scenár**
+
+2a. Používateľ nie je prihlásený.  
+Systém vyzve používateľa na prihlásenie.
+
+7a. Používateľ nezadá termín obhliadky.  
+Systém zobrazí chybové hlásenie a žiadosť neuloží.
+
+6a. Používateľ zruší odoslanie žiadosti.  
+Systém zavrie formulár a používateľ zostáva na detaile nehnuteľnosti.
