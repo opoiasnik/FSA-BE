@@ -10,33 +10,32 @@ The goal of the application is to simplify the process of finding and offering a
 
 # Zber požiadaviek
 
-- **RQ01** Používateľ sa môže zaregistrovať do systému pomocou e-mailu.
-- **RQ02** Systém by mal podporovať registráciu a autorizáciu používateľov s rozlíšením rolí (používateľ, vlastník).
-- **RQ03** Používateľ by mal mať možnosť vyhľadávať nehnuteľnosti dostupné na prenájom alebo predaj.
-- **RQ04** Používateľ by mal mať možnosť filtrovať nehnuteľnosti podľa adresy, ceny alebo typu nehnuteľnosti.
-- **RQ05** Používateľ by mal mať možnosť zobraziť detail vybranej nehnuteľnosti.
-- **RQ06** Detail nehnuteľnosti by mal obsahovať popis, fotografie, adresu, cenu a základné vlastnosti nehnuteľnosti.
-- **RQ07** Používateľ by mal mať možnosť kontaktovať vlastníka nehnuteľnosti v prípade záujmu.
-- **RQ08** Používateľ by mal mať možnosť ukladať nehnuteľnosti medzi obľúbené.
-- **RQ09** Vlastník by mal mať možnosť vytvárať nové inzeráty nehnuteľností.
-- **RQ10** Vlastník by mal mať možnosť upravovať existujúce inzeráty.
-- **RQ11** Vlastník by mal mať možnosť odstrániť inzerát, ktorý už nie je aktuálny.
-- **RQ12** Vlastník by mal mať možnosť spravovať základné informácie o svojej nehnuteľnosti.
-- **RQ13** Systém by mal používateľovi zobrazovať zoznam dostupných nehnuteľností.
-- **RQ14** Systém by mal rozlišovať medzi ponukami na prenájom a ponukami na predaj.
-- **RQ15** Používateľ by mal mať možnosť prezerať fotografie priradené k inzerátu.
-- **RQ16** Používateľ by mal mať možnosť zobraziť kontaktné údaje vlastníka.
-- **RQ17** Vlastník by mal mať možnosť pridať k inzerátu viacero fotografií.
-- **RQ18** Systém by mal umožniť evidenciu stavu inzerátu (aktívny, neaktívny).
-- **RQ19** Používateľ by mal mať možnosť prezerať iba aktívne inzeráty.
-- **RQ20** Používateľ by mal mať možnosť požiadať o obhliadku nehnuteľnosti.
-- **RQ21** Vlastník by mal mať možnosť schváliť alebo zamietnuť žiadosť o obhliadku.
-- **RQ22** Systém by mal evidovať stav žiadosti o obhliadku (pending, approved, rejected, cancelled).
-- **RQ23** Inzerát by mal obsahovať štruktúrovanú adresu (ulica, mesto, PSČ, krajina).
-- **RQ24** Cena nehnuteľnosti by mala byť evidovaná ako suma a mena.
-- **RQ25** Inzerát by mal obsahovať základné vlastnosti nehnuteľnosti, napríklad rozlohu, počet izieb, poschodie, informáciu o zariadení a parkovaní.
-- **RQ26** Cieľom systému je zjednodušiť proces hľadania a ponúkania ubytovania prostredníctvom online platformy.
-
+- **RQ01** Systém umožní používateľovi zaregistrovať sa do systému pomocou e-mailu.
+- **RQ02** Systém umožní používateľovi prihlásiť sa do systému a bude rozlišovať roly používateľov (používateľ, vlastník).
+- **RQ03** Systém umožní používateľovi vyhľadávať nehnuteľnosti dostupné na prenájom alebo predaj.
+- **RQ04** Systém umožní používateľovi filtrovať nehnuteľnosti podľa adresy, ceny alebo typu nehnuteľnosti.
+- **RQ05** Systém umožní používateľovi zobraziť detail vybranej nehnuteľnosti.
+- **RQ06** Systém zobrazí detail nehnuteľnosti vrátane popisu, fotografií, adresy, ceny a základných vlastností nehnuteľnosti.
+- **RQ07** Systém umožní používateľovi kontaktovať vlastníka nehnuteľnosti v prípade záujmu.
+- **RQ08** Systém umožní používateľovi ukladať nehnuteľnosti medzi obľúbené.
+- **RQ09** Systém umožní vlastníkovi vytvárať nové inzeráty nehnuteľností.
+- **RQ10** Systém umožní vlastníkovi upravovať existujúce inzeráty.
+- **RQ11** Systém umožní vlastníkovi odstrániť inzerát, ktorý už nie je aktuálny.
+- **RQ12** Systém umožní vlastníkovi spravovať základné informácie o svojej nehnuteľnosti.
+- **RQ13** Systém zobrazí používateľovi zoznam dostupných nehnuteľností.
+- **RQ14** Systém bude rozlišovať medzi ponukami na prenájom a ponukami na predaj.
+- **RQ15** Systém umožní používateľovi prezerať fotografie priradené k inzerátu.
+- **RQ16** Systém umožní používateľovi zobraziť kontaktné údaje vlastníka.
+- **RQ17** Systém umožní vlastníkovi pridať k inzerátu viacero fotografií.
+- **RQ18** Systém bude evidovať stav inzerátu (aktívny, neaktívny).
+- **RQ19** Systém zobrazí používateľovi iba aktívne inzeráty.
+- **RQ20** Systém umožní používateľovi požiadať o obhliadku nehnuteľnosti.
+- **RQ21** Systém umožní vlastníkovi schváliť alebo zamietnuť žiadosť o obhliadku.
+- **RQ22** Systém bude evidovať stav žiadosti o obhliadku (pending, approved, rejected, cancelled).
+- **RQ23** Systém bude evidovať adresu nehnuteľnosti ako štruktúrovaný údaj (ulica, mesto, PSČ, krajina).
+- **RQ24** Systém bude evidovať cenu nehnuteľnosti ako hodnotu a menu.
+- **RQ25** Systém bude evidovať vlastnosti nehnuteľnosti, napríklad rozlohu, počet izieb, poschodie, zariadenie a parkovanie.
+- **RQ26** Systém umožní zjednodušiť proces hľadania a ponúkania ubytovania prostredníctvom online platformy.
 # Slovník pojmov
 
 | Pojem | Anglický názov | Definícia |
