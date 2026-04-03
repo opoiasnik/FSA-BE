@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+        xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        https://jakarta.ee/xml/ns/persistence/orm
+        https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+        version="3.0">
+
+    <!-- User Entity -->
+    <entity class="sk.fsa.rental.domain.User" access="FIELD">
+        <table name="users"/>
+        <attributes>
+            <id name="id">
+                <column name="user_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="name">
+                <column name="name" nullable="false"/>
+            </basic>
+            <basic name="email">
+                <column name="email" nullable="false" unique="true"/>
+            </basic>
+            <basic name="passwordHash">
+                <column name="password_hash" nullable="false"/>
+            </basic>
+            <basic name="role">
+                <column name="role" nullable="false"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <one-to-many name="ownedListings" target-entity="sk.fsa.rental.domain.Listing" mapped-by="owner"/>
+            <one-to-many name="favorites" target-entity="sk.fsa.rental.domain.Favorite" mapped-by="user">
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <!-- Listing Entity -->
+    <entity class="sk.fsa.rental.domain.Listing" access="FIELD">
+        <table name="listing"/>
+        <attributes>
+            <id name="id">
+                <column name="listing_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="title">
+                <column name="title" nullable="false"/>
+            </basic>
+            <basic name="description">
+                <column name="description" nullable="false" length="2000"/>
+            </basic>
+            <basic name="listingType">
+                <column name="listing_type" nullable="false"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="status">
+                <column name="status" nullable="false"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="createdAt">
+                <column name="created_at" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+            <many-to-one name="owner" target-entity="sk.fsa.rental.domain.User">
+                <join-column name="owner_id" nullable="false"/>
+            </many-to-one>
+            <embedded name="address">
+                <attribute-override name="street">
+                    <column name="address_street" nullable="false"/>
+                </attribute-override>
+                <attribute-override name="city">
+                    <column name="address_city" nullable="false"/>
+                </attribute-override>
+                <attribute-override name="postalCode">
+                    <column name="address_postal_code" nullable="false"/>
+                </attribute-override>
+                <attribute-override name="country">
+                    <column name="address_country" nullable="false"/>
+                </attribute-override>
+            </embedded>
+            <embedded name="price">
+                <attribute-override name="amount">
+                    <column name="price_amount" nullable="false" precision="10" scale="2"/>
+                </attribute-override>
+                <attribute-override name="currency">
+                    <column name="price_currency" nullable="false"/>
+                </attribute-override>
+            </embedded>
+            <embedded name="features">
+                <attribute-override name="propertyType">
+                    <column name="property_type" nullable="false"/>
+                </attribute-override>
+                <attribute-override name="area">
+                    <column name="features_area"/>
+                </attribute-override>
+                <attribute-override name="roomCount">
+                    <column name="features_room_count"/>
+                </attribute-override>
+                <attribute-override name="floor">
+                    <column name="features_floor"/>
+                </attribute-override>
+                <attribute-override name="furnished">
+                    <column name="features_furnished"/>
+                </attribute-override>
+                <attribute-override name="parkingAvailable">
+                    <column name="features_parking_available"/>
+                </attribute-override>
+            </embedded>
+            <one-to-many name="photos" target-entity="sk.fsa.rental.domain.Photo" mapped-by="listing">
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <!-- Address Embeddable -->
+    <embeddable class="sk.fsa.rental.domain.Address" access="FIELD">
+        <attributes>
+            <basic name="street"/>
+            <basic name="city"/>
+            <basic name="postalCode"/>
+            <basic name="country"/>
+        </attributes>
+    </embeddable>
+
+    <!-- Price Embeddable -->
+    <embeddable class="sk.fsa.rental.domain.Price" access="FIELD">
+        <attributes>
+            <basic name="amount"/>
+            <basic name="currency"/>
+        </attributes>
+    </embeddable>
+
+    <!-- PropertyFeatures Embeddable -->
+    <embeddable class="sk.fsa.rental.domain.PropertyFeatures" access="FIELD">
+        <attributes>
+            <basic name="propertyType">
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="area"/>
+            <basic name="roomCount"/>
+            <basic name="floor"/>
+            <basic name="furnished"/>
+            <basic name="parkingAvailable"/>
+        </attributes>
+    </embeddable>
+
+    <!-- Photo Entity -->
+    <entity class="sk.fsa.rental.domain.Photo" access="FIELD">
+        <table name="photo"/>
+        <attributes>
+            <id name="id">
+                <column name="photo_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="url">
+                <column name="url" nullable="false"/>
+            </basic>
+            <basic name="altText">
+                <column name="alt_text"/>
+            </basic>
+            <many-to-one name="listing" target-entity="sk.fsa.rental.domain.Listing">
+                <join-column name="listing_id" nullable="false"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <!-- Favorite Entity -->
+    <entity class="sk.fsa.rental.domain.Favorite" access="FIELD">
+        <table name="favorite"/>
+        <attributes>
+            <id name="id">
+                <column name="favorite_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="createdAt">
+                <column name="created_at" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+            <many-to-one name="user" target-entity="sk.fsa.rental.domain.User">
+                <join-column name="user_id" nullable="false"/>
+            </many-to-one>
+            <many-to-one name="listing" target-entity="sk.fsa.rental.domain.Listing">
+                <join-column name="listing_id" nullable="false"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+</entity-mappings>

@@ -1,0 +1,308 @@
+openapi: 3.0.0
+info:
+  title: Property Rental API
+  version: 1.0.0
+  description: API for managing property rental listings
+servers:
+  - url: http://localhost:8080
+security:
+  - bearerAuth: []
+
+paths:
+  /api/listings:
+    post:
+      summary: Create a new property listing
+      operationId: createListing
+      tags:
+        - Listings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateListingRequest'
+      responses:
+        '201':
+          description: Listing successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingResponse'
+        '400':
+          description: Bad Request - Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Missing or invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - User is not an OWNER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/listings/{id}:
+    get:
+      summary: Get listing by ID
+      operationId: getListingById
+      tags:
+        - Listings
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Listing found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingResponse'
+        '404':
+          description: Listing not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateListingRequest:
+      type: object
+      required:
+        - title
+        - description
+        - listingType
+        - address
+        - price
+        - features
+      properties:
+        title:
+          type: string
+          description: Title of the listing
+          example: "Modern 2-bedroom apartment in city center"
+        description:
+          type: string
+          description: Detailed description of the property
+          example: "Beautiful apartment with great view"
+        listingType:
+          $ref: '#/components/schemas/ListingType'
+        address:
+          $ref: '#/components/schemas/AddressRequest'
+        price:
+          $ref: '#/components/schemas/PriceRequest'
+        features:
+          $ref: '#/components/schemas/PropertyFeaturesRequest'
+
+    ListingResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: "Modern 2-bedroom apartment in city center"
+        description:
+          type: string
+          example: "Beautiful apartment with great view"
+        listingType:
+          $ref: '#/components/schemas/ListingType'
+        status:
+          $ref: '#/components/schemas/ListingStatus'
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-04-03T10:00:00Z"
+        address:
+          $ref: '#/components/schemas/AddressResponse'
+        price:
+          $ref: '#/components/schemas/PriceResponse'
+        features:
+          $ref: '#/components/schemas/PropertyFeaturesResponse'
+        ownerId:
+          type: integer
+          format: int64
+          example: 123
+
+    AddressRequest:
+      type: object
+      required:
+        - street
+        - city
+        - postalCode
+        - country
+      properties:
+        street:
+          type: string
+          example: "Main Street 123"
+        city:
+          type: string
+          example: "Bratislava"
+        postalCode:
+          type: string
+          example: "81101"
+        country:
+          type: string
+          example: "Slovakia"
+
+    AddressResponse:
+      type: object
+      properties:
+        street:
+          type: string
+          example: "Main Street 123"
+        city:
+          type: string
+          example: "Bratislava"
+        postalCode:
+          type: string
+          example: "81101"
+        country:
+          type: string
+          example: "Slovakia"
+
+    PriceRequest:
+      type: object
+      required:
+        - amount
+        - currency
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 850.00
+        currency:
+          type: string
+          example: "EUR"
+
+    PriceResponse:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 850.00
+        currency:
+          type: string
+          example: "EUR"
+
+    PropertyFeaturesRequest:
+      type: object
+      required:
+        - propertyType
+      properties:
+        propertyType:
+          $ref: '#/components/schemas/PropertyType'
+        area:
+          type: number
+          format: double
+          description: Area in square meters
+          example: 65.5
+        roomCount:
+          type: integer
+          example: 2
+        floor:
+          type: integer
+          example: 3
+        furnished:
+          type: boolean
+          example: true
+        parkingAvailable:
+          type: boolean
+          example: false
+
+    PropertyFeaturesResponse:
+      type: object
+      properties:
+        propertyType:
+          $ref: '#/components/schemas/PropertyType'
+        area:
+          type: number
+          format: double
+          example: 65.5
+        roomCount:
+          type: integer
+          example: 2
+        floor:
+          type: integer
+          example: 3
+        furnished:
+          type: boolean
+          example: true
+        parkingAvailable:
+          type: boolean
+          example: false
+
+    ListingType:
+      type: string
+      enum:
+        - RENT
+        - SALE
+      example: RENT
+
+    ListingStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+      example: INACTIVE
+
+    PropertyType:
+      type: string
+      enum:
+        - APARTMENT
+        - HOUSE
+        - ROOM
+      example: APARTMENT
+
+    ErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error
+          example: "VALIDATION"
+        message:
+          type: string
+          description: Error message
+          example: "Listing title is required."
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-04-03T10:00:00Z"

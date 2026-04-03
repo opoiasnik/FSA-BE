@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: property-rental
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rental_db
+    username: rental_user
+    password: rental_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    mapping-resources:
+      - persistence/rental-orm.xml
+
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+    enabled: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    sk.fsa.rental: DEBUG
+    org.springframework.security: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: keycloak
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/rental
+          jwk-set-uri: http://localhost:8081/realms/rental/protocol/openid-connect/certs

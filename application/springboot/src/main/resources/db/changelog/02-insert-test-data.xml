@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="2" author="rental-app">
+        <!-- Insert test owner user -->
+        <insert tableName="users">
+            <column name="name" value="John Owner"/>
+            <column name="email" value="owner@example.com"/>
+            <column name="password_hash" value="$2a$10$hash"/>
+            <column name="role" value="OWNER"/>
+        </insert>
+
+        <!-- Insert test regular user -->
+        <insert tableName="users">
+            <column name="name" value="Jane User"/>
+            <column name="email" value="user@example.com"/>
+            <column name="password_hash" value="$2a$10$hash"/>
+            <column name="role" value="USER"/>
+        </insert>
+
+        <!-- Insert test listing -->
+        <insert tableName="listing">
+            <column name="title" value="Modern 2-bedroom apartment"/>
+            <column name="description" value="Beautiful apartment in city center with great view"/>
+            <column name="listing_type" value="RENT"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="property_type" value="APARTMENT"/>
+            <column name="created_at" valueDate="2025-04-01T10:00:00"/>
+            <column name="owner_id" value="1"/>
+            <column name="address_street" value="Main Street 123"/>
+            <column name="address_city" value="Bratislava"/>
+            <column name="address_postal_code" value="81101"/>
+            <column name="address_country" value="Slovakia"/>
+            <column name="price_amount" value="850.00"/>
+            <column name="price_currency" value="EUR"/>
+            <column name="features_area" value="65.5"/>
+            <column name="features_room_count" value="2"/>
+            <column name="features_floor" value="3"/>
+            <column name="features_furnished" valueBoolean="true"/>
+            <column name="features_parking_available" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

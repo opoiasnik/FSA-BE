@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="1" author="rental-app">
+        <createTable tableName="users">
+            <column name="user_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="listing">
+            <column name="listing_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="listing_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="property_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_listing_owner" references="users(user_id)"/>
+            </column>
+            <!-- Address embedded -->
+            <column name="address_street" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_city" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_postal_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_country" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Price embedded -->
+            <column name="price_amount" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_currency" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Features embedded -->
+            <column name="features_area" type="DOUBLE"/>
+            <column name="features_room_count" type="INT"/>
+            <column name="features_floor" type="INT"/>
+            <column name="features_furnished" type="BOOLEAN"/>
+            <column name="features_parking_available" type="BOOLEAN"/>
+        </createTable>
+
+        <createTable tableName="photo">
+            <column name="photo_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="url" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alt_text" type="VARCHAR(255)"/>
+            <column name="listing_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_photo_listing" references="listing(listing_id)"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="favorite">
+            <column name="favorite_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_favorite_user" references="users(user_id)"/>
+            </column>
+            <column name="listing_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_favorite_listing" references="listing(listing_id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

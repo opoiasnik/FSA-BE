@@ -1,0 +1,54 @@
+{
+  "realm": "rental",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "defaultSignatureAlgorithm": "RS256",
+  "roles": {
+    "realm": [
+      { "name": "OWNER", "composite": false, "clientRole": false },
+      { "name": "USER",  "composite": false, "clientRole": false }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "rental-client",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "rental-client-secret",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "redirectUris": ["https://oauth.pstmn.io/v1/callback", "*"],
+      "webOrigins": ["*"]
+    }
+  ],
+  "users": [
+    {
+      "username": "owner",
+      "email": "owner@example.com",
+      "firstName": "John",
+      "lastName": "Owner",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "password", "temporary": false }
+      ],
+      "realmRoles": ["OWNER"]
+    },
+    {
+      "username": "user",
+      "email": "user@example.com",
+      "firstName": "Jane",
+      "lastName": "User",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "password", "temporary": false }
+      ],
+      "realmRoles": ["USER"]
+    }
+  ]
+}

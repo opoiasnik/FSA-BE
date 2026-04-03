@@ -1,0 +1,91 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Rental API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Minimal learning collection: get OIDC token from Keycloak and call secured Rental REST API endpoints."
+  },
+  "item": [
+    {
+      "name": "Listings",
+      "item": [
+        {
+          "name": "Create Listing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('listingId', String(json.id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Modern 2-bedroom apartment\",\n  \"description\": \"Beautiful apartment in city center with great view\",\n  \"listingType\": \"RENT\",\n  \"address\": {\n    \"street\": \"Main Street 123\",\n    \"city\": \"Bratislava\",\n    \"postalCode\": \"81101\",\n    \"country\": \"Slovakia\"\n  },\n  \"price\": {\n    \"amount\": 850.00,\n    \"currency\": \"EUR\"\n  },\n  \"features\": {\n    \"propertyType\": \"APARTMENT\",\n    \"area\": 65.5,\n    \"roomCount\": 2,\n    \"floor\": 3,\n    \"furnished\": true,\n    \"parkingAvailable\": false\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/listings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Listing",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings/{{listingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings", "{{listingId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl",         "value": "http://localhost:8080"  },
+    { "key": "keycloakBaseUrl", "value": "http://localhost:8081"  },
+    { "key": "realm",           "value": "rental"                 },
+    { "key": "clientId",        "value": "rental-client"          },
+    { "key": "clientSecret",    "value": "rental-client-secret"   },
+    { "key": "listingId",       "value": "1"                      }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      { "key": "addTokenTo",     "value": "header",                                                                                         "type": "string"  },
+      { "key": "headerPrefix",   "value": "Bearer",                                                                                         "type": "string"  },
+      { "key": "grant_type",     "value": "authorization_code",                                                                             "type": "string"  },
+      { "key": "callback_url",   "value": "https://oauth.pstmn.io/v1/callback",                                                             "type": "string"  },
+      { "key": "authUrl",        "value": "{{keycloakBaseUrl}}/realms/{{realm}}/protocol/openid-connect/auth",                              "type": "string"  },
+      { "key": "accessTokenUrl", "value": "{{keycloakBaseUrl}}/realms/{{realm}}/protocol/openid-connect/token",                            "type": "string"  },
+      { "key": "clientId",       "value": "{{clientId}}",                                                                                   "type": "string"  },
+      { "key": "clientSecret",   "value": "{{clientSecret}}",                                                                               "type": "string"  },
+      { "key": "scope",          "value": "openid",                                                                                         "type": "string"  },
+      { "key": "useBrowser",     "value": true,                                                                                             "type": "boolean" },
+      { "key": "tokenName",      "value": "Rental OIDC",                                                                                    "type": "string"  }
+    ]
+  }
+}
