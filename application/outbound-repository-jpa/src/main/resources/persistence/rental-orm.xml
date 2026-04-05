@@ -66,6 +66,11 @@
             <many-to-one name="owner" target-entity="sk.fsa.rental.domain.User">
                 <join-column name="owner_id" nullable="false"/>
             </many-to-one>
+            <one-to-many name="photos" target-entity="sk.fsa.rental.domain.Photo" mapped-by="listing">
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+            </one-to-many>
             <embedded name="address">
                 <attribute-override name="street">
                     <column name="address_street" nullable="false"/>
@@ -108,45 +113,8 @@
                     <column name="features_parking_available"/>
                 </attribute-override>
             </embedded>
-            <one-to-many name="photos" target-entity="sk.fsa.rental.domain.Photo" mapped-by="listing">
-                <cascade>
-                    <cascade-all/>
-                </cascade>
-            </one-to-many>
         </attributes>
     </entity>
-
-    <!-- Address Embeddable -->
-    <embeddable class="sk.fsa.rental.domain.Address" access="FIELD">
-        <attributes>
-            <basic name="street"/>
-            <basic name="city"/>
-            <basic name="postalCode"/>
-            <basic name="country"/>
-        </attributes>
-    </embeddable>
-
-    <!-- Price Embeddable -->
-    <embeddable class="sk.fsa.rental.domain.Price" access="FIELD">
-        <attributes>
-            <basic name="amount"/>
-            <basic name="currency"/>
-        </attributes>
-    </embeddable>
-
-    <!-- PropertyFeatures Embeddable -->
-    <embeddable class="sk.fsa.rental.domain.PropertyFeatures" access="FIELD">
-        <attributes>
-            <basic name="propertyType">
-                <enumerated>STRING</enumerated>
-            </basic>
-            <basic name="area"/>
-            <basic name="roomCount"/>
-            <basic name="floor"/>
-            <basic name="furnished"/>
-            <basic name="parkingAvailable"/>
-        </attributes>
-    </embeddable>
 
     <!-- Photo Entity -->
     <entity class="sk.fsa.rental.domain.Photo" access="FIELD">
@@ -188,5 +156,37 @@
             </many-to-one>
         </attributes>
     </entity>
+
+    <!-- Address Embeddable -->
+    <embeddable class="sk.fsa.rental.domain.Address" access="FIELD">
+        <attributes>
+            <basic name="street"/>
+            <basic name="city"/>
+            <basic name="postalCode"/>
+            <basic name="country"/>
+        </attributes>
+    </embeddable>
+
+    <!-- Price Embeddable -->
+    <embeddable class="sk.fsa.rental.domain.Price" access="FIELD">
+        <attributes>
+            <basic name="amount"/>
+            <basic name="currency"/>
+        </attributes>
+    </embeddable>
+
+    <!-- PropertyFeatures Embeddable -->
+    <embeddable class="sk.fsa.rental.domain.PropertyFeatures" access="FIELD">
+        <attributes>
+            <basic name="propertyType">
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="area"/>
+            <basic name="roomCount"/>
+            <basic name="floor"/>
+            <basic name="furnished"/>
+            <basic name="parkingAvailable"/>
+        </attributes>
+    </embeddable>
 
 </entity-mappings>
