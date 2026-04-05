@@ -32,6 +32,7 @@ class SecurityConfiguration {
                         .accessDeniedHandler(restSecurityExceptionHandler)
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
+                        .authenticationEntryPoint(restSecurityExceptionHandler)
                         .jwt(jwt -> {
                             jwt.decoder(jwtDecoder);
                             jwt.jwtAuthenticationConverter(JwtConverter::new);
