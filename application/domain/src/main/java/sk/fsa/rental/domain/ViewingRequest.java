@@ -44,7 +44,6 @@ public class ViewingRequest {
     public void setRequestedDate(Date requestedDate) { this.requestedDate = requestedDate; }
 
     public ViewingStatus getStatus() { return status; }
-    public void setStatus(ViewingStatus status) { this.status = status; }
 
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }

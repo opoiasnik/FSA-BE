@@ -30,7 +30,6 @@ public class Conversation {
     public void setId(Long id) { this.id = id; }
 
     public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
     public Listing getListing() { return listing; }
     public void setListing(Listing listing) { this.listing = listing; }
@@ -39,5 +38,4 @@ public class Conversation {
     public void setParticipants(List<User> participants) { this.participants = participants; }
 
     public List<Message> getMessages() { return Collections.unmodifiableList(messages); }
-    public void setMessages(List<Message> messages) { this.messages = messages; }
 }

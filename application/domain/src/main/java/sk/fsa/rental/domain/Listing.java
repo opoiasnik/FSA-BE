@@ -107,10 +107,8 @@ public class Listing {
     public void setListingType(ListingType listingType) { this.listingType = listingType; }
 
     public ListingStatus getStatus() { return status; }
-    public void setStatus(ListingStatus status) { this.status = status; }
 
     public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }
@@ -125,5 +123,4 @@ public class Listing {
     public void setFeatures(PropertyFeatures features) { this.features = features; }
 
     public List<Photo> getPhotos() { return Collections.unmodifiableList(photos); }
-    public void setPhotos(List<Photo> photos) { this.photos = photos; }
 }

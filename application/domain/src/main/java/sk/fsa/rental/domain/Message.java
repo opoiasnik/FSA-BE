@@ -26,10 +26,8 @@ public class Message {
     public void setText(String text) { this.text = text; }
 
     public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
     public Boolean getIsRead() { return isRead; }
-    public void setIsRead(Boolean isRead) { this.isRead = isRead; }
 
     public User getSender() { return sender; }
     public void setSender(User sender) { this.sender = sender; }

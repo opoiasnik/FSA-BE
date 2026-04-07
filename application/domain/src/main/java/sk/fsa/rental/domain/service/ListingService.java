@@ -1,6 +1,7 @@
 package sk.fsa.rental.domain.service;
 
 import sk.fsa.rental.domain.Listing;
+import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
@@ -10,10 +11,12 @@ import sk.fsa.rental.domain.repository.UserRepository;
 public class ListingService implements ListingFacade {
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
+    private final ListingFactory listingFactory;
 
-    public ListingService(ListingRepository listingRepository, UserRepository userRepository) {
+    public ListingService(ListingRepository listingRepository, UserRepository userRepository, ListingFactory listingFactory) {
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
+        this.listingFactory = listingFactory;
     }
 
     @Override
@@ -21,10 +24,8 @@ public class ListingService implements ListingFacade {
         User owner = userRepository.findByEmail(ownerEmail)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Owner not found."));
 
-        listing.setOwner(owner);
-        listing.validateForCreation();
-
-        return listingRepository.save(listing);
+        Listing prepared = listingFactory.createListing(listing, owner);
+        return listingRepository.save(prepared);
     }
 
     @Override
