@@ -65,6 +65,7 @@
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <openApiNullable>false</openApiNullable>
+                                <useTags>true</useTags>
                                 <documentationProvider>none</documentationProvider>
                             </configOptions>
                         </configuration>

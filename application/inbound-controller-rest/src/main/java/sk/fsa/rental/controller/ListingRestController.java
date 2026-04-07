@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import sk.fsa.rental.controller.mapper.ListingMapper;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.facade.ListingFacade;
-import sk.fsa.rental.rest.api.ApiApi;
+import sk.fsa.rental.rest.api.ListingApi;
 import sk.fsa.rental.rest.dto.CreateListingRequestDto;
 import sk.fsa.rental.rest.dto.ListingResponseDto;
 
 @RestController
-public class ListingRestController implements ApiApi {
+public class ListingRestController implements ListingApi {
 
     private final ListingFacade listingFacade;
     private final ListingMapper listingMapper;

@@ -14,7 +14,7 @@ paths:
       summary: Create a new property listing
       operationId: createListing
       tags:
-        - Listings
+        - Listing
       requestBody:
         required: true
         content:
@@ -58,7 +58,7 @@ paths:
       summary: Get listing by ID
       operationId: getListingById
       tags:
-        - Listings
+        - Listing
       security: []
       parameters:
         - name: id
