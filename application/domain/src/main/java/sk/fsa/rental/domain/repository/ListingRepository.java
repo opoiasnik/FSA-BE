@@ -1,5 +1,6 @@
 package sk.fsa.rental.domain.repository;
 
+import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingStatus;
 
@@ -12,4 +13,5 @@ public interface ListingRepository {
     List<Listing> findByStatus(ListingStatus status);
     List<Listing> findByOwnerId(Long ownerId);
     void deleteById(Long id);
+    boolean existsByOwnerIdAndAddress(Long ownerId, Address address);
 }

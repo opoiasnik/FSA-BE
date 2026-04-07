@@ -12,8 +12,8 @@ import sk.fsa.rental.domain.service.ListingService;
 public class ListingBeanConfiguration {
 
     @Bean
-    public ListingFactory listingFactory() {
-        return new ListingFactory();
+    public ListingFactory listingFactory(ListingRepository listingRepository) {
+        return new ListingFactory(listingRepository);
     }
 
     @Bean

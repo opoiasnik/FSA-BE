@@ -1,6 +1,7 @@
 package sk.fsa.rental.jpa;
 
 import org.springframework.stereotype.Repository;
+import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.repository.ListingRepository;
@@ -40,5 +41,10 @@ public class JpaListingRepositoryAdapter implements ListingRepository {
     @Override
     public void deleteById(Long id) {
         listingSpringDataRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByOwnerIdAndAddress(Long ownerId, Address address) {
+        return listingSpringDataRepository.existsByOwnerIdAndAddress(ownerId, address);
     }
 }
