@@ -12,6 +12,8 @@ import sk.fsa.rental.rest.api.ListingApi;
 import sk.fsa.rental.rest.dto.CreateListingRequestDto;
 import sk.fsa.rental.rest.dto.ListingResponseDto;
 
+import java.util.List;
+
 @RestController
 public class ListingRestController implements ListingApi {
 
@@ -40,6 +42,16 @@ public class ListingRestController implements ListingApi {
     public ResponseEntity<ListingResponseDto> getListingById(Long id) {
         Listing listing = listingFacade.getListingById(id);
         ListingResponseDto response = listingMapper.toDto(listing);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ListingResponseDto>> getFeaturedListings() {
+        List<ListingResponseDto> response = listingFacade.getFeaturedListings().stream()
+                .map(listingMapper::toDto)
+                .toList();
 
         return ResponseEntity.ok(response);
     }

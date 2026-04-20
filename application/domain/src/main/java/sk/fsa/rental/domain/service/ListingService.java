@@ -2,13 +2,20 @@ package sk.fsa.rental.domain.service;
 
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingFactory;
+import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ListingService implements ListingFacade {
+    private static final int FEATURED_LISTINGS_LIMIT = 4;
+
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
     private final ListingFactory listingFactory;
@@ -81,5 +88,19 @@ public class ListingService implements ListingFacade {
     public Listing getListingById(Long id) {
         return listingRepository.findById(id)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
+    }
+
+    @Override
+    public List<Listing> getFeaturedListings() {
+        List<Listing> activeListings = listingRepository.findByStatus(ListingStatus.ACTIVE);
+        if (activeListings.isEmpty()) {
+            return List.of();
+        }
+
+        List<Listing> shuffledListings = new ArrayList<>(activeListings);
+        Collections.shuffle(shuffledListings);
+
+        int resultSize = Math.min(FEATURED_LISTINGS_LIMIT, shuffledListings.size());
+        return List.copyOf(shuffledListings.subList(0, resultSize));
     }
 }

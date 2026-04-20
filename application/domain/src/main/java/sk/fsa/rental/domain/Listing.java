@@ -18,6 +18,7 @@ public class Listing {
     private PropertyFeatures features;
     private List<Photo> photos;
 
+
     public Listing() {
         this.photos = new ArrayList<>();
         this.status = ListingStatus.INACTIVE;

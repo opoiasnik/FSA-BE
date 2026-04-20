@@ -2,6 +2,8 @@ package sk.fsa.rental.domain.facade;
 
 import sk.fsa.rental.domain.Listing;
 
+import java.util.List;
+
 public interface ListingFacade {
 
     Listing createListing(Listing listing, String ownerEmail);
@@ -13,4 +15,6 @@ public interface ListingFacade {
     Listing activateListing(Long listingId, Long ownerId);
 
     Listing getListingById(Long id);
+
+    List<Listing> getFeaturedListings();
 }

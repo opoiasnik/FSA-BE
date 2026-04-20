@@ -53,6 +53,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/listings/featured:
+    get:
+      summary: Get up to 4 random featured listings
+      operationId: getFeaturedListings
+      tags:
+        - Listing
+      security: []
+      responses:
+        '200':
+          description: Featured listings found (up to 4 items, can be empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListingResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/listings/{id}:
     get:
       summary: Get listing by ID
