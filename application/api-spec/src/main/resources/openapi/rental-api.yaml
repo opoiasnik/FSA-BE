@@ -308,6 +308,29 @@ components:
         - ROOM
       example: APARTMENT
 
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "owner@example.com"
+        role:
+          $ref: '#/components/schemas/UserRole'
+
+    UserRole:
+      type: string
+      enum:
+        - OWNER
+        - USER
+      example: OWNER
+
     ErrorResponse:
       type: object
       properties:
