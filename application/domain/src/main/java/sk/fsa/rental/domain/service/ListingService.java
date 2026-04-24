@@ -6,6 +6,7 @@ import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
+import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.UserRepository;
 
@@ -40,10 +41,8 @@ public class ListingService implements ListingFacade {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        if (!existing.getOwner().getId().equals(ownerId)) {
-            throw new RentalException(RentalException.Type.FORBIDDEN,
-                    "Only the owner can update this listing.");
-        }
+        if (!IsOwnedByPredicate.INSTANCE.test(existing.getOwner(), userWithId(ownerId)))
+            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can update this listing.");
 
         existing.setTitle(updatedListing.getTitle());
         existing.setDescription(updatedListing.getDescription());
@@ -62,10 +61,8 @@ public class ListingService implements ListingFacade {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        if (!existing.getOwner().getId().equals(ownerId)) {
-            throw new RentalException(RentalException.Type.FORBIDDEN,
-                    "Only the owner can delete this listing.");
-        }
+        if (!IsOwnedByPredicate.INSTANCE.test(existing.getOwner(), userWithId(ownerId)))
+            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can delete this listing.");
 
         listingRepository.deleteById(listingId);
     }
@@ -75,13 +72,17 @@ public class ListingService implements ListingFacade {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        if (!listing.getOwner().getId().equals(ownerId)) {
-            throw new RentalException(RentalException.Type.FORBIDDEN,
-                    "Only the owner can activate this listing.");
-        }
+        if (!IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), userWithId(ownerId)))
+            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can activate this listing.");
 
         listing.activate();
         return listingRepository.save(listing);
+    }
+
+    private User userWithId(Long id) {
+        User user = new User();
+        user.setId(id);
+        return user;
     }
 
     @Override

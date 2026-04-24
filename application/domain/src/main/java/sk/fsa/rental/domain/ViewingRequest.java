@@ -1,5 +1,8 @@
 package sk.fsa.rental.domain;
 
+import sk.fsa.rental.domain.predicate.viewingrequest.IsViewingCancellablePredicate;
+import sk.fsa.rental.domain.predicate.viewingrequest.IsViewingPendingPredicate;
+
 import java.util.Date;
 
 public class ViewingRequest {
@@ -16,25 +19,21 @@ public class ViewingRequest {
     }
 
     public void approve() {
-        require(status == ViewingStatus.PENDING, "Only PENDING requests can be approved.");
+        if (!IsViewingPendingPredicate.INSTANCE.test(status))
+            throw new RentalException(RentalException.Type.VALIDATION, "Only PENDING requests can be approved.");
         this.status = ViewingStatus.APPROVED;
     }
 
     public void reject() {
-        require(status == ViewingStatus.PENDING, "Only PENDING requests can be rejected.");
+        if (!IsViewingPendingPredicate.INSTANCE.test(status))
+            throw new RentalException(RentalException.Type.VALIDATION, "Only PENDING requests can be rejected.");
         this.status = ViewingStatus.REJECTED;
     }
 
     public void cancel() {
-        require(status == ViewingStatus.PENDING || status == ViewingStatus.APPROVED,
-                "Only PENDING or APPROVED requests can be cancelled.");
+        if (!IsViewingCancellablePredicate.INSTANCE.test(status))
+            throw new RentalException(RentalException.Type.VALIDATION, "Only PENDING or APPROVED requests can be cancelled.");
         this.status = ViewingStatus.CANCELLED;
-    }
-
-    private void require(boolean condition, String message) {
-        if (!condition) {
-            throw new RentalException(RentalException.Type.VALIDATION, message);
-        }
     }
 
     public Long getId() { return id; }

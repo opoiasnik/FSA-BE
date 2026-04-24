@@ -1,5 +1,13 @@
 package sk.fsa.rental.domain;
 
+import sk.fsa.rental.domain.predicate.listing.HasRequiredDescriptionPredicate;
+import sk.fsa.rental.domain.predicate.listing.HasRequiredListingTypePredicate;
+import sk.fsa.rental.domain.predicate.listing.HasRequiredOwnerPredicate;
+import sk.fsa.rental.domain.predicate.listing.HasRequiredTitlePredicate;
+import sk.fsa.rental.domain.predicate.listing.IsListingActivePredicate;
+import sk.fsa.rental.domain.predicate.listing.IsListingInactivePredicate;
+import sk.fsa.rental.domain.predicate.user.IsOwnerRolePredicate;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,32 +34,21 @@ public class Listing {
     }
 
     public void validateForCreation() {
-        require(title != null && !title.trim().isEmpty(),
-                RentalException.Type.VALIDATION,
-                "Listing title is required.");
-        require(description != null && !description.trim().isEmpty(),
-                RentalException.Type.VALIDATION,
-                "Listing description is required.");
-        require(listingType != null,
-                RentalException.Type.VALIDATION,
-                "Listing type (RENT/SALE) is required.");
-        require(owner != null,
-                RentalException.Type.VALIDATION,
-                "Listing must have an owner.");
-        require(owner.isOwner(),
-                RentalException.Type.FORBIDDEN,
-                "Only users with OWNER role can create listings.");
-        require(address != null,
-                RentalException.Type.VALIDATION,
-                "Address is required.");
+        if (!HasRequiredTitlePredicate.INSTANCE.test(title))
+            throw new RentalException(RentalException.Type.VALIDATION, "Listing title is required.");
+        if (!HasRequiredDescriptionPredicate.INSTANCE.test(description))
+            throw new RentalException(RentalException.Type.VALIDATION, "Listing description is required.");
+        if (!HasRequiredListingTypePredicate.INSTANCE.test(listingType))
+            throw new RentalException(RentalException.Type.VALIDATION, "Listing type (RENT/SALE) is required.");
+        if (!HasRequiredOwnerPredicate.INSTANCE.test(this))
+            throw new RentalException(RentalException.Type.VALIDATION, "Listing must have an owner.");
+        if (!IsOwnerRolePredicate.INSTANCE.test(owner))
+            throw new RentalException(RentalException.Type.FORBIDDEN, "Only users with OWNER role can create listings.");
+        if (address == null) throw new RentalException(RentalException.Type.VALIDATION, "Address is required.");
         address.validate();
-        require(price != null,
-                RentalException.Type.VALIDATION,
-                "Price is required.");
+        if (price == null) throw new RentalException(RentalException.Type.VALIDATION, "Price is required.");
         price.validate();
-        require(features != null,
-                RentalException.Type.VALIDATION,
-                "Property features (including property type) are required.");
+        if (features == null) throw new RentalException(RentalException.Type.VALIDATION, "Property features (including property type) are required.");
         features.validate();
     }
 
@@ -60,21 +57,19 @@ public class Listing {
     }
 
     public void activate() {
-        require(status == ListingStatus.INACTIVE,
-                RentalException.Type.VALIDATION,
-                "Listing is already active.");
+        if (!IsListingInactivePredicate.INSTANCE.test(this))
+            throw new RentalException(RentalException.Type.VALIDATION, "Listing is already active.");
         this.status = ListingStatus.ACTIVE;
     }
 
     public void deactivate() {
-        require(status == ListingStatus.ACTIVE,
-                RentalException.Type.VALIDATION,
-                "Listing is already inactive.");
+        if (!IsListingActivePredicate.INSTANCE.test(this))
+            throw new RentalException(RentalException.Type.VALIDATION, "Listing is already inactive.");
         this.status = ListingStatus.INACTIVE;
     }
 
     public void addPhoto(Photo photo) {
-        require(photo != null, RentalException.Type.VALIDATION, "Photo cannot be null.");
+        if (photo == null) throw new RentalException(RentalException.Type.VALIDATION, "Photo cannot be null.");
         photo.setListing(this);
         photos.add(photo);
     }
@@ -84,15 +79,9 @@ public class Listing {
     }
 
     public void updatePrice(Price newPrice) {
-        require(newPrice != null, RentalException.Type.VALIDATION, "New price cannot be null.");
+        if (newPrice == null) throw new RentalException(RentalException.Type.VALIDATION, "New price cannot be null.");
         newPrice.validate();
         this.price = newPrice;
-    }
-
-    private void require(boolean condition, RentalException.Type type, String message) {
-        if (!condition) {
-            throw new RentalException(type, message);
-        }
     }
 
     public Long getId() { return id; }
