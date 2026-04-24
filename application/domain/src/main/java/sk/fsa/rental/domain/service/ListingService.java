@@ -6,83 +6,64 @@ import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
-import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
 import sk.fsa.rental.domain.repository.ListingRepository;
-import sk.fsa.rental.domain.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ListingService implements ListingFacade {
+
     private static final int FEATURED_LISTINGS_LIMIT = 4;
 
     private final ListingRepository listingRepository;
-    private final UserRepository userRepository;
     private final ListingFactory listingFactory;
 
-    public ListingService(ListingRepository listingRepository, UserRepository userRepository, ListingFactory listingFactory) {
+    public ListingService(ListingRepository listingRepository, ListingFactory listingFactory) {
         this.listingRepository = listingRepository;
-        this.userRepository = userRepository;
         this.listingFactory = listingFactory;
     }
 
     @Override
-    public Listing createListing(Listing listing, String ownerEmail) {
-        User owner = userRepository.findByEmail(ownerEmail)
-                .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Owner not found."));
-
+    public Listing createListing(Listing listing, User owner) {
         Listing prepared = listingFactory.createListing(listing, owner);
         return listingRepository.save(prepared);
     }
 
     @Override
-    public Listing updateListing(Long listingId, Listing updatedListing, Long ownerId) {
+    public Listing updateListing(Long listingId, Listing updatedListing, User editor) {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        if (!IsOwnedByPredicate.INSTANCE.test(existing.getOwner(), userWithId(ownerId)))
-            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can update this listing.");
-
-        existing.setTitle(updatedListing.getTitle());
-        existing.setDescription(updatedListing.getDescription());
-        existing.setListingType(updatedListing.getListingType());
-        existing.setAddress(updatedListing.getAddress());
-        existing.setPrice(updatedListing.getPrice());
-        existing.setFeatures(updatedListing.getFeatures());
-
-        existing.validateForUpdate();
+        existing.update(
+                editor,
+                updatedListing.getTitle(),
+                updatedListing.getDescription(),
+                updatedListing.getListingType(),
+                updatedListing.getAddress(),
+                updatedListing.getPrice(),
+                updatedListing.getFeatures()
+        );
 
         return listingRepository.save(existing);
     }
 
     @Override
-    public void deleteListing(Long listingId, Long ownerId) {
+    public void deleteListing(Long listingId, User editor) {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        if (!IsOwnedByPredicate.INSTANCE.test(existing.getOwner(), userWithId(ownerId)))
-            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can delete this listing.");
-
+        existing.delete(editor);
         listingRepository.deleteById(listingId);
     }
 
     @Override
-    public Listing activateListing(Long listingId, Long ownerId) {
+    public Listing activateListing(Long listingId, User editor) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        if (!IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), userWithId(ownerId)))
-            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can activate this listing.");
-
-        listing.activate();
+        listing.activate(editor);
         return listingRepository.save(listing);
-    }
-
-    private User userWithId(Long id) {
-        User user = new User();
-        user.setId(id);
-        return user;
     }
 
     @Override
@@ -98,10 +79,9 @@ public class ListingService implements ListingFacade {
             return List.of();
         }
 
-        List<Listing> shuffledListings = new ArrayList<>(activeListings);
-        Collections.shuffle(shuffledListings);
+        List<Listing> shuffled = new ArrayList<>(activeListings);
+        Collections.shuffle(shuffled);
 
-        int resultSize = Math.min(FEATURED_LISTINGS_LIMIT, shuffledListings.size());
-        return List.copyOf(shuffledListings.subList(0, resultSize));
+        return List.copyOf(shuffled.subList(0, Math.min(FEATURED_LISTINGS_LIMIT, shuffled.size())));
     }
 }

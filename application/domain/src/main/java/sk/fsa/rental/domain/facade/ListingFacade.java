@@ -1,18 +1,19 @@
 package sk.fsa.rental.domain.facade;
 
 import sk.fsa.rental.domain.Listing;
+import sk.fsa.rental.domain.User;
 
 import java.util.List;
 
 public interface ListingFacade {
 
-    Listing createListing(Listing listing, String ownerEmail);
+    Listing createListing(Listing listing, User owner);
 
-    Listing updateListing(Long listingId, Listing updatedListing, Long ownerId);
+    Listing updateListing(Long listingId, Listing updatedListing, User editor);
 
-    void deleteListing(Long listingId, Long ownerId);
+    void deleteListing(Long listingId, User editor);
 
-    Listing activateListing(Long listingId, Long ownerId);
+    Listing activateListing(Long listingId, User editor);
 
     Listing getListingById(Long id);
 

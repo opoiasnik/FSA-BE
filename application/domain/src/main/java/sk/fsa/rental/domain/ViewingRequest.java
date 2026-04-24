@@ -19,21 +19,27 @@ public class ViewingRequest {
     }
 
     public void approve() {
-        if (!IsViewingPendingPredicate.INSTANCE.test(status))
-            throw new RentalException(RentalException.Type.VALIDATION, "Only PENDING requests can be approved.");
+        require(IsViewingPendingPredicate.INSTANCE.test(status),
+                "Only PENDING requests can be approved.");
         this.status = ViewingStatus.APPROVED;
     }
 
     public void reject() {
-        if (!IsViewingPendingPredicate.INSTANCE.test(status))
-            throw new RentalException(RentalException.Type.VALIDATION, "Only PENDING requests can be rejected.");
+        require(IsViewingPendingPredicate.INSTANCE.test(status),
+                "Only PENDING requests can be rejected.");
         this.status = ViewingStatus.REJECTED;
     }
 
     public void cancel() {
-        if (!IsViewingCancellablePredicate.INSTANCE.test(status))
-            throw new RentalException(RentalException.Type.VALIDATION, "Only PENDING or APPROVED requests can be cancelled.");
+        require(IsViewingCancellablePredicate.INSTANCE.test(status),
+                "Only PENDING or APPROVED requests can be cancelled.");
         this.status = ViewingStatus.CANCELLED;
+    }
+
+    private void require(boolean valid, String message) {
+        if (!valid) {
+            throw new RentalException(RentalException.Type.VALIDATION, message);
+        }
     }
 
     public Long getId() { return id; }
