@@ -151,7 +151,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListingResponse'
+                  $ref: '#/components/schemas/ListingSummary'
         '500':
           description: Internal Server Error
           content:
@@ -232,6 +232,22 @@ components:
           $ref: '#/components/schemas/PriceRequest'
         features:
           $ref: '#/components/schemas/PropertyFeaturesRequest'
+
+    ListingSummary:
+      type: object
+      required: [ id, title, listingType, city, price ]
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        listingType:
+          $ref: '#/components/schemas/ListingType'
+        city:
+          type: string
+        price:
+          $ref: '#/components/schemas/PriceResponse'
 
     ListingResponse:
       type: object

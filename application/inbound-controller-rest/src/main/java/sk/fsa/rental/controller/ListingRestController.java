@@ -16,6 +16,7 @@ import sk.fsa.rental.rest.api.ListingApi;
 import sk.fsa.rental.rest.dto.CreateListingRequestDto;
 import sk.fsa.rental.rest.dto.ListingResponseDto;
 import sk.fsa.rental.rest.dto.ListingSearchResponseDto;
+import sk.fsa.rental.rest.dto.ListingSummaryDto;
 import sk.fsa.rental.rest.dto.ListingTypeDto;
 import sk.fsa.rental.rest.dto.PaginationResponseDto;
 import sk.fsa.rental.rest.dto.PropertyTypeDto;
@@ -78,14 +79,14 @@ public class ListingRestController implements ListingApi {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<List<ListingResponseDto>> getFeaturedListings(
+    public ResponseEntity<List<ListingSummaryDto>> getFeaturedListings(
             String city, ListingTypeDto listingType, PropertyTypeDto propertyType) {
-        List<ListingResponseDto> response = listingFacade.getFeaturedListings(
+        List<ListingSummaryDto> response = listingFacade.getFeaturedListings(
                         city,
                         listingType != null ? ListingType.valueOf(listingType.name()) : null,
                         propertyType != null ? PropertyType.valueOf(propertyType.name()) : null)
                 .stream()
-                .map(listingMapper::toDto)
+                .map(listingMapper::toSummary)
                 .toList();
         return ResponseEntity.ok(response);
     }

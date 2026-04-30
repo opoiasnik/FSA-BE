@@ -11,7 +11,6 @@ import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.ListingType;
 import sk.fsa.rental.domain.PropertyType;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 interface ListingSpringDataRepository extends JpaRepository<Listing, Long> {
@@ -23,7 +22,7 @@ interface ListingSpringDataRepository extends JpaRepository<Listing, Long> {
     boolean existsByOwnerIdAndAddress(Long ownerId, Address address);
 
     @Query("SELECT l FROM Listing l WHERE l.status = sk.fsa.rental.domain.ListingStatus.ACTIVE " +
-           "AND (:city IS NULL OR LOWER(l.address.city) LIKE LOWER(CONCAT('%', :city, '%'))) " +
+           "AND (cast(:city as string) IS NULL OR LOWER(l.address.city) LIKE LOWER(CONCAT('%', cast(:city as string), '%'))) " +
            "AND (:listingType IS NULL OR l.listingType = :listingType) " +
            "AND (:propertyType IS NULL OR l.features.propertyType = :propertyType)")
     Page<Listing> search(@Param("city") String city,
