@@ -3,6 +3,8 @@ package sk.fsa.rental.domain.facade;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
+import sk.fsa.rental.domain.ListingType;
+import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.User;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public interface ListingFacade {
 
     Listing getListingById(Long id);
 
-    List<Listing> getFeaturedListings();
+    List<Listing> getFeaturedListings(String city, ListingType listingType, PropertyType propertyType);
 
     ListingSearchResult searchListings(ListingSearchFilters filters);
 }

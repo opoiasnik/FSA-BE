@@ -4,20 +4,19 @@ import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
-import sk.fsa.rental.domain.ListingStatus;
+import sk.fsa.rental.domain.ListingType;
+import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.domain.repository.ListingRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
 public class ListingService implements ListingFacade {
 
-    private static final int FEATURED_LISTINGS_LIMIT = 4;
+    private static final int FEATURED_LISTINGS_LIMIT = 24;
 
     private final ListingRepository listingRepository;
     private final ListingFactory listingFactory;
@@ -81,15 +80,9 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
-    public List<Listing> getFeaturedListings() {
-        List<Listing> activeListings = listingRepository.findByStatus(ListingStatus.ACTIVE);
-        if (activeListings.isEmpty()) {
-            return List.of();
-        }
-
-        List<Listing> shuffled = new ArrayList<>(activeListings);
-        Collections.shuffle(shuffled);
-
-        return List.copyOf(shuffled.subList(0, Math.min(FEATURED_LISTINGS_LIMIT, shuffled.size())));
+    public List<Listing> getFeaturedListings(String city, ListingType listingType, PropertyType propertyType) {
+        ListingSearchFilters filters = new ListingSearchFilters(
+                city, listingType, propertyType, 0, FEATURED_LISTINGS_LIMIT);
+        return listingRepository.search(filters).content();
     }
 }

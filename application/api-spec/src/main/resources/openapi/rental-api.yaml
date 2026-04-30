@@ -15,7 +15,6 @@ paths:
       operationId: searchListings
       tags:
         - Listing
-      security: []
       parameters:
         - name: city
           in: query
@@ -66,6 +65,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListingSearchResponse'
+        '401':
+          description: Unauthorized - Missing or invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal Server Error
           content:
@@ -117,14 +122,30 @@ paths:
 
   /api/listings/featured:
     get:
-      summary: Get up to 4 random featured listings
+      summary: Get featured listings, optionally filtered (public endpoint for home page)
       operationId: getFeaturedListings
       tags:
         - Listing
       security: []
+      parameters:
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: listingType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListingType'
+        - name: propertyType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PropertyType'
       responses:
         '200':
-          description: Featured listings found (up to 4 items, can be empty)
+          description: Featured listings (limited list, can be empty)
           content:
             application/json:
               schema:
@@ -144,7 +165,6 @@ paths:
       operationId: getListingById
       tags:
         - Listing
-      security: []
       parameters:
         - name: id
           in: path
@@ -159,6 +179,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListingResponse'
+        '401':
+          description: Unauthorized - Missing or invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Listing not found
           content:

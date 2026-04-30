@@ -78,8 +78,13 @@ public class ListingRestController implements ListingApi {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<List<ListingResponseDto>> getFeaturedListings() {
-        List<ListingResponseDto> response = listingFacade.getFeaturedListings().stream()
+    public ResponseEntity<List<ListingResponseDto>> getFeaturedListings(
+            String city, ListingTypeDto listingType, PropertyTypeDto propertyType) {
+        List<ListingResponseDto> response = listingFacade.getFeaturedListings(
+                        city,
+                        listingType != null ? ListingType.valueOf(listingType.name()) : null,
+                        propertyType != null ? PropertyType.valueOf(propertyType.name()) : null)
+                .stream()
                 .map(listingMapper::toDto)
                 .toList();
         return ResponseEntity.ok(response);
