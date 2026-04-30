@@ -2,6 +2,8 @@ package sk.fsa.rental.domain.repository;
 
 import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Listing;
+import sk.fsa.rental.domain.ListingSearchFilters;
+import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingStatus;
 
 import java.util.List;
@@ -14,4 +16,5 @@ public interface ListingRepository {
     List<Listing> findByOwnerId(Long ownerId);
     void deleteById(Long id);
     boolean existsByOwnerIdAndAddress(Long ownerId, Address address);
+    ListingSearchResult search(ListingSearchFilters filters);
 }

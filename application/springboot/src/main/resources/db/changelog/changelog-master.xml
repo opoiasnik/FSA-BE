@@ -8,5 +8,8 @@
     <include file="db/changelog/01-create-tables.xml"/>
     <include file="db/changelog/02-insert-test-data.xml"/>
     <include file="db/changelog/03-add-phone-number.xml"/>
+    <include file="db/changelog/04-add-address-features-fields.xml"/>
+    <include file="db/changelog/05-create-missing-tables.xml"/>
+    <include file="db/changelog/06-fix-address-coordinates-type.xml"/>
 
 </databaseChangeLog>

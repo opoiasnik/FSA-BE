@@ -10,6 +10,68 @@ security:
 
 paths:
   /api/listings:
+    get:
+      summary: Search active listings with optional filters
+      operationId: searchListings
+      tags:
+        - Listing
+      security: []
+      parameters:
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: listingType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListingType'
+        - name: priceMin
+          in: query
+          required: false
+          schema:
+            type: number
+            format: double
+        - name: priceMax
+          in: query
+          required: false
+          schema:
+            type: number
+            format: double
+        - name: propertyType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PropertyType'
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Listings matching the filters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingSearchResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       summary: Create a new property listing
       operationId: createListing
@@ -197,6 +259,20 @@ components:
         country:
           type: string
           example: "Slovakia"
+        district:
+          type: string
+          example: "Old Town"
+        region:
+          type: string
+          example: "Bratislava Region"
+        lat:
+          type: number
+          format: double
+          example: 48.1486
+        lng:
+          type: number
+          format: double
+          example: 17.1077
 
     AddressResponse:
       type: object
@@ -213,6 +289,20 @@ components:
         country:
           type: string
           example: "Slovakia"
+        district:
+          type: string
+          example: "Old Town"
+        region:
+          type: string
+          example: "Bratislava Region"
+        lat:
+          type: number
+          format: double
+          example: 48.1486
+        lng:
+          type: number
+          format: double
+          example: 17.1077
 
     PriceRequest:
       type: object
@@ -263,6 +353,21 @@ components:
         parkingAvailable:
           type: boolean
           example: false
+        balcony:
+          type: boolean
+          example: true
+        elevator:
+          type: boolean
+          example: false
+        petsAllowed:
+          type: boolean
+          example: true
+        energyClass:
+          type: string
+          example: "A"
+        yearBuilt:
+          type: integer
+          example: 2015
 
     PropertyFeaturesResponse:
       type: object
@@ -285,6 +390,21 @@ components:
         parkingAvailable:
           type: boolean
           example: false
+        balcony:
+          type: boolean
+          example: true
+        elevator:
+          type: boolean
+          example: false
+        petsAllowed:
+          type: boolean
+          example: true
+        energyClass:
+          type: string
+          example: "A"
+        yearBuilt:
+          type: integer
+          example: 2015
 
     ListingType:
       type: string
@@ -330,6 +450,33 @@ components:
         - OWNER
         - USER
       example: OWNER
+
+    ListingSearchResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListingResponse'
+        pagination:
+          $ref: '#/components/schemas/PaginationResponse'
+
+    PaginationResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 0
+        size:
+          type: integer
+          example: 10
+        totalElements:
+          type: integer
+          format: int64
+          example: 42
+        totalPages:
+          type: integer
+          example: 5
 
     ErrorResponse:
       type: object

@@ -2,6 +2,8 @@ package sk.fsa.rental.domain.service;
 
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingFactory;
+import sk.fsa.rental.domain.ListingSearchFilters;
+import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
@@ -11,6 +13,7 @@ import sk.fsa.rental.domain.repository.ListingRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 public class ListingService implements ListingFacade {
 
@@ -70,6 +73,11 @@ public class ListingService implements ListingFacade {
     public Listing getListingById(Long id) {
         return listingRepository.findById(id)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
+    }
+
+    @Override
+    public ListingSearchResult searchListings(ListingSearchFilters filters) {
+        return listingRepository.search(filters);
     }
 
     @Override

@@ -7,6 +7,11 @@ public class PropertyFeatures {
     private Integer floor;
     private Boolean furnished;
     private Boolean parkingAvailable;
+    private Boolean balcony;
+    private Boolean elevator;
+    private Boolean petsAllowed;
+    private String energyClass;
+    private Integer yearBuilt;
 
     public PropertyFeatures() {
     }
@@ -74,4 +79,19 @@ public class PropertyFeatures {
     public void setParkingAvailable(Boolean parkingAvailable) {
         this.parkingAvailable = parkingAvailable;
     }
+
+    public Boolean getBalcony() { return balcony; }
+    public void setBalcony(Boolean balcony) { this.balcony = balcony; }
+
+    public Boolean getElevator() { return elevator; }
+    public void setElevator(Boolean elevator) { this.elevator = elevator; }
+
+    public Boolean getPetsAllowed() { return petsAllowed; }
+    public void setPetsAllowed(Boolean petsAllowed) { this.petsAllowed = petsAllowed; }
+
+    public String getEnergyClass() { return energyClass; }
+    public void setEnergyClass(String energyClass) { this.energyClass = energyClass; }
+
+    public Integer getYearBuilt() { return yearBuilt; }
+    public void setYearBuilt(Integer yearBuilt) { this.yearBuilt = yearBuilt; }
 }

@@ -29,7 +29,7 @@ public class Listing {
 
     public Listing() {
         this.photos = new ArrayList<>();
-        this.status = ListingStatus.INACTIVE;
+        this.status = ListingStatus.ACTIVE;
         this.createdAt = new Date();
     }
 

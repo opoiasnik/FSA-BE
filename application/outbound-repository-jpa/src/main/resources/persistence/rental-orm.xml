@@ -84,6 +84,18 @@
                 <attribute-override name="country">
                     <column name="address_country" nullable="false"/>
                 </attribute-override>
+                <attribute-override name="district">
+                    <column name="address_district"/>
+                </attribute-override>
+                <attribute-override name="region">
+                    <column name="address_region"/>
+                </attribute-override>
+                <attribute-override name="lat">
+                    <column name="address_lat"/>
+                </attribute-override>
+                <attribute-override name="lng">
+                    <column name="address_lng"/>
+                </attribute-override>
             </embedded>
             <embedded name="price">
                 <attribute-override name="amount">
@@ -111,6 +123,21 @@
                 </attribute-override>
                 <attribute-override name="parkingAvailable">
                     <column name="features_parking_available"/>
+                </attribute-override>
+                <attribute-override name="balcony">
+                    <column name="features_balcony"/>
+                </attribute-override>
+                <attribute-override name="elevator">
+                    <column name="features_elevator"/>
+                </attribute-override>
+                <attribute-override name="petsAllowed">
+                    <column name="features_pets_allowed"/>
+                </attribute-override>
+                <attribute-override name="energyClass">
+                    <column name="features_energy_class"/>
+                </attribute-override>
+                <attribute-override name="yearBuilt">
+                    <column name="features_year_built"/>
                 </attribute-override>
             </embedded>
         </attributes>
@@ -164,6 +191,10 @@
             <basic name="city"/>
             <basic name="postalCode"/>
             <basic name="country"/>
+            <basic name="district"/>
+            <basic name="region"/>
+            <basic name="lat"/>
+            <basic name="lng"/>
         </attributes>
     </embeddable>
 
@@ -186,6 +217,11 @@
             <basic name="floor"/>
             <basic name="furnished"/>
             <basic name="parkingAvailable"/>
+            <basic name="balcony"/>
+            <basic name="elevator"/>
+            <basic name="petsAllowed"/>
+            <basic name="energyClass"/>
+            <basic name="yearBuilt"/>
         </attributes>
     </embeddable>
 

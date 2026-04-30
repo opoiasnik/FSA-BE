@@ -1,8 +1,13 @@
 package sk.fsa.rental.jpa;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Listing;
+import sk.fsa.rental.domain.ListingSearchFilters;
+import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.repository.ListingRepository;
 
@@ -46,5 +51,17 @@ public class JpaListingRepositoryAdapter implements ListingRepository {
     @Override
     public boolean existsByOwnerIdAndAddress(Long ownerId, Address address) {
         return listingSpringDataRepository.existsByOwnerIdAndAddress(ownerId, address);
+    }
+
+    @Override
+    public ListingSearchResult search(ListingSearchFilters filters) {
+        int effectivePage = Math.max(filters.page(), 0);
+        int effectiveSize = filters.size() < 1 ? 10 : Math.min(filters.size(), 100);
+        Pageable pageable = PageRequest.of(effectivePage, effectiveSize);
+
+        Page<Listing> page = listingSpringDataRepository.search(
+                filters.city(), filters.listingType(), filters.propertyType(), pageable);
+
+        return new ListingSearchResult(page.getContent(), effectivePage, effectiveSize, page.getTotalElements());
     }
 }

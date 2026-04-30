@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="6-fix-address-lat-lng-type" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="listing"/>
+                <columnExists tableName="listing" columnName="address_lat"/>
+                <columnExists tableName="listing" columnName="address_lng"/>
+            </and>
+        </preConditions>
+
+        <modifyDataType tableName="listing" columnName="address_lat" newDataType="DOUBLE PRECISION"/>
+        <modifyDataType tableName="listing" columnName="address_lng" newDataType="DOUBLE PRECISION"/>
+    </changeSet>
+
+</databaseChangeLog>
