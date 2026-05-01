@@ -21,19 +21,19 @@ public class Address {
     }
 
     public void validate() {
-        require(street != null && !street.trim().isEmpty(),
-                "Street is required.");
-        require(city != null && !city.trim().isEmpty(),
-                "City is required.");
-        require(postalCode != null && !postalCode.trim().isEmpty(),
-                "Postal code is required.");
-        require(country != null && !country.trim().isEmpty(),
-                "Country is required.");
+        requireField(street != null && !street.trim().isEmpty(),
+                "address.street", "Street is required.");
+        requireField(city != null && !city.trim().isEmpty(),
+                "address.city", "City is required.");
+        requireField(postalCode != null && !postalCode.trim().isEmpty(),
+                "address.postalCode", "Postal code is required.");
+        requireField(country != null && !country.trim().isEmpty(),
+                "address.country", "Country is required.");
     }
 
-    private void require(boolean condition, String message) {
+    private void requireField(boolean condition, String field, String message) {
         if (!condition) {
-            throw new RentalException(RentalException.Type.VALIDATION, message);
+            throw new RentalException(RentalException.Type.VALIDATION, message, field);
         }
     }
 

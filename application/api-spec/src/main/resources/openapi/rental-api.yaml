@@ -561,6 +561,10 @@ components:
           type: string
           description: Error message
           example: "Listing title is required."
+        field:
+          type: string
+          description: Field name for validation errors (optional)
+          example: "title"
         timestamp:
           type: string
           format: date-time

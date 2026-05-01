@@ -34,24 +34,21 @@ public class Listing {
     }
 
     public void validateForCreation() {
-        require(HasRequiredTitlePredicate.INSTANCE.test(title),
-                RentalException.Type.VALIDATION, "Listing title is required.");
-        require(HasRequiredDescriptionPredicate.INSTANCE.test(description),
-                RentalException.Type.VALIDATION, "Listing description is required.");
-        require(HasRequiredListingTypePredicate.INSTANCE.test(listingType),
-                RentalException.Type.VALIDATION, "Listing type (RENT/SALE) is required.");
+        requireField(HasRequiredTitlePredicate.INSTANCE.test(title),
+                "title", "Listing title is required.");
+        requireField(HasRequiredDescriptionPredicate.INSTANCE.test(description),
+                "description", "Listing description is required.");
+        requireField(HasRequiredListingTypePredicate.INSTANCE.test(listingType),
+                "listingType", "Listing type (RENT/SALE) is required.");
         require(HasRequiredOwnerPredicate.INSTANCE.test(this),
                 RentalException.Type.VALIDATION, "Listing must have an owner.");
         require(IsOwnerRolePredicate.INSTANCE.test(owner),
                 RentalException.Type.FORBIDDEN, "Only users with OWNER role can create listings.");
-        require(address != null,
-                RentalException.Type.VALIDATION, "Address is required.");
+        requireField(address != null, "address", "Address is required.");
         address.validate();
-        require(price != null,
-                RentalException.Type.VALIDATION, "Price is required.");
+        requireField(price != null, "price", "Price is required.");
         price.validate();
-        require(features != null,
-                RentalException.Type.VALIDATION, "Property features (including property type) are required.");
+        requireField(features != null, "features", "Property features (including property type) are required.");
         features.validate();
     }
 
@@ -110,6 +107,12 @@ public class Listing {
     private void require(boolean valid, RentalException.Type type, String message) {
         if (!valid) {
             throw new RentalException(type, message);
+        }
+    }
+
+    private void requireField(boolean valid, String field, String message) {
+        if (!valid) {
+            throw new RentalException(RentalException.Type.VALIDATION, message, field);
         }
     }
 

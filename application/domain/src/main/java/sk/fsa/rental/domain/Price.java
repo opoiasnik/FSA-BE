@@ -15,17 +15,17 @@ public class Price {
     }
 
     public void validate() {
-        require(amount != null,
-                "Price amount is required.");
-        require(amount.compareTo(BigDecimal.ZERO) > 0,
-                "Price amount must be positive.");
-        require(currency != null && !currency.trim().isEmpty(),
-                "Currency is required.");
+        requireField(amount != null,
+                "price.amount", "Price amount is required.");
+        requireField(amount.compareTo(BigDecimal.ZERO) > 0,
+                "price.amount", "Price amount must be positive.");
+        requireField(currency != null && !currency.trim().isEmpty(),
+                "price.currency", "Currency is required.");
     }
 
-    private void require(boolean condition, String message) {
+    private void requireField(boolean condition, String field, String message) {
         if (!condition) {
-            throw new RentalException(RentalException.Type.VALIDATION, message);
+            throw new RentalException(RentalException.Type.VALIDATION, message, field);
         }
     }
 

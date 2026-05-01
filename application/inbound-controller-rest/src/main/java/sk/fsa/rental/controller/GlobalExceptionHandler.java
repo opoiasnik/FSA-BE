@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleRentalException(RentalException ex, WebRequest request) {
         LoggerFactory.getLogger(GlobalExceptionHandler.class).warn("Domain error: {}", ex.getMessage());
         return new ResponseEntity<>(
-                createError(ex.getType().name(), ex.getMessage()),
+                createError(ex.getType().name(), ex.getMessage(), ex.getField()),
                 resolveStatus(ex));
     }
 
@@ -48,9 +48,14 @@ public class GlobalExceptionHandler {
     }
 
     private ErrorResponseDto createError(String type, String message) {
+        return createError(type, message, null);
+    }
+
+    private ErrorResponseDto createError(String type, String message, String field) {
         return new ErrorResponseDto()
                 .type(type)
                 .message(message)
+                .field(field)
                 .timestamp(OffsetDateTime.now());
     }
 
