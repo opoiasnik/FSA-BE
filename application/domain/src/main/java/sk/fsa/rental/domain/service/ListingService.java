@@ -85,4 +85,9 @@ public class ListingService implements ListingFacade {
                 city, listingType, propertyType, 0, FEATURED_LISTINGS_LIMIT);
         return listingRepository.search(filters).content();
     }
+
+    @Override
+    public List<Listing> getListingsByOwner(Long ownerId) {
+        return listingRepository.findByOwnerId(ownerId);
+    }
 }

@@ -28,10 +28,13 @@ public interface ListingMapper {
     Listing toDomain(CreateListingRequestDto dto);
 
     @Mapping(source = "owner.id", target = "ownerId")
+    @Mapping(source = "owner", target = "owner")
     ListingResponseDto toDto(Listing listing);
 
     @Mapping(source = "address.city", target = "city")
     ListingSummaryDto toSummary(Listing listing);
+
+    UserDto toDto(sk.fsa.rental.domain.User user);
 
     AddressResponseDto toDto(sk.fsa.rental.domain.Address address);
 

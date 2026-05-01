@@ -159,6 +159,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/listings/my:
+    get:
+      summary: List listings owned by the current authenticated user
+      operationId: getMyListings
+      tags:
+        - Listing
+      responses:
+        '200':
+          description: Listings owned by current user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListingResponse'
+        '401':
+          description: Unauthorized - Missing or invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/listings/{id}:
     get:
       summary: Get listing by ID
@@ -280,6 +308,8 @@ components:
           type: integer
           format: int64
           example: 123
+        owner:
+          $ref: '#/components/schemas/User'
 
     AddressRequest:
       type: object

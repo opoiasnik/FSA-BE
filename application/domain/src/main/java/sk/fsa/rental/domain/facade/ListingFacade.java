@@ -23,5 +23,7 @@ public interface ListingFacade {
 
     List<Listing> getFeaturedListings(String city, ListingType listingType, PropertyType propertyType);
 
+    List<Listing> getListingsByOwner(Long ownerId);
+
     ListingSearchResult searchListings(ListingSearchFilters filters);
 }
