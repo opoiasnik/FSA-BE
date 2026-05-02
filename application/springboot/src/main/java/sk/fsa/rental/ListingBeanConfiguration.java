@@ -7,6 +7,7 @@ import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.domain.facade.UserFacade;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.UserRepository;
+import sk.fsa.rental.domain.service.GeocodingService;
 import sk.fsa.rental.domain.service.ListingService;
 import sk.fsa.rental.domain.service.UserService;
 
@@ -19,8 +20,8 @@ public class ListingBeanConfiguration {
     }
 
     @Bean
-    public ListingFactory listingFactory(ListingRepository listingRepository) {
-        return new ListingFactory(listingRepository);
+    public ListingFactory listingFactory(ListingRepository listingRepository, GeocodingService geocodingService) {
+        return new ListingFactory(listingRepository, geocodingService);
     }
 
     @Bean
