@@ -1,5 +1,8 @@
 package sk.fsa.rental.domain;
 
+import sk.fsa.rental.domain.predicate.listing.IsListingActivePredicate;
+import sk.fsa.rental.domain.predicate.viewingrequest.HasRequiredFieldsPredicate;
+import sk.fsa.rental.domain.predicate.viewingrequest.IsNotOwnListingPredicate;
 import sk.fsa.rental.domain.predicate.viewingrequest.IsViewingCancellablePredicate;
 import sk.fsa.rental.domain.predicate.viewingrequest.IsViewingPendingPredicate;
 
@@ -18,27 +21,53 @@ public class ViewingRequest {
         this.status = ViewingStatus.PENDING;
     }
 
-    public void approve() {
+    public void validateForCreation() {
+        require(HasRequiredFieldsPredicate.INSTANCE.test(this),
+                RentalException.Type.VALIDATION,
+                "ViewingRequest must have requester, owner, listing and requested date.");
+        require(IsListingActivePredicate.INSTANCE.test(listing),
+                RentalException.Type.VALIDATION,
+                "Cannot request a viewing for an inactive listing.");
+        require(IsNotOwnListingPredicate.INSTANCE.test(this),
+                RentalException.Type.VALIDATION,
+                "Cannot request a viewing on your own listing.");
+    }
+
+    public void approve(User editor) {
+        require(isOwner(editor),
+                RentalException.Type.FORBIDDEN, "Only the owner can approve this viewing.");
         require(IsViewingPendingPredicate.INSTANCE.test(status),
-                "Only PENDING requests can be approved.");
+                RentalException.Type.VALIDATION, "Only PENDING requests can be approved.");
         this.status = ViewingStatus.APPROVED;
     }
 
-    public void reject() {
+    public void reject(User editor) {
+        require(isOwner(editor),
+                RentalException.Type.FORBIDDEN, "Only the owner can reject this viewing.");
         require(IsViewingPendingPredicate.INSTANCE.test(status),
-                "Only PENDING requests can be rejected.");
+                RentalException.Type.VALIDATION, "Only PENDING requests can be rejected.");
         this.status = ViewingStatus.REJECTED;
     }
 
-    public void cancel() {
+    public void cancel(User editor) {
+        require(isRequester(editor),
+                RentalException.Type.FORBIDDEN, "Only the requester can cancel this viewing.");
         require(IsViewingCancellablePredicate.INSTANCE.test(status),
-                "Only PENDING or APPROVED requests can be cancelled.");
+                RentalException.Type.VALIDATION, "Only PENDING or APPROVED requests can be cancelled.");
         this.status = ViewingStatus.CANCELLED;
     }
 
-    private void require(boolean valid, String message) {
+    private boolean isOwner(User user) {
+        return user != null && owner != null && user.getId() != null && user.getId().equals(owner.getId());
+    }
+
+    private boolean isRequester(User user) {
+        return user != null && requester != null && user.getId() != null && user.getId().equals(requester.getId());
+    }
+
+    private void require(boolean valid, RentalException.Type type, String message) {
         if (!valid) {
-            throw new RentalException(RentalException.Type.VALIDATION, message);
+            throw new RentalException(type, message);
         }
     }
 

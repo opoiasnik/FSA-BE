@@ -7,13 +7,16 @@ import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.facade.FavoriteFacade;
 import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.domain.facade.UserFacade;
+import sk.fsa.rental.domain.facade.ViewingRequestFacade;
 import sk.fsa.rental.domain.repository.FavoriteRepository;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.UserRepository;
+import sk.fsa.rental.domain.repository.ViewingRequestRepository;
 import sk.fsa.rental.domain.service.FavoriteService;
 import sk.fsa.rental.domain.service.GeocodingService;
 import sk.fsa.rental.domain.service.ListingService;
 import sk.fsa.rental.domain.service.UserService;
+import sk.fsa.rental.domain.service.ViewingRequestService;
 
 @Configuration
 public class ListingBeanConfiguration {
@@ -43,5 +46,11 @@ public class ListingBeanConfiguration {
                                          ListingRepository listingRepository,
                                          FavoriteFactory favoriteFactory) {
         return new FavoriteService(favoriteRepository, listingRepository, favoriteFactory);
+    }
+
+    @Bean
+    public ViewingRequestFacade viewingRequestFacade(ViewingRequestRepository viewingRequestRepository,
+                                                      ListingRepository listingRepository) {
+        return new ViewingRequestService(viewingRequestRepository, listingRepository);
     }
 }

@@ -184,6 +184,37 @@
         </attributes>
     </entity>
 
+    <!-- ViewingRequest Entity -->
+    <entity class="sk.fsa.rental.domain.ViewingRequest" access="FIELD">
+        <table name="viewing_request"/>
+        <attributes>
+            <id name="id">
+                <column name="viewing_request_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="requestedDate">
+                <column name="requested_date" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+            <basic name="status">
+                <column name="status" nullable="false"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="note">
+                <column name="note"/>
+            </basic>
+            <many-to-one name="requester" target-entity="sk.fsa.rental.domain.User">
+                <join-column name="requester_id" nullable="false"/>
+            </many-to-one>
+            <many-to-one name="owner" target-entity="sk.fsa.rental.domain.User">
+                <join-column name="owner_id" nullable="false"/>
+            </many-to-one>
+            <many-to-one name="listing" target-entity="sk.fsa.rental.domain.Listing">
+                <join-column name="listing_id" nullable="false"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
     <!-- Address Embeddable -->
     <embeddable class="sk.fsa.rental.domain.Address" access="FIELD">
         <attributes>

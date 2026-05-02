@@ -159,6 +159,205 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/viewings:
+    post:
+      summary: Create a viewing request for a listing
+      operationId: createViewingRequest
+      tags:
+        - ViewingRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateViewingRequest'
+      responses:
+        '201':
+          description: Viewing request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewingRequestResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Listing not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/viewings/my:
+    get:
+      summary: List viewing requests created by the current user
+      operationId: getMyViewingRequests
+      tags:
+        - ViewingRequest
+      responses:
+        '200':
+          description: List of viewing requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViewingRequestResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/viewings/owner:
+    get:
+      summary: List viewing requests for listings owned by the current user
+      operationId: getOwnerViewingRequests
+      tags:
+        - ViewingRequest
+      responses:
+        '200':
+          description: List of viewing requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViewingRequestResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/viewings/{id}/approve:
+    patch:
+      summary: Approve a viewing request (owner only)
+      operationId: approveViewingRequest
+      tags:
+        - ViewingRequest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewingRequestResponse'
+        '400':
+          description: Invalid state transition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/viewings/{id}/reject:
+    patch:
+      summary: Reject a viewing request (owner only)
+      operationId: rejectViewingRequest
+      tags:
+        - ViewingRequest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewingRequestResponse'
+        '400':
+          description: Invalid state transition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/viewings/{id}/cancel:
+    patch:
+      summary: Cancel a viewing request (requester only)
+      operationId: cancelViewingRequest
+      tags:
+        - ViewingRequest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewingRequestResponse'
+        '400':
+          description: Invalid state transition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/listings/my:
     get:
       summary: List listings owned by the current authenticated user
@@ -349,6 +548,48 @@ components:
           $ref: '#/components/schemas/PriceRequest'
         features:
           $ref: '#/components/schemas/PropertyFeaturesRequest'
+
+    CreateViewingRequest:
+      type: object
+      required: [ listingId, requestedDate ]
+      properties:
+        listingId:
+          type: integer
+          format: int64
+        requestedDate:
+          type: string
+          format: date-time
+        note:
+          type: string
+
+    ViewingRequestResponse:
+      type: object
+      required: [ id, listing, status, requestedDate ]
+      properties:
+        id:
+          type: integer
+          format: int64
+        listing:
+          $ref: '#/components/schemas/ListingSummary'
+        requester:
+          $ref: '#/components/schemas/User'
+        owner:
+          $ref: '#/components/schemas/User'
+        status:
+          $ref: '#/components/schemas/ViewingStatus'
+        requestedDate:
+          type: string
+          format: date-time
+        note:
+          type: string
+
+    ViewingStatus:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+        - CANCELLED
 
     FavoriteResponse:
       type: object
