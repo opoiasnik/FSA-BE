@@ -187,6 +187,95 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/favorites:
+    get:
+      summary: List favorites of the current authenticated user
+      operationId: getMyFavorites
+      tags:
+        - Favorite
+      responses:
+        '200':
+          description: User's favorites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavoriteResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/favorites/{listingId}:
+    post:
+      summary: Add listing to favorites
+      operationId: addFavorite
+      tags:
+        - Favorite
+      parameters:
+        - name: listingId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Favorite created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteResponse'
+        '400':
+          description: Already in favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Listing not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Remove listing from favorites
+      operationId: removeFavorite
+      tags:
+        - Favorite
+      parameters:
+        - name: listingId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Favorite removed
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Favorite not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/listings/{id}:
     get:
       summary: Get listing by ID
@@ -260,6 +349,19 @@ components:
           $ref: '#/components/schemas/PriceRequest'
         features:
           $ref: '#/components/schemas/PropertyFeaturesRequest'
+
+    FavoriteResponse:
+      type: object
+      required: [ id, listing, createdAt ]
+      properties:
+        id:
+          type: integer
+          format: int64
+        listing:
+          $ref: '#/components/schemas/ListingSummary'
+        createdAt:
+          type: string
+          format: date-time
 
     ListingSummary:
       type: object
