@@ -1,6 +1,6 @@
 package sk.fsa.rental.domain;
 
-public class Address { 
+public class Address {
     private String street;
     private String city;
     private String postalCode;

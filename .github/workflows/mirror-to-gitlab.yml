@@ -17,5 +17,6 @@ jobs:
         env:
           GITLAB_TOKEN: ${{ secrets.GPAT }}
         run: |
+          git fetch --unshallow
           git remote add gitlab https://oauth2:${GITLAB_TOKEN}@gitlab.fullstackacademy.sk/opoiasnik/FSA-BE.git
           git push --mirror gitlab
