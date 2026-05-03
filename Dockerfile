@@ -1,4 +1,4 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS builder
+FROM maven:3.9.11-eclipse-temurin-25 AS builder
 LABEL maintainer="Oleh Poiasnik" \
       version="1.0" \
       description="Property Rental Spring Boot backend"
@@ -21,7 +21,7 @@ RUN mkdir build \
  && java -Djarmode=layertools \
       -jar ../application/springboot/target/*.jar extract
 
-FROM eclipse-temurin:21.0.1_12-jdk-alpine
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /application
 
 COPY --from=builder /application/build/dependencies/           ./
