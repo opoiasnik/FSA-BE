@@ -16,8 +16,7 @@
     {
       "clientId": "rental-client",
       "enabled": true,
-      "publicClient": false,
-      "secret": "rental-client-secret",
+      "publicClient": true,
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
