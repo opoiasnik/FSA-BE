@@ -60,31 +60,28 @@ public class ListingRestController implements ListingApi {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ListingResponseDto> getListingById(Long id) {
-        Listing listing = listingFacade.getById(id);
-        return ResponseEntity.ok(listingMapper.toDto(listing));
+        return ResponseEntity.ok(listingMapper.toDto(listingFacade.getById(id)));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<List<ListingResponseDto>> getMyListings() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        List<ListingResponseDto> response = listingFacade.getByOwner(currentUser.getId()).stream()
+        return ResponseEntity.ok(listingFacade.getByOwner(currentUser.getId()).stream()
                 .map(listingMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(response);
+                .toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<List<ListingSummaryDto>> getFeaturedListings(
             String city, ListingTypeDto listingType, PropertyTypeDto propertyType) {
-        List<ListingSummaryDto> response = listingFacade.getFeatured(
+        return ResponseEntity.ok(listingFacade.getFeatured(
                         city,
                         listingType != null ? ListingType.valueOf(listingType.name()) : null,
                         propertyType != null ? PropertyType.valueOf(propertyType.name()) : null)
                 .stream()
                 .map(listingMapper::toSummary)
-                .toList();
-        return ResponseEntity.ok(response);
+                .toList());
     }
 }

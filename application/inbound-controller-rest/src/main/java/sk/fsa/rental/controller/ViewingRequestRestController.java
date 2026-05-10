@@ -43,43 +43,38 @@ public class ViewingRequestRestController implements ViewingRequestApi {
     @Transactional(readOnly = true)
     public ResponseEntity<List<ViewingRequestResponseDto>> getMyViewingRequests() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        List<ViewingRequestResponseDto> response = viewingRequestFacade.listByRequester(currentUser.getId()).stream()
+        return ResponseEntity.ok(viewingRequestFacade.listByRequester(currentUser.getId()).stream()
                 .map(viewingRequestMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(response);
+                .toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<List<ViewingRequestResponseDto>> getOwnerViewingRequests() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        List<ViewingRequestResponseDto> response = viewingRequestFacade.listByOwner(currentUser.getId()).stream()
+        return ResponseEntity.ok(viewingRequestFacade.listByOwner(currentUser.getId()).stream()
                 .map(viewingRequestMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(response);
+                .toList());
     }
 
     @Override
     @Transactional
     public ResponseEntity<ViewingRequestResponseDto> approveViewingRequest(Long id) {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        ViewingRequest updated = viewingRequestFacade.approve(id, currentUser);
-        return ResponseEntity.ok(viewingRequestMapper.toDto(updated));
+        return ResponseEntity.ok(viewingRequestMapper.toDto(viewingRequestFacade.approve(id, currentUser)));
     }
 
     @Override
     @Transactional
     public ResponseEntity<ViewingRequestResponseDto> rejectViewingRequest(Long id) {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        ViewingRequest updated = viewingRequestFacade.reject(id, currentUser);
-        return ResponseEntity.ok(viewingRequestMapper.toDto(updated));
+        return ResponseEntity.ok(viewingRequestMapper.toDto(viewingRequestFacade.reject(id, currentUser)));
     }
 
     @Override
     @Transactional
     public ResponseEntity<ViewingRequestResponseDto> cancelViewingRequest(Long id) {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        ViewingRequest updated = viewingRequestFacade.cancel(id, currentUser);
-        return ResponseEntity.ok(viewingRequestMapper.toDto(updated));
+        return ResponseEntity.ok(viewingRequestMapper.toDto(viewingRequestFacade.cancel(id, currentUser)));
     }
 }

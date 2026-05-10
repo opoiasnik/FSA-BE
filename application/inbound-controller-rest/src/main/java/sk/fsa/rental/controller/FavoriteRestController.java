@@ -33,10 +33,9 @@ public class FavoriteRestController implements FavoriteApi {
     @Transactional(readOnly = true)
     public ResponseEntity<List<FavoriteResponseDto>> getMyFavorites() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        List<FavoriteResponseDto> response = favoriteFacade.getByUser(currentUser.getId()).stream()
+        return ResponseEntity.ok(favoriteFacade.getByUser(currentUser.getId()).stream()
                 .map(favoriteMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(response);
+                .toList());
     }
 
     @Override
