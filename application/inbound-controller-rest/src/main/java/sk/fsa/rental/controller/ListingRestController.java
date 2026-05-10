@@ -6,11 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import sk.fsa.rental.controller.mapper.ListingMapper;
 import sk.fsa.rental.domain.Listing;
-import sk.fsa.rental.domain.ListingSearchFilters;
-import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
 import sk.fsa.rental.domain.PropertyType;
-import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.rest.api.ListingApi;
@@ -19,7 +16,6 @@ import sk.fsa.rental.rest.dto.ListingResponseDto;
 import sk.fsa.rental.rest.dto.ListingSearchResponseDto;
 import sk.fsa.rental.rest.dto.ListingSummaryDto;
 import sk.fsa.rental.rest.dto.ListingTypeDto;
-import sk.fsa.rental.rest.dto.PaginationResponseDto;
 import sk.fsa.rental.rest.dto.PropertyTypeDto;
 import sk.fsa.rental.security.CurrentUserDetailService;
 
@@ -55,33 +51,10 @@ public class ListingRestController implements ListingApi {
             PropertyTypeDto propertyType, Integer roomCount, Double areaMin, Double areaMax,
             Boolean furnished, Boolean parkingAvailable, Boolean balcony, Boolean petsAllowed,
             String energyClass, String sortBy, Integer page, Integer size) {
-        ListingSearchFilters filters = new ListingSearchFilters(
-                city,
-                listingType != null ? ListingType.valueOf(listingType.name()) : null,
-                propertyType != null ? PropertyType.valueOf(propertyType.name()) : null,
-                priceMin,
-                priceMax,
-                roomCount,
-                areaMin,
-                areaMax,
-                furnished,
-                parkingAvailable,
-                balcony,
-                petsAllowed,
-                energyClass,
-                SortBy.fromString(sortBy),
-                page != null ? page : 0,
-                size != null ? size : 10
-        );
-        ListingSearchResult result = listingFacade.search(filters);
-        ListingSearchResponseDto response = new ListingSearchResponseDto()
-                .content(result.content().stream().map(listingMapper::toDto).toList())
-                .pagination(new PaginationResponseDto()
-                        .page(result.page())
-                        .size(result.size())
-                        .totalElements(result.totalElements())
-                        .totalPages(result.totalPages()));
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(listingMapper.toDto(listingFacade.search(listingMapper.toFilters(
+                city, listingType, propertyType, priceMin, priceMax, roomCount,
+                areaMin, areaMax, furnished, parkingAvailable, balcony, petsAllowed,
+                energyClass, sortBy, page, size))));
     }
 
     @Override

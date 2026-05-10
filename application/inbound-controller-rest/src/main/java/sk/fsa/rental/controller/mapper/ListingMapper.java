@@ -3,6 +3,11 @@ package sk.fsa.rental.controller.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import sk.fsa.rental.domain.Listing;
+import sk.fsa.rental.domain.ListingSearchFilters;
+import sk.fsa.rental.domain.ListingSearchResult;
+import sk.fsa.rental.domain.ListingType;
+import sk.fsa.rental.domain.PropertyType;
+import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.rest.dto.*;
 
 import java.time.Instant;
@@ -33,6 +38,33 @@ public interface ListingMapper {
 
     @Mapping(source = "address.city", target = "city")
     ListingSummaryDto toSummary(Listing listing);
+
+    default ListingSearchFilters toFilters(
+            String city, ListingTypeDto listingType, PropertyTypeDto propertyType,
+            Double priceMin, Double priceMax, Integer roomCount,
+            Double areaMin, Double areaMax, Boolean furnished,
+            Boolean parkingAvailable, Boolean balcony, Boolean petsAllowed,
+            String energyClass, String sortBy, Integer page, Integer size) {
+        return new ListingSearchFilters(
+                city,
+                listingType != null ? ListingType.valueOf(listingType.name()) : null,
+                propertyType != null ? PropertyType.valueOf(propertyType.name()) : null,
+                priceMin, priceMax, roomCount, areaMin, areaMax,
+                furnished, parkingAvailable, balcony, petsAllowed,
+                energyClass, SortBy.fromString(sortBy),
+                page != null ? page : 0,
+                size != null ? size : 10);
+    }
+
+    default ListingSearchResponseDto toDto(ListingSearchResult result) {
+        return new ListingSearchResponseDto()
+                .content(result.content().stream().map(this::toDto).toList())
+                .pagination(new PaginationResponseDto()
+                        .page(result.page())
+                        .size(result.size())
+                        .totalElements(result.totalElements())
+                        .totalPages(result.totalPages()));
+    }
 
     UserDto toDto(sk.fsa.rental.domain.User user);
 
