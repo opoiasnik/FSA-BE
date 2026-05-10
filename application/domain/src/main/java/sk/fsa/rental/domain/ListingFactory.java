@@ -13,7 +13,7 @@ public class ListingFactory {
         this.geocodingService = geocodingService;
     }
 
-    public Listing createListing(Listing listing, User owner) {
+    public Listing create(Listing listing, User owner) {
         require(listing != null,
                 RentalException.Type.VALIDATION, "Listing must not be null.");
         require(owner != null,

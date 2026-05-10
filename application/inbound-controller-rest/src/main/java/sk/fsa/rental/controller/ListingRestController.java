@@ -43,7 +43,7 @@ public class ListingRestController implements ListingApi {
     public ResponseEntity<ListingResponseDto> createListing(CreateListingRequestDto createListingRequestDto) {
         User currentUser = currentUserDetailService.getFullCurrentUser();
         Listing listing = listingMapper.toDomain(createListingRequestDto);
-        Listing created = listingFacade.createListing(listing, currentUser);
+        Listing created = listingFacade.create(listing, currentUser);
         return new ResponseEntity<>(listingMapper.toDto(created), HttpStatus.CREATED);
     }
 
@@ -59,7 +59,7 @@ public class ListingRestController implements ListingApi {
                 page != null ? page : 0,
                 size != null ? size : 10
         );
-        ListingSearchResult result = listingFacade.searchListings(filters);
+        ListingSearchResult result = listingFacade.search(filters);
         ListingSearchResponseDto response = new ListingSearchResponseDto()
                 .content(result.content().stream().map(listingMapper::toDto).toList())
                 .pagination(new PaginationResponseDto()
@@ -73,7 +73,7 @@ public class ListingRestController implements ListingApi {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ListingResponseDto> getListingById(Long id) {
-        Listing listing = listingFacade.getListingById(id);
+        Listing listing = listingFacade.getById(id);
         return ResponseEntity.ok(listingMapper.toDto(listing));
     }
 
@@ -81,7 +81,7 @@ public class ListingRestController implements ListingApi {
     @Transactional(readOnly = true)
     public ResponseEntity<List<ListingResponseDto>> getMyListings() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        List<ListingResponseDto> response = listingFacade.getListingsByOwner(currentUser.getId()).stream()
+        List<ListingResponseDto> response = listingFacade.getByOwner(currentUser.getId()).stream()
                 .map(listingMapper::toDto)
                 .toList();
         return ResponseEntity.ok(response);
@@ -91,7 +91,7 @@ public class ListingRestController implements ListingApi {
     @Transactional(readOnly = true)
     public ResponseEntity<List<ListingSummaryDto>> getFeaturedListings(
             String city, ListingTypeDto listingType, PropertyTypeDto propertyType) {
-        List<ListingSummaryDto> response = listingFacade.getFeaturedListings(
+        List<ListingSummaryDto> response = listingFacade.getFeatured(
                         city,
                         listingType != null ? ListingType.valueOf(listingType.name()) : null,
                         propertyType != null ? PropertyType.valueOf(propertyType.name()) : null)

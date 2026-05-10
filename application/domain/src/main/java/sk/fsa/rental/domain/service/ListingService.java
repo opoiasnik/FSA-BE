@@ -27,13 +27,13 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
-    public Listing createListing(Listing listing, User owner) {
-        Listing prepared = listingFactory.createListing(listing, owner);
+    public Listing create(Listing listing, User owner) {
+        Listing prepared = listingFactory.create(listing, owner);
         return listingRepository.save(prepared);
     }
 
     @Override
-    public Listing updateListing(Long listingId, Listing updatedListing, User editor) {
+    public Listing update(Long listingId, Listing updatedListing, User editor) {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
@@ -51,7 +51,7 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
-    public void deleteListing(Long listingId, User editor) {
+    public void delete(Long listingId, User editor) {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
@@ -60,7 +60,7 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
-    public Listing activateListing(Long listingId, User editor) {
+    public Listing activate(Long listingId, User editor) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
@@ -69,25 +69,25 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
-    public Listing getListingById(Long id) {
+    public Listing getById(Long id) {
         return listingRepository.findById(id)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
     }
 
     @Override
-    public ListingSearchResult searchListings(ListingSearchFilters filters) {
+    public ListingSearchResult search(ListingSearchFilters filters) {
         return listingRepository.search(filters);
     }
 
     @Override
-    public List<Listing> getFeaturedListings(String city, ListingType listingType, PropertyType propertyType) {
+    public List<Listing> getFeatured(String city, ListingType listingType, PropertyType propertyType) {
         ListingSearchFilters filters = new ListingSearchFilters(
                 city, listingType, propertyType, 0, FEATURED_LISTINGS_LIMIT);
         return listingRepository.search(filters).content();
     }
 
     @Override
-    public List<Listing> getListingsByOwner(Long ownerId) {
+    public List<Listing> getByOwner(Long ownerId) {
         return listingRepository.findByOwnerId(ownerId);
     }
 }

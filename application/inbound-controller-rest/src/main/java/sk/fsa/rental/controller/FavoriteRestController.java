@@ -33,7 +33,7 @@ public class FavoriteRestController implements FavoriteApi {
     @Transactional(readOnly = true)
     public ResponseEntity<List<FavoriteResponseDto>> getMyFavorites() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        List<FavoriteResponseDto> response = favoriteFacade.listFavoritesByUser(currentUser.getId()).stream()
+        List<FavoriteResponseDto> response = favoriteFacade.getByUser(currentUser.getId()).stream()
                 .map(favoriteMapper::toDto)
                 .toList();
         return ResponseEntity.ok(response);
@@ -43,7 +43,7 @@ public class FavoriteRestController implements FavoriteApi {
     @Transactional
     public ResponseEntity<FavoriteResponseDto> addFavorite(Long listingId) {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        Favorite favorite = favoriteFacade.addFavorite(listingId, currentUser);
+        Favorite favorite = favoriteFacade.add(listingId, currentUser);
         return new ResponseEntity<>(favoriteMapper.toDto(favorite), HttpStatus.CREATED);
     }
 
@@ -51,7 +51,7 @@ public class FavoriteRestController implements FavoriteApi {
     @Transactional
     public ResponseEntity<Void> removeFavorite(Long listingId) {
         User currentUser = currentUserDetailService.getFullCurrentUser();
-        favoriteFacade.removeFavorite(listingId, currentUser);
+        favoriteFacade.remove(listingId, currentUser);
         return ResponseEntity.noContent().build();
     }
 }

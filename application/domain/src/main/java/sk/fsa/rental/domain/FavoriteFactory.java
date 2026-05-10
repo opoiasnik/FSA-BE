@@ -10,7 +10,7 @@ public class FavoriteFactory {
         this.favoriteRepository = favoriteRepository;
     }
 
-    public Favorite createFavorite(Listing listing, User user) {
+    public Favorite create(Listing listing, User user) {
         require(listing != null,
                 RentalException.Type.VALIDATION, "Listing must not be null.");
         require(user != null,

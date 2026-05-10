@@ -11,19 +11,19 @@ import java.util.List;
 
 public interface ListingFacade {
 
-    Listing createListing(Listing listing, User owner);
+    Listing create(Listing listing, User owner);
 
-    Listing updateListing(Long listingId, Listing updatedListing, User editor);
+    Listing update(Long listingId, Listing updatedListing, User editor);
 
-    void deleteListing(Long listingId, User editor);
+    void delete(Long listingId, User editor);
 
-    Listing activateListing(Long listingId, User editor);
+    Listing activate(Long listingId, User editor);
 
-    Listing getListingById(Long id);
+    Listing getById(Long id);
 
-    List<Listing> getFeaturedListings(String city, ListingType listingType, PropertyType propertyType);
+    List<Listing> getFeatured(String city, ListingType listingType, PropertyType propertyType);
 
-    List<Listing> getListingsByOwner(Long ownerId);
+    List<Listing> getByOwner(Long ownerId);
 
-    ListingSearchResult searchListings(ListingSearchFilters filters);
+    ListingSearchResult search(ListingSearchFilters filters);
 }

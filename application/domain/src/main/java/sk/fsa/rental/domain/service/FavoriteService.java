@@ -26,22 +26,22 @@ public class FavoriteService implements FavoriteFacade {
     }
 
     @Override
-    public Favorite addFavorite(Long listingId, User user) {
+    public Favorite add(Long listingId, User user) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
-        Favorite prepared = favoriteFactory.createFavorite(listing, user);
+        Favorite prepared = favoriteFactory.create(listing, user);
         return favoriteRepository.save(prepared);
     }
 
     @Override
-    public void removeFavorite(Long listingId, User user) {
+    public void remove(Long listingId, User user) {
         Favorite existing = favoriteRepository.findByUserIdAndListingId(user.getId(), listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Favorite not found."));
         favoriteRepository.deleteById(existing.getId());
     }
 
     @Override
-    public List<Favorite> listFavoritesByUser(Long userId) {
+    public List<Favorite> getByUser(Long userId) {
         return favoriteRepository.findByUserId(userId);
     }
 }
