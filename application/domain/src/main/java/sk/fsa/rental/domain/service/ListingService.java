@@ -7,6 +7,7 @@ import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
 import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.RentalException;
+import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.domain.repository.ListingRepository;
@@ -82,7 +83,9 @@ public class ListingService implements ListingFacade {
     @Override
     public List<Listing> getFeatured(String city, ListingType listingType, PropertyType propertyType) {
         ListingSearchFilters filters = new ListingSearchFilters(
-                city, listingType, propertyType, 0, FEATURED_LISTINGS_LIMIT);
+                city, listingType, propertyType,
+                null, null, null, null, null, null, null, null, null, null,
+                SortBy.NEWEST, 0, FEATURED_LISTINGS_LIMIT);
         return listingRepository.search(filters).content();
     }
 

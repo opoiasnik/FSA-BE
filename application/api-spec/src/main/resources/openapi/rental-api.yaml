@@ -43,6 +43,55 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/PropertyType'
+        - name: roomCount
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: areaMin
+          in: query
+          required: false
+          schema:
+            type: number
+            format: double
+        - name: areaMax
+          in: query
+          required: false
+          schema:
+            type: number
+            format: double
+        - name: furnished
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: parkingAvailable
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: balcony
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: petsAllowed
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: energyClass
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [A, B, C, D]
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [price_asc, price_desc, newest, area_asc, area_desc]
         - name: page
           in: query
           required: false

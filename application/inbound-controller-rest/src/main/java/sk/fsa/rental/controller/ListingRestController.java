@@ -10,6 +10,7 @@ import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
 import sk.fsa.rental.domain.PropertyType;
+import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.rest.api.ListingApi;
@@ -51,11 +52,24 @@ public class ListingRestController implements ListingApi {
     @Transactional(readOnly = true)
     public ResponseEntity<ListingSearchResponseDto> searchListings(
             String city, ListingTypeDto listingType, Double priceMin, Double priceMax,
-            PropertyTypeDto propertyType, Integer page, Integer size) {
+            PropertyTypeDto propertyType, Integer roomCount, Double areaMin, Double areaMax,
+            Boolean furnished, Boolean parkingAvailable, Boolean balcony, Boolean petsAllowed,
+            String energyClass, String sortBy, Integer page, Integer size) {
         ListingSearchFilters filters = new ListingSearchFilters(
                 city,
                 listingType != null ? ListingType.valueOf(listingType.name()) : null,
                 propertyType != null ? PropertyType.valueOf(propertyType.name()) : null,
+                priceMin,
+                priceMax,
+                roomCount,
+                areaMin,
+                areaMax,
+                furnished,
+                parkingAvailable,
+                balcony,
+                petsAllowed,
+                energyClass,
+                SortBy.fromString(sortBy),
                 page != null ? page : 0,
                 size != null ? size : 10
         );
