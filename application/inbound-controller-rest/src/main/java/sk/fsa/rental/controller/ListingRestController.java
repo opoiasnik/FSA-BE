@@ -64,7 +64,7 @@ public class ListingRestController implements ListingApi {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseEntity<List<ListingResponseDto>> getMyListings() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
         return ResponseEntity.ok(listingFacade.getByOwner(currentUser.getId()).stream()

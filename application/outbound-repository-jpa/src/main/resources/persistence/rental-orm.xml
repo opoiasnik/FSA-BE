@@ -21,10 +21,7 @@
             <basic name="email">
                 <column name="email" nullable="false" unique="true"/>
             </basic>
-            <basic name="passwordHash">
-                <column name="password_hash" nullable="false"/>
-            </basic>
-            <basic name="role">
+<basic name="role">
                 <column name="role" nullable="false"/>
                 <enumerated>STRING</enumerated>
             </basic>

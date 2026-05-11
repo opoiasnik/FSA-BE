@@ -12,5 +12,6 @@
     <include file="db/changelog/05-create-missing-tables.xml"/>
     <include file="db/changelog/06-fix-address-coordinates-type.xml"/>
     <include file="db/changelog/07-create-viewing-request.xml"/>
+    <include file="db/changelog/08-make-password-hash-nullable.xml"/>
 
 </databaseChangeLog>

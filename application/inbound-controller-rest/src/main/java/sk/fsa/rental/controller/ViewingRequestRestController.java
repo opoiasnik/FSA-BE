@@ -40,7 +40,7 @@ public class ViewingRequestRestController implements ViewingRequestApi {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseEntity<List<ViewingRequestResponseDto>> getMyViewingRequests() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
         return ResponseEntity.ok(viewingRequestFacade.listByRequester(currentUser.getId()).stream()
@@ -49,7 +49,7 @@ public class ViewingRequestRestController implements ViewingRequestApi {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseEntity<List<ViewingRequestResponseDto>> getOwnerViewingRequests() {
         User currentUser = currentUserDetailService.getFullCurrentUser();
         return ResponseEntity.ok(viewingRequestFacade.listByOwner(currentUser.getId()).stream()
