@@ -7,7 +7,6 @@ import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.UserRole;
 import sk.fsa.rental.domain.facade.UserFacade;
-import sk.fsa.rental.rest.dto.UserDto;
 import sk.fsa.rental.rest.dto.UserRoleDto;
 
 @Service
@@ -19,22 +18,18 @@ public class CurrentUserDetailService {
         this.userFacade = userFacade;
     }
 
-    public UserDto getCurrentUser() {
+    public AuthenticatedUser getAuthenticatedUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDto userDto) {
-            return userDto;
+        if (principal instanceof AuthenticatedUser authenticatedUser) {
+            return authenticatedUser;
         }
         throw new RentalException(RentalException.Type.UNAUTHORIZED, "Authentication required.");
     }
 
-    public String getUserEmail() {
-        return getCurrentUser().getEmail();
-    }
-
     @Transactional
     public User getFullCurrentUser() {
-        UserDto dto = getCurrentUser();
-        UserRole role = dto.getRole() == UserRoleDto.OWNER ? UserRole.OWNER : UserRole.USER;
-        return userFacade.findOrCreate(dto.getEmail(), dto.getName(), role);
+        AuthenticatedUser auth = getAuthenticatedUser();
+        UserRole role = auth.getRole() == UserRoleDto.OWNER ? UserRole.OWNER : UserRole.USER;
+        return userFacade.findOrCreate(auth.getKeycloakId(), auth.getEmail(), auth.getName(), auth.getSurname(), role);
     }
 }

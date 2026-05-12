@@ -21,17 +21,8 @@ public class JpaUserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userSpringDataRepository.findById(id);
+    public Optional<User> findByKeycloakId(String keycloakId) {
+        return userSpringDataRepository.findByKeycloakId(keycloakId);
     }
 
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return userSpringDataRepository.findByEmail(email);
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userSpringDataRepository.existsByEmail(email);
-    }
 }

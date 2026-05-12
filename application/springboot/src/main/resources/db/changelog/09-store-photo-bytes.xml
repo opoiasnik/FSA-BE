@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="9-photo-url-nullable" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="photo"/>
+            <columnExists tableName="photo" columnName="url"/>
+        </preConditions>
+        <dropNotNullConstraint tableName="photo" columnName="url" columnDataType="VARCHAR(500)"/>
+    </changeSet>
+
+    <changeSet id="9-photo-content-type" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="photo"/>
+            <not><columnExists tableName="photo" columnName="content_type"/></not>
+        </preConditions>
+        <addColumn tableName="photo">
+            <column name="content_type" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="9-photo-original-filename" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="photo"/>
+            <not><columnExists tableName="photo" columnName="original_filename"/></not>
+        </preConditions>
+        <addColumn tableName="photo">
+            <column name="original_filename" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="9-photo-position" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="photo"/>
+            <not><columnExists tableName="photo" columnName="position"/></not>
+        </preConditions>
+        <addColumn tableName="photo">
+            <column name="position" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="9-photo-data" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="photo"/>
+            <not><columnExists tableName="photo" columnName="data"/></not>
+        </preConditions>
+        <addColumn tableName="photo">
+            <column name="data" type="BYTEA"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

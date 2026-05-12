@@ -4,7 +4,6 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
-import sk.fsa.rental.rest.dto.UserDto;
 import sk.fsa.rental.rest.dto.UserRoleDto;
 
 import java.util.*;
@@ -26,11 +25,13 @@ class JwtConverter extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        UserDto userDto = new UserDto();
-        userDto.setEmail(source.getClaimAsString("email"));
-        userDto.setName(source.getClaimAsString("given_name"));
-        userDto.setRole(getRole());
-        return userDto;
+        AuthenticatedUser principal = new AuthenticatedUser();
+        principal.setKeycloakId(source.getClaimAsString("sub"));
+        principal.setEmail(source.getClaimAsString("email"));
+        principal.setName(source.getClaimAsString("given_name"));
+        principal.setSurname(source.getClaimAsString("family_name"));
+        principal.setRole(getRole());
+        return principal;
     }
 
     private UserRoleDto getRole() {

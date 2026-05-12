@@ -4,6 +4,7 @@ import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
+import sk.fsa.rental.domain.Photo;
 import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.User;
 
@@ -26,4 +27,9 @@ public interface ListingFacade {
     List<Listing> getByOwner(Long ownerId);
 
     ListingSearchResult search(ListingSearchFilters filters);
+
+    List<Photo> getPhotos(Long listingId);
+
+    Photo addPhoto(Long listingId, User owner, byte[] data, String contentType,
+                   String originalFilename, String altText);
 }

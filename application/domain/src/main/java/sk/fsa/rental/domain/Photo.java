@@ -2,16 +2,22 @@ package sk.fsa.rental.domain;
 
 public class Photo {
     private Long id;
-    private String url;
     private String altText;
+    private String contentType;
+    private String originalFilename;
+    private Integer position;
+    private byte[] data;
     private Listing listing;
 
     public Photo() {
     }
 
-    public Photo(String url, String altText) {
-        this.url = url;
+    public Photo(byte[] data, String contentType, String originalFilename, String altText, Integer position) {
+        this.data = data;
+        this.contentType = contentType;
+        this.originalFilename = originalFilename;
         this.altText = altText;
+        this.position = position;
     }
 
     public Long getId() {
@@ -22,27 +28,18 @@ public class Photo {
         this.id = id;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getAltText() {
-        return altText;
-    }
-
-    public void setAltText(String altText) {
+    public void updateDetails(String altText, Integer position) {
         this.altText = altText;
+        this.position = position;
     }
 
-    public Listing getListing() {
-        return listing;
-    }
+    public String getAltText() { return altText; }
+    public String getContentType() { return contentType; }
+    public String getOriginalFilename() { return originalFilename; }
+    public Integer getPosition() { return position; }
+    public byte[] getData() { return data; }
+    public Listing getListing() { return listing; }
 
-    public void setListing(Listing listing) {
-        this.listing = listing;
-    }
+    // called by Listing.addPhoto() to wire the relationship
+    void setListing(Listing listing) { this.listing = listing; }
 }

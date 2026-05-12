@@ -15,16 +15,31 @@
                 <column name="user_id"/>
                 <generated-value strategy="IDENTITY"/>
             </id>
+            <basic name="keycloakId">
+                <column name="keycloak_id" unique="true"/>
+            </basic>
             <basic name="name">
                 <column name="name" nullable="false"/>
+            </basic>
+            <basic name="surname">
+                <column name="surname"/>
             </basic>
             <basic name="email">
                 <column name="email" nullable="false" unique="true"/>
             </basic>
-<basic name="role">
+            <basic name="phone">
+                <column name="phone_number"/>
+            </basic>
+            <basic name="bio">
+                <column name="bio" length="1000"/>
+            </basic>
+            <basic name="role">
                 <column name="role" nullable="false"/>
                 <enumerated>STRING</enumerated>
             </basic>
+            <many-to-one name="avatarPhoto" target-entity="sk.fsa.rental.domain.Photo">
+                <join-column name="avatar_photo_id" nullable="true"/>
+            </many-to-one>
             <one-to-many name="ownedListings" target-entity="sk.fsa.rental.domain.Listing" mapped-by="owner"/>
             <one-to-many name="favorites" target-entity="sk.fsa.rental.domain.Favorite" mapped-by="user">
                 <cascade>
@@ -148,14 +163,23 @@
                 <column name="photo_id"/>
                 <generated-value strategy="IDENTITY"/>
             </id>
-            <basic name="url">
-                <column name="url" nullable="false"/>
-            </basic>
             <basic name="altText">
                 <column name="alt_text"/>
             </basic>
+            <basic name="contentType">
+                <column name="content_type"/>
+            </basic>
+            <basic name="originalFilename">
+                <column name="original_filename"/>
+            </basic>
+            <basic name="position">
+                <column name="position"/>
+            </basic>
+            <basic name="data">
+                <column name="data"/>
+            </basic>
             <many-to-one name="listing" target-entity="sk.fsa.rental.domain.Listing">
-                <join-column name="listing_id" nullable="false"/>
+                <join-column name="listing_id" nullable="true"/>
             </many-to-one>
         </attributes>
     </entity>

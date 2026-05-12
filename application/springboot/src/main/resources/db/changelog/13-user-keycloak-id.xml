@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="13-users-add-keycloak-id" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="users" columnName="keycloak_id"/></not>
+        </preConditions>
+        <addColumn tableName="users">
+            <column name="keycloak_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="13-users-keycloak-id-unique" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists tableName="users" indexName="uq_users_keycloak_id"/></not>
+        </preConditions>
+        <addUniqueConstraint tableName="users" columnNames="keycloak_id" constraintName="uq_users_keycloak_id"/>
+    </changeSet>
+
+</databaseChangeLog>

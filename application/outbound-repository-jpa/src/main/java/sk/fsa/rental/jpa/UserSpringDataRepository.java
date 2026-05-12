@@ -6,6 +6,5 @@ import sk.fsa.rental.domain.User;
 import java.util.Optional;
 
 interface UserSpringDataRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
-    boolean existsByEmail(String email);
+    Optional<User> findByKeycloakId(String keycloakId);
 }

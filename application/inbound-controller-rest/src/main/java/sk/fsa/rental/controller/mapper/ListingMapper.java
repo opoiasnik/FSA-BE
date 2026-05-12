@@ -6,6 +6,7 @@ import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
+import sk.fsa.rental.domain.Photo;
 import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.rest.dto.*;
@@ -37,7 +38,29 @@ public interface ListingMapper {
     ListingResponseDto toDto(Listing listing);
 
     @Mapping(source = "address.city", target = "city")
+    @Mapping(target = "coverPhoto", expression = "java(toCoverPhoto(listing))")
     ListingSummaryDto toSummary(Listing listing);
+
+    @Mapping(target = "contentUrl", expression = "java(toPhotoContentUrl(photo))")
+    PhotoResponseDto toDto(Photo photo);
+
+    default PhotoResponseDto toCoverPhoto(Listing listing) {
+        if (listing == null || listing.getPhotos().isEmpty()) {
+            return null;
+        }
+        return listing.getPhotos().stream()
+                .filter(photo -> photo.getPosition() != null)
+                .min(java.util.Comparator.comparing(Photo::getPosition))
+                .map(this::toDto)
+                .orElseGet(() -> toDto(listing.getPhotos().getFirst()));
+    }
+
+    default String toPhotoContentUrl(Photo photo) {
+        if (photo == null || photo.getId() == null) {
+            return null;
+        }
+        return "/api/photos/" + photo.getId() + "/content";
+    }
 
     default ListingSearchFilters toFilters(
             String city, ListingTypeDto listingType, PropertyTypeDto propertyType,
@@ -65,8 +88,6 @@ public interface ListingMapper {
                         .totalElements(result.totalElements())
                         .totalPages(result.totalPages()));
     }
-
-    UserDto toDto(sk.fsa.rental.domain.User user);
 
     AddressResponseDto toDto(sk.fsa.rental.domain.Address address);
 

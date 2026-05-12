@@ -5,11 +5,13 @@ import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
+import sk.fsa.rental.domain.Photo;
 import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
+import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
 import sk.fsa.rental.domain.repository.ListingRepository;
 
 import java.util.List;
@@ -92,5 +94,30 @@ public class ListingService implements ListingFacade {
     @Override
     public List<Listing> getByOwner(Long ownerId) {
         return listingRepository.findByOwnerId(ownerId);
+    }
+
+    @Override
+    public List<Photo> getPhotos(Long listingId) {
+        return getById(listingId).getPhotos();
+    }
+
+    @Override
+    public Photo addPhoto(Long listingId, User owner, byte[] data, String contentType,
+                          String originalFilename, String altText) {
+        Listing listing = getById(listingId);
+        if (!IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), owner)) {
+            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can add photos to this listing.");
+        }
+        if (data == null || data.length == 0) {
+            throw new RentalException(RentalException.Type.VALIDATION, "Photo file is required.", "file");
+        }
+
+        Photo photo = new Photo(data, contentType, originalFilename, altText, listing.getPhotos().size());
+        listing.addPhoto(photo);
+        Listing saved = listingRepository.save(listing);
+        return saved.getPhotos().stream()
+                .filter(savedPhoto -> savedPhoto.getPosition() != null && savedPhoto.getPosition().equals(photo.getPosition()))
+                .reduce((first, second) -> second)
+                .orElse(photo);
     }
 }

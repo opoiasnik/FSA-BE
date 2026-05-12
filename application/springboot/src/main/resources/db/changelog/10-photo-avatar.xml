@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="10-photo-listing-nullable" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="photo"/>
+            <columnExists tableName="photo" columnName="listing_id"/>
+        </preConditions>
+        <dropNotNullConstraint tableName="photo" columnName="listing_id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="10-users-avatar-photo" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="users"/>
+            <not><columnExists tableName="users" columnName="avatar_photo_id"/></not>
+        </preConditions>
+        <addColumn tableName="users">
+            <column name="avatar_photo_id" type="BIGINT">
+                <constraints nullable="true"
+                             foreignKeyName="fk_users_avatar_photo"
+                             references="photo(photo_id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

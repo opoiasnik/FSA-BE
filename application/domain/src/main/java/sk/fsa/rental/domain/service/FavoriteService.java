@@ -1,7 +1,6 @@
 package sk.fsa.rental.domain.service;
 
 import sk.fsa.rental.domain.Favorite;
-import sk.fsa.rental.domain.FavoriteFactory;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
@@ -15,29 +14,25 @@ public class FavoriteService implements FavoriteFacade {
 
     private final FavoriteRepository favoriteRepository;
     private final ListingRepository listingRepository;
-    private final FavoriteFactory favoriteFactory;
 
     public FavoriteService(FavoriteRepository favoriteRepository,
-                           ListingRepository listingRepository,
-                           FavoriteFactory favoriteFactory) {
+                           ListingRepository listingRepository) {
         this.favoriteRepository = favoriteRepository;
         this.listingRepository = listingRepository;
-        this.favoriteFactory = favoriteFactory;
     }
 
     @Override
     public Favorite add(Long listingId, User user) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
-        Favorite prepared = favoriteFactory.create(listing, user);
-        return favoriteRepository.save(prepared);
+        Favorite favorite = user.addToFavorites(listing);
+        return favoriteRepository.save(favorite);
     }
 
     @Override
     public void remove(Long listingId, User user) {
-        Favorite existing = favoriteRepository.findByUserIdAndListingId(user.getId(), listingId)
-                .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Favorite not found."));
-        favoriteRepository.deleteById(existing.getId());
+        Favorite removed = user.removeFromFavorites(listingId);
+        favoriteRepository.deleteById(removed.getId());
     }
 
     @Override

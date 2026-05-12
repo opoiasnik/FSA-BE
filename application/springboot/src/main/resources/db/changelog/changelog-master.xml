@@ -13,5 +13,10 @@
     <include file="db/changelog/06-fix-address-coordinates-type.xml"/>
     <include file="db/changelog/07-create-viewing-request.xml"/>
     <include file="db/changelog/08-make-password-hash-nullable.xml"/>
+    <include file="db/changelog/09-store-photo-bytes.xml"/>
+    <include file="db/changelog/10-photo-avatar.xml"/>
+    <include file="db/changelog/11-user-profile-fields.xml"/>
+    <include file="db/changelog/12-user-surname.xml"/>
+    <include file="db/changelog/13-user-keycloak-id.xml"/>
 
 </databaseChangeLog>
