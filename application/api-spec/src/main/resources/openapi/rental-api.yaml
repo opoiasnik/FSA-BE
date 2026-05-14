@@ -524,6 +524,193 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/conversations:
+    get:
+      summary: List conversations for the current authenticated user
+      operationId: getMyConversations
+      tags:
+        - Conversation
+      responses:
+        '200':
+          description: Current user's conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConversationResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Open a conversation for a listing
+      operationId: openConversation
+      tags:
+        - Conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConversationRequest'
+      responses:
+        '200':
+          description: Existing conversation returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Listing not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/conversations/{conversationId}:
+    get:
+      summary: Get a conversation with messages
+      operationId: getConversation
+      tags:
+        - Conversation
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Conversation found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/conversations/{conversationId}/messages:
+    post:
+      summary: Send a message in a conversation
+      operationId: sendConversationMessage
+      tags:
+        - Conversation
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '201':
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/conversations/{conversationId}/read:
+    patch:
+      summary: Mark messages in a conversation as read by the current user
+      operationId: markConversationRead
+      tags:
+        - Conversation
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Conversation updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/user:
     get:
       summary: Get current authenticated user's profile
@@ -939,6 +1126,71 @@ components:
         createdAt:
           type: string
           format: date-time
+
+    CreateConversationRequest:
+      type: object
+      required: [ listingId ]
+      properties:
+        listingId:
+          type: integer
+          format: int64
+        initialMessage:
+          type: string
+          maxLength: 2000
+
+    SendMessageRequest:
+      type: object
+      required: [ text ]
+      properties:
+        text:
+          type: string
+          maxLength: 2000
+
+    ConversationResponse:
+      type: object
+      required: [ id, listing, peer, updatedAt, unreadCount, messages ]
+      properties:
+        id:
+          type: integer
+          format: int64
+        listing:
+          $ref: '#/components/schemas/ListingSummary'
+        peer:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        unreadCount:
+          type: integer
+        preview:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageResponse'
+
+    MessageResponse:
+      type: object
+      required: [ id, sender, text, sentAt, ownMessage ]
+      properties:
+        id:
+          type: integer
+          format: int64
+        sender:
+          $ref: '#/components/schemas/User'
+        text:
+          type: string
+        sentAt:
+          type: string
+          format: date-time
+        readAt:
+          type: string
+          format: date-time
+        ownMessage:
+          type: boolean
 
     ListingSummary:
       type: object

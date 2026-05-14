@@ -236,6 +236,74 @@
         </attributes>
     </entity>
 
+    <!-- Conversation Entity -->
+    <entity class="sk.fsa.rental.domain.Conversation" access="FIELD">
+        <table name="conversation">
+            <unique-constraint name="uq_conversation_listing_owner_requester">
+                <column-name>listing_id</column-name>
+                <column-name>owner_id</column-name>
+                <column-name>requester_id</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <id name="id">
+                <column name="conversation_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="createdAt">
+                <column name="created_at" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+            <basic name="updatedAt">
+                <column name="updated_at" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+            <many-to-one name="listing" target-entity="sk.fsa.rental.domain.Listing">
+                <join-column name="listing_id" nullable="false"/>
+            </many-to-one>
+            <many-to-one name="owner" target-entity="sk.fsa.rental.domain.User">
+                <join-column name="owner_id" nullable="false"/>
+            </many-to-one>
+            <many-to-one name="requester" target-entity="sk.fsa.rental.domain.User">
+                <join-column name="requester_id" nullable="false"/>
+            </many-to-one>
+            <one-to-many name="messages" target-entity="sk.fsa.rental.domain.Message" mapped-by="conversation">
+                <order-by>sentAt ASC</order-by>
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <!-- Message Entity -->
+    <entity class="sk.fsa.rental.domain.Message" access="FIELD">
+        <table name="message"/>
+        <attributes>
+            <id name="id">
+                <column name="message_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="text">
+                <column name="text" nullable="false" length="2000"/>
+            </basic>
+            <basic name="sentAt">
+                <column name="sent_at" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+            <basic name="readAt">
+                <column name="read_at"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+            <many-to-one name="conversation" target-entity="sk.fsa.rental.domain.Conversation">
+                <join-column name="conversation_id" nullable="false"/>
+            </many-to-one>
+            <many-to-one name="sender" target-entity="sk.fsa.rental.domain.User">
+                <join-column name="sender_id" nullable="false"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
     <!-- ListingViewEvent Entity -->
     <entity class="sk.fsa.rental.domain.ListingViewEvent" access="FIELD">
         <table name="listing_view_event"/>
