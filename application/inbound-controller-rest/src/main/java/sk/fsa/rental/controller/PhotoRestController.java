@@ -1,32 +1,49 @@
 package sk.fsa.rental.controller;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import sk.fsa.rental.domain.Photo;
+import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.PhotoFacade;
+import sk.fsa.rental.rest.api.PhotoApi;
+import sk.fsa.rental.security.CurrentUserDetailService;
 
 @RestController
-public class PhotoRestController {
+public class PhotoRestController implements PhotoApi {
 
     private final PhotoFacade photoFacade;
+    private final CurrentUserDetailService currentUserDetailService;
 
-    public PhotoRestController(PhotoFacade photoFacade) {
+    public PhotoRestController(PhotoFacade photoFacade, CurrentUserDetailService currentUserDetailService) {
         this.photoFacade = photoFacade;
+        this.currentUserDetailService = currentUserDetailService;
     }
 
-    @GetMapping("/api/photos/{photoId}/content")
+    @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<byte[]> getPhotoContent(@PathVariable Long photoId) {
-        Photo photo = photoFacade.getById(photoId);
+    public ResponseEntity<Resource> getPhotoContent(Long photoId) {
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        return toImageResponse(photoFacade.getById(photoId, currentUser));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<Resource> getPublicCoverPhotoContent(Long photoId) {
+        return toImageResponse(photoFacade.getPublicCoverById(photoId));
+    }
+
+    private ResponseEntity<Resource> toImageResponse(Photo photo) {
+        byte[] data = photo.getData();
         String contentType = photo.getContentType() != null
                 ? photo.getContentType()
                 : MediaType.APPLICATION_OCTET_STREAM_VALUE;
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .body(photo.getData());
+                .contentLength(data.length)
+                .body(new ByteArrayResource(data));
     }
 }

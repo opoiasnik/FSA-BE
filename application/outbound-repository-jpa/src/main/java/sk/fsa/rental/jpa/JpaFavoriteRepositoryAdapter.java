@@ -35,4 +35,9 @@ public class JpaFavoriteRepositoryAdapter implements FavoriteRepository {
     public void deleteById(Long id) {
         favoriteSpringDataRepository.deleteById(id);
     }
+
+    @Override
+    public long countByListingOwnerId(Long ownerId) {
+        return favoriteSpringDataRepository.countByListingOwnerId(ownerId);
+    }
 }

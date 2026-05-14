@@ -63,34 +63,45 @@ public class User {
     }
 
     public Photo getAvatarPhoto() { return avatarPhoto; }
-    public void setAvatarPhoto(Photo avatarPhoto) { this.avatarPhoto = avatarPhoto; }
+
+    public void assignKeycloakId(String keycloakId) {
+        require(keycloakId != null && !keycloakId.isBlank(),
+                RentalException.Type.VALIDATION, "Keycloak id is required.");
+        this.keycloakId = keycloakId;
+    }
+
+    public void updateProfile(String name, String surname, String email, String phone, String bio) {
+        require(name != null && !name.isBlank(), RentalException.Type.VALIDATION, "Name is required.");
+        require(email != null && !email.isBlank(), RentalException.Type.VALIDATION, "Email is required.");
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone = phone;
+        this.bio = bio;
+    }
+
+    public void updateAvatar(Photo avatarPhoto) {
+        require(avatarPhoto != null, RentalException.Type.VALIDATION, "Avatar photo cannot be null.");
+        this.avatarPhoto = avatarPhoto;
+    }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getKeycloakId() { return keycloakId; }
-    public void setKeycloakId(String keycloakId) { this.keycloakId = keycloakId; }
 
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 
     public String getSurname() { return surname; }
-    public void setSurname(String surname) { this.surname = surname; }
 
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
 
     public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
 
     public String getBio() { return bio; }
-    public void setBio(String bio) { this.bio = bio; }
 
     public UserRole getRole() { return role; }
-    public void setRole(UserRole role) { this.role = role; }
 
     public List<Listing> getOwnedListings() { return Collections.unmodifiableList(ownedListings); }
-    public void setOwnedListings(List<Listing> ownedListings) { this.ownedListings = ownedListings; }
 
     public List<Favorite> getFavorites() { return Collections.unmodifiableList(favorites); }
 }

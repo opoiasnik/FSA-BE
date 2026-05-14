@@ -1,5 +1,9 @@
 package sk.fsa.rental.domain;
 
+import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
+
+import java.util.Arrays;
+
 public class Photo {
     private Long id;
     private String altText;
@@ -13,7 +17,7 @@ public class Photo {
     }
 
     public Photo(byte[] data, String contentType, String originalFilename, String altText, Integer position) {
-        this.data = data;
+        this.data = Arrays.copyOf(data, data.length);
         this.contentType = contentType;
         this.originalFilename = originalFilename;
         this.altText = altText;
@@ -24,20 +28,25 @@ public class Photo {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public boolean isPublicCover() {
+        return listing != null
+                && ListingStatus.ACTIVE.equals(listing.getStatus())
+                && position != null
+                && position == 0;
     }
 
-    public void updateDetails(String altText, Integer position) {
-        this.altText = altText;
-        this.position = position;
+    public boolean canBeViewedBy(User requester) {
+        return requester != null
+                && (listing == null
+                || UserRole.USER.equals(requester.getRole())
+                || IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), requester));
     }
 
     public String getAltText() { return altText; }
     public String getContentType() { return contentType; }
     public String getOriginalFilename() { return originalFilename; }
     public Integer getPosition() { return position; }
-    public byte[] getData() { return data; }
+    public byte[] getData() { return Arrays.copyOf(data, data.length); }
     public Listing getListing() { return listing; }
 
     // called by Listing.addPhoto() to wire the relationship

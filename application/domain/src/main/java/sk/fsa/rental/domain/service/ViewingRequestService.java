@@ -9,8 +9,6 @@ import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.ViewingRequestRepository;
 
 import java.util.List;
-import java.util.Optional;
-
 public class ViewingRequestService implements ViewingRequestFacade {
 
     private final ViewingRequestRepository viewingRequestRepository;
@@ -24,15 +22,10 @@ public class ViewingRequestService implements ViewingRequestFacade {
 
     @Override
     public ViewingRequest createRequest(ViewingRequest viewingRequest, Long listingId, User requester) {
-        Optional<Listing> listingOpt = listingRepository.findById(listingId);
-        if (listingOpt.isEmpty()) {
-            throw new RentalException(RentalException.Type.NOT_FOUND, "Listing not found.");
-        }
-        Listing listing = listingOpt.get();
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        viewingRequest.setListing(listing);
-        viewingRequest.setRequester(requester);
-        viewingRequest.setOwner(listing.getOwner());
+        viewingRequest.assignParticipants(listing, requester);
         viewingRequest.validateForCreation();
         return viewingRequestRepository.save(viewingRequest);
     }
@@ -69,10 +62,7 @@ public class ViewingRequestService implements ViewingRequestFacade {
     }
 
     private ViewingRequest findOrThrow(Long viewingId) {
-        Optional<ViewingRequest> existing = viewingRequestRepository.findById(viewingId);
-        if (existing.isEmpty()) {
-            throw new RentalException(RentalException.Type.NOT_FOUND, "Viewing request not found.");
-        }
-        return existing.get();
+        return viewingRequestRepository.findById(viewingId)
+                .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Viewing request not found."));
     }
 }

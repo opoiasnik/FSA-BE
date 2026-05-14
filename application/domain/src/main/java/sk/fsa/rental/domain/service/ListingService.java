@@ -5,7 +5,9 @@ import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
+import sk.fsa.rental.domain.ListingViewEvent;
 import sk.fsa.rental.domain.Photo;
+import sk.fsa.rental.domain.PhotoFactory;
 import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.SortBy;
@@ -13,6 +15,7 @@ import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
 import sk.fsa.rental.domain.repository.ListingRepository;
+import sk.fsa.rental.domain.repository.ListingViewEventRepository;
 
 import java.util.List;
 
@@ -23,10 +26,16 @@ public class ListingService implements ListingFacade {
 
     private final ListingRepository listingRepository;
     private final ListingFactory listingFactory;
+    private final ListingViewEventRepository listingViewEventRepository;
+    private final PhotoFactory photoFactory;
 
-    public ListingService(ListingRepository listingRepository, ListingFactory listingFactory) {
+    public ListingService(ListingRepository listingRepository, ListingFactory listingFactory,
+                          ListingViewEventRepository listingViewEventRepository,
+                          PhotoFactory photoFactory) {
         this.listingRepository = listingRepository;
         this.listingFactory = listingFactory;
+        this.listingViewEventRepository = listingViewEventRepository;
+        this.photoFactory = photoFactory;
     }
 
     @Override
@@ -97,27 +106,42 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
-    public List<Photo> getPhotos(Long listingId) {
-        return getById(listingId).getPhotos();
+    public List<Photo> getPhotos(Long listingId, User requester) {
+        List<Photo> photos = getById(listingId).getPhotos();
+        boolean canViewAll = photos.stream().allMatch(photo -> photo.canBeViewedBy(requester));
+        require(canViewAll, RentalException.Type.FORBIDDEN, "Photos are not available for this user.");
+        return photos;
+    }
+
+    @Override
+    public void recordView(Long listingId, Long viewerId) {
+        Listing listing = getById(listingId);
+        Long ownerId = listing.getOwner().getId();
+        if (ownerId.equals(viewerId)) {
+            return; // owners don't inflate their own stats
+        }
+        listingViewEventRepository.save(new ListingViewEvent(listingId, ownerId));
     }
 
     @Override
     public Photo addPhoto(Long listingId, User owner, byte[] data, String contentType,
                           String originalFilename, String altText) {
         Listing listing = getById(listingId);
-        if (!IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), owner)) {
-            throw new RentalException(RentalException.Type.FORBIDDEN, "Only the owner can add photos to this listing.");
-        }
-        if (data == null || data.length == 0) {
-            throw new RentalException(RentalException.Type.VALIDATION, "Photo file is required.", "file");
-        }
-
-        Photo photo = new Photo(data, contentType, originalFilename, altText, listing.getPhotos().size());
+        require(IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), owner),
+                RentalException.Type.FORBIDDEN, "Only the owner can add photos to this listing.");
+        Photo photo = photoFactory.create(data, contentType, originalFilename, altText, listing.getPhotos().size());
         listing.addPhoto(photo);
         Listing saved = listingRepository.save(listing);
         return saved.getPhotos().stream()
-                .filter(savedPhoto -> savedPhoto.getPosition() != null && savedPhoto.getPosition().equals(photo.getPosition()))
+                .filter(savedPhoto -> savedPhoto.getPosition() != null
+                        && savedPhoto.getPosition().equals(photo.getPosition()))
                 .reduce((first, second) -> second)
                 .orElse(photo);
+    }
+
+    private void require(boolean valid, RentalException.Type type, String message) {
+        if (!valid) {
+            throw new RentalException(type, message);
+        }
     }
 }

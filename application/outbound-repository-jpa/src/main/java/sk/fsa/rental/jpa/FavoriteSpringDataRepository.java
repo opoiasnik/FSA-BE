@@ -9,4 +9,5 @@ import java.util.Optional;
 interface FavoriteSpringDataRepository extends JpaRepository<Favorite, Long> {
     Optional<Favorite> findByUserIdAndListingId(Long userId, Long listingId);
     List<Favorite> findByUserId(Long userId);
+    long countByListingOwnerId(Long ownerId);
 }

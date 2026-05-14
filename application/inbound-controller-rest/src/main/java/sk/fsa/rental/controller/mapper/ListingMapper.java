@@ -51,8 +51,8 @@ public interface ListingMapper {
         return listing.getPhotos().stream()
                 .filter(photo -> photo.getPosition() != null)
                 .min(java.util.Comparator.comparing(Photo::getPosition))
-                .map(this::toDto)
-                .orElseGet(() -> toDto(listing.getPhotos().getFirst()));
+                .map(this::toPublicCoverDto)
+                .orElseGet(() -> toPublicCoverDto(listing.getPhotos().getFirst()));
     }
 
     default String toPhotoContentUrl(Photo photo) {
@@ -60,6 +60,14 @@ public interface ListingMapper {
             return null;
         }
         return "/api/photos/" + photo.getId() + "/content";
+    }
+
+    private PhotoResponseDto toPublicCoverDto(Photo photo) {
+        PhotoResponseDto dto = toDto(photo);
+        if (photo != null && photo.getId() != null) {
+            dto.setContentUrl("/api/photos/" + photo.getId() + "/cover-content");
+        }
+        return dto;
     }
 
     default ListingSearchFilters toFilters(

@@ -33,6 +33,16 @@ public class ViewingRequest {
                 "Cannot request a viewing on your own listing.");
     }
 
+    public void assignParticipants(Listing listing, User requester) {
+        require(listing != null,
+                RentalException.Type.VALIDATION, "Listing is required.");
+        require(requester != null,
+                RentalException.Type.VALIDATION, "Requester is required.");
+        this.listing = listing;
+        this.requester = requester;
+        this.owner = listing.getOwner();
+    }
+
     public void approve(User editor) {
         require(isOwner(editor),
                 RentalException.Type.FORBIDDEN, "Only the owner can approve this viewing.");
@@ -83,11 +93,8 @@ public class ViewingRequest {
     public void setNote(String note) { this.note = note; }
 
     public User getRequester() { return requester; }
-    public void setRequester(User requester) { this.requester = requester; }
 
     public User getOwner() { return owner; }
-    public void setOwner(User owner) { this.owner = owner; }
 
     public Listing getListing() { return listing; }
-    public void setListing(Listing listing) { this.listing = listing; }
 }

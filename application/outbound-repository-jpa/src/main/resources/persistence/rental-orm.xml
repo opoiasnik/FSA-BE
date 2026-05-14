@@ -236,6 +236,27 @@
         </attributes>
     </entity>
 
+    <!-- ListingViewEvent Entity -->
+    <entity class="sk.fsa.rental.domain.ListingViewEvent" access="FIELD">
+        <table name="listing_view_event"/>
+        <attributes>
+            <id name="id">
+                <column name="id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="listingId">
+                <column name="listing_id" nullable="false"/>
+            </basic>
+            <basic name="ownerId">
+                <column name="owner_id" nullable="false"/>
+            </basic>
+            <basic name="viewedAt">
+                <column name="viewed_at" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
+        </attributes>
+    </entity>
+
     <!-- Address Embeddable -->
     <embeddable class="sk.fsa.rental.domain.Address" access="FIELD">
         <attributes>

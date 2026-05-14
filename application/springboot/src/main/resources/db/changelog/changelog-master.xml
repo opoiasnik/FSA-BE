@@ -18,5 +18,6 @@
     <include file="db/changelog/11-user-profile-fields.xml"/>
     <include file="db/changelog/12-user-surname.xml"/>
     <include file="db/changelog/13-user-keycloak-id.xml"/>
+    <include file="db/changelog/14-listing-view-event.xml"/>
 
 </databaseChangeLog>

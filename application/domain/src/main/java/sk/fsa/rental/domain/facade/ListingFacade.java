@@ -28,8 +28,10 @@ public interface ListingFacade {
 
     ListingSearchResult search(ListingSearchFilters filters);
 
-    List<Photo> getPhotos(Long listingId);
+    List<Photo> getPhotos(Long listingId, User requester);
 
     Photo addPhoto(Long listingId, User owner, byte[] data, String contentType,
                    String originalFilename, String altText);
+
+    void recordView(Long listingId, Long viewerId);
 }

@@ -73,7 +73,8 @@ public class ListingRestController implements ListingApi {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<List<PhotoResponseDto>> getListingPhotos(Long listingId) {
-        return ResponseEntity.ok(listingFacade.getPhotos(listingId).stream()
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        return ResponseEntity.ok(listingFacade.getPhotos(listingId, currentUser).stream()
                 .map(listingMapper::toDto)
                 .toList());
     }
@@ -121,6 +122,14 @@ public class ListingRestController implements ListingApi {
                 .stream()
                 .map(listingMapper::toSummary)
                 .toList());
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<Void> recordListingView(Long id) {
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        listingFacade.recordView(id, currentUser.getId());
+        return ResponseEntity.noContent().build();
     }
 
     private void validatePhoto(MultipartFile file) {

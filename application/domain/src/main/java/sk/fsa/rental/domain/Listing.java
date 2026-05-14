@@ -4,7 +4,6 @@ import sk.fsa.rental.domain.predicate.listing.HasRequiredDescriptionPredicate;
 import sk.fsa.rental.domain.predicate.listing.HasRequiredListingTypePredicate;
 import sk.fsa.rental.domain.predicate.listing.HasRequiredOwnerPredicate;
 import sk.fsa.rental.domain.predicate.listing.HasRequiredTitlePredicate;
-import sk.fsa.rental.domain.predicate.listing.IsListingActivePredicate;
 import sk.fsa.rental.domain.predicate.listing.IsListingInactivePredicate;
 import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
 import sk.fsa.rental.domain.predicate.user.IsOwnerRolePredicate;
@@ -73,14 +72,6 @@ public class Listing {
         this.status = ListingStatus.ACTIVE;
     }
 
-    public void deactivate(User editor) {
-        require(IsOwnedByPredicate.INSTANCE.test(owner, editor),
-                RentalException.Type.FORBIDDEN, "Only the owner can deactivate this listing.");
-        require(IsListingActivePredicate.INSTANCE.test(this),
-                RentalException.Type.VALIDATION, "Listing is already inactive.");
-        this.status = ListingStatus.INACTIVE;
-    }
-
     public void delete(User editor) {
         require(IsOwnedByPredicate.INSTANCE.test(owner, editor),
                 RentalException.Type.FORBIDDEN, "Only the owner can delete this listing.");
@@ -91,17 +82,6 @@ public class Listing {
                 RentalException.Type.VALIDATION, "Photo cannot be null.");
         photo.setListing(this);
         photos.add(photo);
-    }
-
-    public void removePhoto(Long photoId) {
-        photos.removeIf(p -> p.getId().equals(photoId));
-    }
-
-    public void updatePrice(Price newPrice) {
-        require(newPrice != null,
-                RentalException.Type.VALIDATION, "New price cannot be null.");
-        newPrice.validate();
-        this.price = newPrice;
     }
 
     private void require(boolean valid, RentalException.Type type, String message) {
@@ -133,7 +113,7 @@ public class Listing {
     public Date getCreatedAt() { return createdAt; }
 
     public User getOwner() { return owner; }
-    public void setOwner(User owner) { this.owner = owner; }
+    void setOwner(User owner) { this.owner = owner; }
 
     public Address getAddress() { return address; }
     public void setAddress(Address address) { this.address = address; }

@@ -43,7 +43,7 @@ public class Favorite {
         return user;
     }
 
-    public void setUser(User user) {
+    void setUser(User user) {
         this.user = user;
     }
 
@@ -51,7 +51,7 @@ public class Favorite {
         return listing;
     }
 
-    public void setListing(Listing listing) {
+    void setListing(Listing listing) {
         this.listing = listing;
     }
 

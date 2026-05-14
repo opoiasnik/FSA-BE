@@ -10,4 +10,5 @@ public interface FavoriteRepository {
     Optional<Favorite> findByUserIdAndListingId(Long userId, Long listingId);
     List<Favorite> findByUserId(Long userId);
     void deleteById(Long id);
+    long countByListingOwnerId(Long ownerId);
 }
