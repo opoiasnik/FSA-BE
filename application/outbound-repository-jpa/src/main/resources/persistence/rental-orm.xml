@@ -27,6 +27,10 @@
             <basic name="email">
                 <column name="email" nullable="false" unique="true"/>
             </basic>
+            <basic name="createdAt">
+                <column name="created_at" nullable="false"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
             <basic name="phone">
                 <column name="phone_number"/>
             </basic>

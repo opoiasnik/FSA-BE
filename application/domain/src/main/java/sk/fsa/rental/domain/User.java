@@ -13,6 +13,7 @@ public class User {
     private String name;
     private String surname;
     private String email;
+    private Date createdAt;
     private String phone;
     private String bio;
     private boolean emailVerified;
@@ -26,6 +27,7 @@ public class User {
     public User() {
         this.ownedListings = new ArrayList<>();
         this.favorites = new ArrayList<>();
+        this.createdAt = new Date();
     }
 
     public User(String name, String surname, String email, UserRole role) {
@@ -133,6 +135,8 @@ public class User {
     public String getSurname() { return surname; }
 
     public String getEmail() { return email; }
+
+    public Date getCreatedAt() { return createdAt; }
 
     public String getPhone() { return phone; }
 

@@ -1527,6 +1527,10 @@ components:
         email:
           type: string
           example: "owner@example.com"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-05-15T10:30:00Z"
         phone:
           type: string
           example: "+421 900 000 000"
