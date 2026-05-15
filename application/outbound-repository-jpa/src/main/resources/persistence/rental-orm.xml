@@ -33,6 +33,16 @@
             <basic name="bio">
                 <column name="bio" length="1000"/>
             </basic>
+            <basic name="emailVerified">
+                <column name="email_verified" nullable="false"/>
+            </basic>
+            <basic name="emailVerificationCode">
+                <column name="email_verification_code"/>
+            </basic>
+            <basic name="emailVerificationExpiresAt">
+                <column name="email_verification_expires_at"/>
+                <temporal>TIMESTAMP</temporal>
+            </basic>
             <basic name="role">
                 <column name="role" nullable="false"/>
                 <enumerated>STRING</enumerated>

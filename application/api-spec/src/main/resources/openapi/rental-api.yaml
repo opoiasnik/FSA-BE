@@ -799,6 +799,60 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/user/email-verification:
+    post:
+      summary: Send email verification code to the current user
+      operationId: requestEmailVerification
+      tags:
+        - EmailVerification
+      responses:
+        '204':
+          description: Verification code sent
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/user/email-verification/confirm:
+    post:
+      summary: Confirm current user's email verification code
+      operationId: confirmEmailVerification
+      tags:
+        - EmailVerification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmailVerificationRequest'
+      responses:
+        '200':
+          description: Email verified, returns updated user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/listings/{listingId}/photos:
     get:
       summary: List photos for a listing
@@ -1481,6 +1535,12 @@ components:
           example: "Looking for a flat in Bratislava."
         role:
           $ref: '#/components/schemas/UserRole'
+        emailVerified:
+          type: boolean
+          example: false
+        emailVerificationPending:
+          type: boolean
+          example: false
         avatarUrl:
           type: string
           description: URL to the user's avatar image
@@ -1505,6 +1565,14 @@ components:
         bio:
           type: string
           example: "Looking for a flat in Bratislava."
+
+    ConfirmEmailVerificationRequest:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: string
+          example: "123456"
 
     UserRole:
       type: string

@@ -1,10 +1,11 @@
 package sk.fsa.rental.domain;
 
-import sk.fsa.rental.domain.predicate.user.IsOwnerRolePredicate;
+import sk.fsa.rental.domain.predicate.user.HasValidEmailPredicate;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class User {
     private Long id;
@@ -14,6 +15,9 @@ public class User {
     private String email;
     private String phone;
     private String bio;
+    private boolean emailVerified;
+    private String emailVerificationCode;
+    private Date emailVerificationExpiresAt;
     private UserRole role;
     private Photo avatarPhoto;
     private List<Listing> ownedListings;
@@ -30,10 +34,6 @@ public class User {
         this.surname = surname;
         this.email = email;
         this.role = role;
-    }
-
-    public boolean isOwner() {
-        return IsOwnerRolePredicate.INSTANCE.test(this);
     }
 
     public Favorite addToFavorites(Listing listing) {
@@ -62,6 +62,10 @@ public class User {
         if (!valid) throw new RentalException(type, message);
     }
 
+    private void require(boolean valid, RentalException.Type type, String message, String field) {
+        if (!valid) throw new RentalException(type, message, field);
+    }
+
     public Photo getAvatarPhoto() { return avatarPhoto; }
 
     public void assignKeycloakId(String keycloakId) {
@@ -72,7 +76,10 @@ public class User {
 
     public void updateProfile(String name, String surname, String email, String phone, String bio) {
         require(name != null && !name.isBlank(), RentalException.Type.VALIDATION, "Name is required.");
-        require(email != null && !email.isBlank(), RentalException.Type.VALIDATION, "Email is required.");
+        require(HasValidEmailPredicate.INSTANCE.test(email), RentalException.Type.VALIDATION, "Valid email is required.");
+        if (!Objects.equals(this.email, email)) {
+            resetEmailVerification();
+        }
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -85,9 +92,41 @@ public class User {
         this.avatarPhoto = avatarPhoto;
     }
 
-    public Long getId() { return id; }
+    public void startEmailVerification(String code, Date expiresAt) {
+        require(HasValidEmailPredicate.INSTANCE.test(email),
+                RentalException.Type.VALIDATION, "Valid email is required.", "email");
+        require(code != null && !code.isBlank(),
+                RentalException.Type.VALIDATION, "Verification code is required.", "code");
+        require(expiresAt != null,
+                RentalException.Type.VALIDATION, "Verification expiration is required.");
+        this.emailVerificationCode = code;
+        this.emailVerificationExpiresAt = new Date(expiresAt.getTime());
+    }
 
-    public String getKeycloakId() { return keycloakId; }
+    public void verifyEmail(String code, Date verifiedAt) {
+        require(code != null && !code.isBlank(),
+                RentalException.Type.VALIDATION, "Verification code is required.", "code");
+        require(emailVerificationCode != null && emailVerificationExpiresAt != null,
+                RentalException.Type.VALIDATION, "Email verification was not requested.", "code");
+        require(verifiedAt != null && !verifiedAt.after(emailVerificationExpiresAt),
+                RentalException.Type.VALIDATION, "Verification code has expired.", "code");
+        require(emailVerificationCode.equals(code),
+                RentalException.Type.VALIDATION, "Verification code is invalid.", "code");
+        this.emailVerified = true;
+        clearEmailVerification();
+    }
+
+    private void resetEmailVerification() {
+        this.emailVerified = false;
+        clearEmailVerification();
+    }
+
+    private void clearEmailVerification() {
+        this.emailVerificationCode = null;
+        this.emailVerificationExpiresAt = null;
+    }
+
+    public Long getId() { return id; }
 
     public String getName() { return name; }
 
@@ -99,9 +138,11 @@ public class User {
 
     public String getBio() { return bio; }
 
+    public boolean isEmailVerified() { return emailVerified; }
+
+    public boolean isEmailVerificationPending() {
+        return !emailVerified && emailVerificationCode != null;
+    }
+
     public UserRole getRole() { return role; }
-
-    public List<Listing> getOwnedListings() { return Collections.unmodifiableList(ownedListings); }
-
-    public List<Favorite> getFavorites() { return Collections.unmodifiableList(favorites); }
 }
