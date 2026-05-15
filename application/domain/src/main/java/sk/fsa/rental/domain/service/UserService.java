@@ -23,11 +23,7 @@ public class UserService implements UserFacade {
     @Override
     public User findOrCreate(String keycloakId, String email, String name, String surname, UserRole role) {
         return userRepository.findByKeycloakId(keycloakId)
-                .orElseGet(() -> {
-                    User user = new User(name, surname, email, role);
-                    user.assignKeycloakId(keycloakId);
-                    return userRepository.save(user);
-                });
+                .orElseGet(() -> createUser(keycloakId, email, name, surname, role));
     }
 
     @Override
@@ -41,6 +37,12 @@ public class UserService implements UserFacade {
         Photo photo = photoFactory.create(data, contentType, originalFilename, null, null);
         Photo saved = photoRepository.save(photo);
         user.updateAvatar(saved);
+        return userRepository.save(user);
+    }
+
+    private User createUser(String keycloakId, String email, String name, String surname, UserRole role) {
+        User user = new User(name, surname, email, role);
+        user.assignKeycloakId(keycloakId);
         return userRepository.save(user);
     }
 }
