@@ -9,4 +9,5 @@ interface ViewingRequestSpringDataRepository extends JpaRepository<ViewingReques
     List<ViewingRequest> findByRequesterId(Long requesterId);
     List<ViewingRequest> findByOwnerId(Long ownerId);
     List<ViewingRequest> findByListingId(Long listingId);
+    List<ViewingRequest> findByListingIdAndRequesterId(Long listingId, Long requesterId);
 }

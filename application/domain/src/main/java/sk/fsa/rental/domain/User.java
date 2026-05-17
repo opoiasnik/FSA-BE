@@ -19,6 +19,9 @@ public class User {
     private boolean emailVerified;
     private String emailVerificationCode;
     private Date emailVerificationExpiresAt;
+    private boolean messageEmailNotifications;
+    private boolean viewingEmailNotifications;
+    private boolean viewingRequestEmailNotifications;
     private UserRole role;
     private Photo avatarPhoto;
     private List<Listing> ownedListings;
@@ -28,6 +31,9 @@ public class User {
         this.ownedListings = new ArrayList<>();
         this.favorites = new ArrayList<>();
         this.createdAt = new Date();
+        this.messageEmailNotifications = true;
+        this.viewingEmailNotifications = true;
+        this.viewingRequestEmailNotifications = true;
     }
 
     public User(String name, String surname, String email, UserRole role) {
@@ -94,6 +100,14 @@ public class User {
         this.avatarPhoto = avatarPhoto;
     }
 
+    public void updateNotificationPreferences(boolean messageEmailNotifications,
+                                              boolean viewingEmailNotifications,
+                                              boolean viewingRequestEmailNotifications) {
+        this.messageEmailNotifications = messageEmailNotifications;
+        this.viewingEmailNotifications = viewingEmailNotifications;
+        this.viewingRequestEmailNotifications = viewingRequestEmailNotifications;
+    }
+
     public void startEmailVerification(String code, Date expiresAt) {
         require(HasValidEmailPredicate.INSTANCE.test(email),
                 RentalException.Type.VALIDATION, "Valid email is required.", "email");
@@ -147,6 +161,12 @@ public class User {
     public boolean isEmailVerificationPending() {
         return !emailVerified && emailVerificationCode != null;
     }
+
+    public boolean isMessageEmailNotifications() { return messageEmailNotifications; }
+
+    public boolean isViewingEmailNotifications() { return viewingEmailNotifications; }
+
+    public boolean isViewingRequestEmailNotifications() { return viewingRequestEmailNotifications; }
 
     public UserRole getRole() { return role; }
 }

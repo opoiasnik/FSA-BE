@@ -853,6 +853,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/user/notification-preferences:
+    patch:
+      summary: Update current user's notification preferences
+      operationId: updateNotificationPreferences
+      tags:
+        - NotificationPreferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNotificationPreferencesRequest'
+      responses:
+        '200':
+          description: Notification preferences updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/listings/{listingId}/photos:
     get:
       summary: List photos for a listing
@@ -1545,6 +1577,15 @@ components:
         emailVerificationPending:
           type: boolean
           example: false
+        messageEmailNotifications:
+          type: boolean
+          example: true
+        viewingEmailNotifications:
+          type: boolean
+          example: true
+        viewingRequestEmailNotifications:
+          type: boolean
+          example: true
         avatarUrl:
           type: string
           description: URL to the user's avatar image
@@ -1577,6 +1618,20 @@ components:
         code:
           type: string
           example: "123456"
+
+    UpdateNotificationPreferencesRequest:
+      type: object
+      required: [messageEmailNotifications, viewingEmailNotifications, viewingRequestEmailNotifications]
+      properties:
+        messageEmailNotifications:
+          type: boolean
+          example: true
+        viewingEmailNotifications:
+          type: boolean
+          example: true
+        viewingRequestEmailNotifications:
+          type: boolean
+          example: true
 
     UserRole:
       type: string

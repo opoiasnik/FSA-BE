@@ -7,6 +7,7 @@ import sk.fsa.rental.domain.Message;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ConversationFacade;
+import sk.fsa.rental.domain.facade.NotificationEmailFacade;
 import sk.fsa.rental.domain.repository.ConversationRepository;
 import sk.fsa.rental.domain.repository.ListingRepository;
 
@@ -19,13 +20,16 @@ public class ConversationService implements ConversationFacade {
     private final ConversationRepository conversationRepository;
     private final ListingRepository listingRepository;
     private final ConversationFactory conversationFactory;
+    private final NotificationEmailFacade notificationEmailFacade;
 
     public ConversationService(ConversationRepository conversationRepository,
                                ListingRepository listingRepository,
-                               ConversationFactory conversationFactory) {
+                               ConversationFactory conversationFactory,
+                               NotificationEmailFacade notificationEmailFacade) {
         this.conversationRepository = conversationRepository;
         this.listingRepository = listingRepository;
         this.conversationFactory = conversationFactory;
+        this.notificationEmailFacade = notificationEmailFacade;
     }
 
     @Override
@@ -61,6 +65,7 @@ public class ConversationService implements ConversationFacade {
         Conversation conversation = getConversation(conversationId, sender);
         Message message = conversation.addMessage(sender, text);
         conversationRepository.save(conversation);
+        notificationEmailFacade.messageSent(conversation, message, sender);
         return message;
     }
 

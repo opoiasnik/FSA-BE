@@ -1,5 +1,7 @@
 package sk.fsa.rental.domain;
 
+import java.time.Year;
+
 public class PropertyFeatures {
     private PropertyType propertyType;
     private Double area;
@@ -23,6 +25,10 @@ public class PropertyFeatures {
         }
         if (roomCount != null) {
             require(roomCount > 0, "Room count must be positive.");
+        }
+        if (yearBuilt != null) {
+            require(yearBuilt >= 1800 && yearBuilt <= Year.now().getValue() + 1,
+                    "Year built must be realistic.");
         }
     }
 

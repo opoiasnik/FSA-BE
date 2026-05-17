@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="18-users-add-message-email-notifications" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="users" columnName="message_email_notifications"/></not>
+        </preConditions>
+        <addColumn tableName="users">
+            <column name="message_email_notifications" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="18-users-add-viewing-email-notifications" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="users" columnName="viewing_email_notifications"/></not>
+        </preConditions>
+        <addColumn tableName="users">
+            <column name="viewing_email_notifications" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="18-users-add-viewing-request-email-notifications" author="opoiasnik">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="users" columnName="viewing_request_email_notifications"/></not>
+        </preConditions>
+        <addColumn tableName="users">
+            <column name="viewing_request_email_notifications" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

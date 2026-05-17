@@ -22,5 +22,6 @@
     <include file="db/changelog/15-create-conversation-message.xml"/>
     <include file="db/changelog/16-user-email-verification.xml"/>
     <include file="db/changelog/17-user-created-at.xml"/>
+    <include file="db/changelog/18-user-notification-preferences.xml"/>
 
 </databaseChangeLog>

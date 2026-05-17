@@ -47,6 +47,15 @@
                 <column name="email_verification_expires_at"/>
                 <temporal>TIMESTAMP</temporal>
             </basic>
+            <basic name="messageEmailNotifications">
+                <column name="message_email_notifications" nullable="false"/>
+            </basic>
+            <basic name="viewingEmailNotifications">
+                <column name="viewing_email_notifications" nullable="false"/>
+            </basic>
+            <basic name="viewingRequestEmailNotifications">
+                <column name="viewing_request_email_notifications" nullable="false"/>
+            </basic>
             <basic name="role">
                 <column name="role" nullable="false"/>
                 <enumerated>STRING</enumerated>

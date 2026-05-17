@@ -40,4 +40,9 @@ public class JpaViewingRequestRepositoryAdapter implements ViewingRequestReposit
     public List<ViewingRequest> findByListingId(Long listingId) {
         return viewingRequestSpringDataRepository.findByListingId(listingId);
     }
+
+    @Override
+    public List<ViewingRequest> findByListingIdAndRequesterId(Long listingId, Long requesterId) {
+        return viewingRequestSpringDataRepository.findByListingIdAndRequesterId(listingId, requesterId);
+    }
 }
