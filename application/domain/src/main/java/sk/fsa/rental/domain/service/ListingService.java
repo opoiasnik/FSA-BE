@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ListingService implements ListingFacade {
 
-    private static final int FEATURED_LISTINGS_LIMIT = 24;
+    private static final int FEATURED_LISTINGS_LIMIT = 5;
 
     private final ListingRepository listingRepository;
     private final ListingFactory listingFactory;
@@ -97,7 +97,7 @@ public class ListingService implements ListingFacade {
                 city, listingType, propertyType,
                 null, null, null, null, null, null, null, null, null, null,
                 SortBy.NEWEST, 0, FEATURED_LISTINGS_LIMIT);
-        return listingRepository.search(filters).content();
+        return listingRepository.findTopViewed(filters);
     }
 
     @Override
@@ -144,4 +144,5 @@ public class ListingService implements ListingFacade {
             throw new RentalException(type, message);
         }
     }
+
 }

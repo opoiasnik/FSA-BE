@@ -2,8 +2,12 @@ package sk.fsa.rental.jpa;
 
 import org.springframework.data.jpa.domain.Specification;
 import sk.fsa.rental.domain.Listing;
+import sk.fsa.rental.domain.ListingViewEvent;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingStatus;
+
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 final class ListingSpecifications {
 
@@ -26,13 +30,17 @@ final class ListingSpecifications {
                 .and(energyClassEq(f.energyClass()));
     }
 
+    static Specification<Listing> topViewed(ListingSearchFilters f) {
+        return from(f).and(orderByViews());
+    }
+
     private static Specification<Listing> isActive() {
         return (root, query, cb) -> cb.equal(root.get("status"), ListingStatus.ACTIVE);
     }
 
     private static Specification<Listing> cityLike(String city) {
-        return (root, query, cb) -> city == null ? cb.conjunction()
-                : cb.like(cb.lower(root.get("address").get("city")), "%" + city.toLowerCase() + "%");
+        return (root, query, cb) -> city == null || city.isBlank() ? cb.conjunction()
+                : cb.like(cb.lower(root.get("address").get("city")), "%" + city.trim().toLowerCase() + "%");
     }
 
     private static Specification<Listing> listingTypeEq(ListingSearchFilters f) {
@@ -93,5 +101,17 @@ final class ListingSpecifications {
     private static Specification<Listing> energyClassEq(String energyClass) {
         return (root, query, cb) -> energyClass == null ? cb.conjunction()
                 : cb.equal(root.get("features").get("energyClass"), energyClass);
+    }
+
+    private static Specification<Listing> orderByViews() {
+        return (root, query, cb) -> {
+            Subquery<Long> viewCount = query.subquery(Long.class);
+            Root<ListingViewEvent> view = viewCount.from(ListingViewEvent.class);
+            viewCount.select(cb.count(view.get("id")))
+                    .where(cb.equal(view.get("listingId"), root.get("id")));
+
+            query.orderBy(cb.desc(viewCount), cb.desc(root.get("createdAt")));
+            return cb.conjunction();
+        };
     }
 }

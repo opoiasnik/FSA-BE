@@ -67,6 +67,13 @@ public class JpaListingRepositoryAdapter implements ListingRepository {
         return new ListingSearchResult(page.getContent(), effectivePage, effectiveSize, page.getTotalElements());
     }
 
+    @Override
+    public List<Listing> findTopViewed(ListingSearchFilters filters) {
+        int effectiveSize = filters.size() < 1 ? 5 : Math.min(filters.size(), 100);
+        Pageable pageable = PageRequest.of(0, effectiveSize);
+        return listingSpringDataRepository.findAll(ListingSpecifications.topViewed(filters), pageable).getContent();
+    }
+
     private Sort resolveSort(SortBy sortBy) {
         return switch (sortBy) {
             case PRICE_ASC  -> Sort.by(Sort.Direction.ASC,  "price.amount");
@@ -76,4 +83,5 @@ public class JpaListingRepositoryAdapter implements ListingRepository {
             default         -> Sort.by(Sort.Direction.DESC, "createdAt");
         };
     }
+
 }

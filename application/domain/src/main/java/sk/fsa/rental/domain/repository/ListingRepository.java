@@ -17,4 +17,5 @@ public interface ListingRepository {
     void deleteById(Long id);
     boolean existsByOwnerIdAndAddress(Long ownerId, Address address);
     ListingSearchResult search(ListingSearchFilters filters);
+    List<Listing> findTopViewed(ListingSearchFilters filters);
 }
