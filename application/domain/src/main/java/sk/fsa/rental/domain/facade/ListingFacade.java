@@ -30,6 +30,8 @@ public interface ListingFacade {
 
     List<Photo> getPhotos(Long listingId, User requester);
 
+    long countViews(Long listingId);
+
     Photo addPhoto(Long listingId, User owner, byte[] data, String contentType,
                    String originalFilename, String altText);
 

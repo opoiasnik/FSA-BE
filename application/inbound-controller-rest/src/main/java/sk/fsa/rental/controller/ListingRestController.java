@@ -17,6 +17,7 @@ import sk.fsa.rental.rest.api.ListingApi;
 import sk.fsa.rental.rest.dto.CreateListingRequestDto;
 import sk.fsa.rental.rest.dto.ListingResponseDto;
 import sk.fsa.rental.rest.dto.ListingSearchResponseDto;
+import sk.fsa.rental.rest.dto.ListingStatsDto;
 import sk.fsa.rental.rest.dto.ListingSummaryDto;
 import sk.fsa.rental.rest.dto.ListingTypeDto;
 import sk.fsa.rental.rest.dto.PhotoResponseDto;
@@ -67,7 +68,9 @@ public class ListingRestController implements ListingApi {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ListingResponseDto> getListingById(Long id) {
-        return ResponseEntity.ok(listingMapper.toDto(listingFacade.getById(id)));
+        ListingResponseDto response = listingMapper.toDto(listingFacade.getById(id));
+        response.setStats(new ListingStatsDto().views(listingFacade.countViews(id)));
+        return ResponseEntity.ok(response);
     }
 
     @Override

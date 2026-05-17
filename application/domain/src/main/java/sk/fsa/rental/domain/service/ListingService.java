@@ -114,6 +114,12 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
+    public long countViews(Long listingId) {
+        getById(listingId);
+        return listingViewEventRepository.countByListingId(listingId);
+    }
+
+    @Override
     public void recordView(Long listingId, Long viewerId) {
         Listing listing = getById(listingId);
         Long ownerId = listing.getOwner().getId();

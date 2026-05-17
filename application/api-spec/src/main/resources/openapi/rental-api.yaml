@@ -1333,6 +1333,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PhotoResponse'
+        stats:
+          $ref: '#/components/schemas/ListingStats'
+
+    ListingStats:
+      type: object
+      properties:
+        views:
+          type: integer
+          format: int64
+          example: 42
 
     PhotoResponse:
       type: object

@@ -22,6 +22,11 @@ public class JpaListingViewEventRepositoryAdapter implements ListingViewEventRep
     }
 
     @Override
+    public long countByListingId(Long listingId) {
+        return springDataRepository.countByListingId(listingId);
+    }
+
+    @Override
     public long countByOwnerId(Long ownerId) {
         return springDataRepository.countByOwnerId(ownerId);
     }

@@ -10,5 +10,7 @@ public interface ListingViewEventSpringDataRepository extends JpaRepository<List
 
     long countByOwnerId(Long ownerId);
 
+    long countByListingId(Long listingId);
+
     List<ListingViewEvent> findByOwnerIdAndViewedAtAfter(Long ownerId, Date since);
 }

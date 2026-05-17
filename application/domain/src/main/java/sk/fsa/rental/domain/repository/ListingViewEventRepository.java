@@ -9,6 +9,8 @@ public interface ListingViewEventRepository {
 
     ListingViewEvent save(ListingViewEvent event);
 
+    long countByListingId(Long listingId);
+
     long countByOwnerId(Long ownerId);
 
     List<ListingViewEvent> findByOwnerIdAndViewedAtAfter(Long ownerId, Date since);
