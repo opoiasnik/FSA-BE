@@ -4,6 +4,7 @@ import sk.fsa.rental.domain.predicate.listing.HasRequiredDescriptionPredicate;
 import sk.fsa.rental.domain.predicate.listing.HasRequiredListingTypePredicate;
 import sk.fsa.rental.domain.predicate.listing.HasRequiredOwnerPredicate;
 import sk.fsa.rental.domain.predicate.listing.HasRequiredTitlePredicate;
+import sk.fsa.rental.domain.predicate.listing.IsListingActivePredicate;
 import sk.fsa.rental.domain.predicate.listing.IsListingInactivePredicate;
 import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
 import sk.fsa.rental.domain.predicate.user.IsOwnerRolePredicate;
@@ -70,6 +71,14 @@ public class Listing {
         require(IsListingInactivePredicate.INSTANCE.test(this),
                 RentalException.Type.VALIDATION, "Listing is already active.");
         this.status = ListingStatus.ACTIVE;
+    }
+
+    public void deactivate(User editor) {
+        require(IsOwnedByPredicate.INSTANCE.test(owner, editor),
+                RentalException.Type.FORBIDDEN, "Only the owner can deactivate this listing.");
+        require(IsListingActivePredicate.INSTANCE.test(this),
+                RentalException.Type.VALIDATION, "Listing is already inactive.");
+        this.status = ListingStatus.INACTIVE;
     }
 
     public void delete(User editor) {

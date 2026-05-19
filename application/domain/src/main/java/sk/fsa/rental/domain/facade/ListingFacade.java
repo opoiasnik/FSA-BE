@@ -20,7 +20,11 @@ public interface ListingFacade {
 
     Listing activate(Long listingId, User editor);
 
+    Listing deactivate(Long listingId, User editor);
+
     Listing getById(Long id);
+
+    Listing getVisibleById(Long id, User requester);
 
     List<Listing> getFeatured(String city, ListingType listingType, PropertyType propertyType);
 

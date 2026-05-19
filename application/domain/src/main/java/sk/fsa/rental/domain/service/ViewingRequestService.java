@@ -4,12 +4,14 @@ import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.ViewingRequest;
+import sk.fsa.rental.domain.ViewingStatus;
 import sk.fsa.rental.domain.facade.NotificationEmailFacade;
 import sk.fsa.rental.domain.facade.ViewingRequestFacade;
 import sk.fsa.rental.domain.predicate.viewingrequest.IsViewingActivePredicate;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.ViewingRequestRepository;
 
+import java.util.Comparator;
 import java.util.List;
 public class ViewingRequestService implements ViewingRequestFacade {
 
@@ -67,12 +69,12 @@ public class ViewingRequestService implements ViewingRequestFacade {
 
     @Override
     public List<ViewingRequest> listByRequester(Long requesterId) {
-        return viewingRequestRepository.findByRequesterId(requesterId);
+        return sortForReview(viewingRequestRepository.findByRequesterId(requesterId));
     }
 
     @Override
     public List<ViewingRequest> listByOwner(Long ownerId) {
-        return viewingRequestRepository.findByOwnerId(ownerId);
+        return sortForReview(viewingRequestRepository.findByOwnerId(ownerId));
     }
 
     private ViewingRequest findOrThrow(Long viewingId) {
@@ -87,5 +89,22 @@ public class ViewingRequestService implements ViewingRequestFacade {
             throw new RentalException(RentalException.Type.VALIDATION,
                     "You already have an active viewing request for this listing.");
         }
+    }
+
+    private List<ViewingRequest> sortForReview(List<ViewingRequest> requests) {
+        return requests.stream()
+                .sorted(Comparator
+                        .comparingInt((ViewingRequest request) -> statusPriority(request.getStatus()))
+                        .thenComparing(ViewingRequest::getRequestedDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                .toList();
+    }
+
+    private int statusPriority(ViewingStatus status) {
+        return switch (status) {
+            case PENDING -> 0;
+            case APPROVED -> 1;
+            case REJECTED -> 2;
+            case CANCELLED -> 3;
+        };
     }
 }

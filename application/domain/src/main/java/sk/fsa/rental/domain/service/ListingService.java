@@ -13,6 +13,8 @@ import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.ListingFacade;
+import sk.fsa.rental.domain.predicate.listing.IsListingActivePredicate;
+import sk.fsa.rental.domain.predicate.listing.IsListingVisibleToPredicate;
 import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.ListingViewEventRepository;
@@ -81,9 +83,26 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
+    public Listing deactivate(Long listingId, User editor) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
+
+        listing.deactivate(editor);
+        return listingRepository.save(listing);
+    }
+
+    @Override
     public Listing getById(Long id) {
         return listingRepository.findById(id)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
+    }
+
+    @Override
+    public Listing getVisibleById(Long id, User requester) {
+        Listing listing = getById(id);
+        require(IsListingVisibleToPredicate.INSTANCE.test(listing, requester),
+                RentalException.Type.NOT_FOUND, "Listing not found.");
+        return listing;
     }
 
     @Override
@@ -107,7 +126,7 @@ public class ListingService implements ListingFacade {
 
     @Override
     public List<Photo> getPhotos(Long listingId, User requester) {
-        List<Photo> photos = getById(listingId).getPhotos();
+        List<Photo> photos = getVisibleById(listingId, requester).getPhotos();
         boolean canViewAll = photos.stream().allMatch(photo -> photo.canBeViewedBy(requester));
         require(canViewAll, RentalException.Type.FORBIDDEN, "Photos are not available for this user.");
         return photos;
@@ -126,6 +145,8 @@ public class ListingService implements ListingFacade {
         if (ownerId.equals(viewerId)) {
             return; // owners don't inflate their own stats
         }
+        require(IsListingActivePredicate.INSTANCE.test(listing),
+                RentalException.Type.NOT_FOUND, "Listing not found.");
         listingViewEventRepository.save(new ListingViewEvent(listingId, ownerId));
     }
 

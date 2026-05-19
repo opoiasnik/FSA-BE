@@ -68,7 +68,8 @@ public class ListingRestController implements ListingApi {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ListingResponseDto> getListingById(Long id) {
-        ListingResponseDto response = listingMapper.toDto(listingFacade.getById(id));
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        ListingResponseDto response = listingMapper.toDto(listingFacade.getVisibleById(id, currentUser));
         response.setStats(new ListingStatsDto().views(listingFacade.countViews(id)));
         return ResponseEntity.ok(response);
     }
@@ -133,6 +134,20 @@ public class ListingRestController implements ListingApi {
         User currentUser = currentUserDetailService.getFullCurrentUser();
         listingFacade.recordView(id, currentUser.getId());
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<ListingResponseDto> activateListing(Long id) {
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        return ResponseEntity.ok(listingMapper.toDto(listingFacade.activate(id, currentUser)));
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<ListingResponseDto> deactivateListing(Long id) {
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        return ResponseEntity.ok(listingMapper.toDto(listingFacade.deactivate(id, currentUser)));
     }
 
     private void validatePhoto(MultipartFile file) {
