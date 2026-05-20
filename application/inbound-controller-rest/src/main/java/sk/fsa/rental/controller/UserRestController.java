@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import sk.fsa.rental.controller.mapper.UserMapper;
+import sk.fsa.rental.mapper.UserMapper;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.UserFacade;

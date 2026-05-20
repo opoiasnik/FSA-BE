@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import sk.fsa.rental.controller.mapper.ConversationMapper;
+import sk.fsa.rental.mapper.ConversationMapper;
 import sk.fsa.rental.domain.Conversation;
 import sk.fsa.rental.domain.Message;
 import sk.fsa.rental.domain.User;

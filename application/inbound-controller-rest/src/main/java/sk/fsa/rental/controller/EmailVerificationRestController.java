@@ -3,7 +3,7 @@ package sk.fsa.rental.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import sk.fsa.rental.controller.mapper.UserMapper;
+import sk.fsa.rental.mapper.UserMapper;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.EmailVerificationFacade;
 import sk.fsa.rental.rest.api.EmailVerificationApi;

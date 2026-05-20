@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import sk.fsa.rental.controller.mapper.FavoriteMapper;
+import sk.fsa.rental.mapper.FavoriteMapper;
 import sk.fsa.rental.domain.Favorite;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.FavoriteFacade;

@@ -13,6 +13,6 @@ public final class IsListingActivePredicate implements Predicate<Listing> {
 
     @Override
     public boolean test(Listing listing) {
-        return ListingStatus.ACTIVE.equals(listing.getStatus());
+        return listing != null && ListingStatus.ACTIVE.equals(listing.getStatus());
     }
 }

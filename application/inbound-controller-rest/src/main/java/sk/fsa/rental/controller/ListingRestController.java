@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import sk.fsa.rental.controller.mapper.ListingMapper;
+import sk.fsa.rental.mapper.ListingMapper;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingType;
 import sk.fsa.rental.domain.Photo;

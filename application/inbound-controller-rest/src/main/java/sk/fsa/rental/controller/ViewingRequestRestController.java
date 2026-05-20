@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import sk.fsa.rental.controller.mapper.ViewingRequestMapper;
+import sk.fsa.rental.mapper.ViewingRequestMapper;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.ViewingRequest;
 import sk.fsa.rental.domain.facade.ViewingRequestFacade;

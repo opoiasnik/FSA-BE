@@ -1,4 +1,4 @@
-package sk.fsa.rental.controller.mapper;
+package sk.fsa.rental.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

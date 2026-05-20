@@ -6,7 +6,7 @@ import sk.fsa.rental.domain.ListingViewEvent;
 import java.util.Date;
 import java.util.List;
 
-public interface ListingViewEventSpringDataRepository extends JpaRepository<ListingViewEvent, Long> {
+interface ListingViewEventSpringDataRepository extends JpaRepository<ListingViewEvent, Long> {
 
     long countByOwnerId(Long ownerId);
 
