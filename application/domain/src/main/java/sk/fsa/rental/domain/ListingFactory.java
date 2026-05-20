@@ -26,15 +26,22 @@ public class ListingFactory {
         require(!listingRepository.existsByOwnerIdAndAddress(owner.getId(), listing.getAddress()),
                 RentalException.Type.VALIDATION, "Owner already has a listing at this address.");
 
-        Address address = listing.getAddress();
-        if (RequiresGeocodingPredicate.INSTANCE.test(address)) {
-            geocodingService.geocode(address).ifPresent(coords -> {
-                address.setLat(coords.lat());
-                address.setLng(coords.lng());
-            });
-        }
+        assignCoordinatesWhenNeeded(listing.getAddress());
 
         return listing;
+    }
+
+    private void assignCoordinatesWhenNeeded(Address address) {
+        if (!RequiresGeocodingPredicate.INSTANCE.test(address)) {
+            return;
+        }
+
+        Coordinates coordinates = geocodingService.geocode(address)
+                .orElseThrow(() -> new RentalException(
+                        RentalException.Type.VALIDATION,
+                        "Address could not be verified. Check street, city, postal code and country.",
+                        "address.street"));
+        address.assignCoordinates(coordinates);
     }
 
     private void require(boolean valid, RentalException.Type type, String message) {

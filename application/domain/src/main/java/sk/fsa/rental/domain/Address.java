@@ -31,6 +31,13 @@ public class Address {
                 "address.country", "Country is required.");
     }
 
+    public void assignCoordinates(Coordinates coordinates) {
+        requireField(coordinates != null,
+                "address.street", "Address could not be verified. Check street, city, postal code and country.");
+        this.lat = coordinates.lat();
+        this.lng = coordinates.lng();
+    }
+
     private void requireField(boolean condition, String field, String message) {
         if (!condition) {
             throw new RentalException(RentalException.Type.VALIDATION, message, field);

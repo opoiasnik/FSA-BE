@@ -1,6 +1,5 @@
 package sk.fsa.rental.geocoding;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,9 +16,11 @@ public class NominatimGeocodingAdapter implements GeocodingService {
     private static final Logger LOG = LoggerFactory.getLogger(NominatimGeocodingAdapter.class);
 
     private final RestClient nominatimRestClient;
+    private final NominatimAddressMatcher addressMatcher;
 
-    public NominatimGeocodingAdapter(RestClient nominatimRestClient) {
+    public NominatimGeocodingAdapter(RestClient nominatimRestClient, NominatimAddressMatcher addressMatcher) {
         this.nominatimRestClient = nominatimRestClient;
+        this.addressMatcher = addressMatcher;
     }
 
     @Override
@@ -33,6 +34,7 @@ public class NominatimGeocodingAdapter implements GeocodingService {
                     .uri(uri -> uri.path("/search")
                             .queryParam("q", query)
                             .queryParam("format", "json")
+                            .queryParam("addressdetails", "1")
                             .queryParam("limit", "1")
                             .build())
                     .retrieve()
@@ -44,6 +46,11 @@ public class NominatimGeocodingAdapter implements GeocodingService {
             }
 
             NominatimResult first = results[0];
+            if (!addressMatcher.matches(address, first.address())) {
+                LOG.warn("Nominatim result does not match requested address. Query: {}, result: {}", query, first.displayName());
+                return Optional.empty();
+            }
+
             return Optional.of(new Coordinates(
                     Double.parseDouble(first.lat()),
                     Double.parseDouble(first.lon())));
@@ -66,9 +73,5 @@ public class NominatimGeocodingAdapter implements GeocodingService {
         if (value == null || value.isBlank()) return;
         if (!sb.isEmpty()) sb.append(", ");
         sb.append(value.trim());
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private record NominatimResult(String lat, String lon) {
     }
 }
