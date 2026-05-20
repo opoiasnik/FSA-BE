@@ -1,6 +1,7 @@
 package sk.fsa.rental.domain;
 
 import sk.fsa.rental.domain.repository.ListingRepository;
+import sk.fsa.rental.domain.predicate.listing.RequiresGeocodingPredicate;
 import sk.fsa.rental.domain.service.GeocodingService;
 
 public class ListingFactory {
@@ -26,7 +27,7 @@ public class ListingFactory {
                 RentalException.Type.VALIDATION, "Owner already has a listing at this address.");
 
         Address address = listing.getAddress();
-        if (address.getLat() == null || address.getLng() == null) {
+        if (RequiresGeocodingPredicate.INSTANCE.test(address)) {
             geocodingService.geocode(address).ifPresent(coords -> {
                 address.setLat(coords.lat());
                 address.setLng(coords.lng());

@@ -1,6 +1,7 @@
 package sk.fsa.rental.domain.predicate.listing;
 
 import org.junit.jupiter.api.Test;
+import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.UserRole;
@@ -53,6 +54,18 @@ class ListingPredicateTest {
         assertFalse(IsOwnedByPredicate.INSTANCE.test(null, user(1L, UserRole.OWNER)));
     }
 
+    @Test
+    void requiresGeocodingPredicateRequiresMissingLatitudeOrLongitude() {
+        Address complete = address(48.72, 21.25);
+        Address withoutLatitude = address(null, 21.25);
+        Address withoutLongitude = address(48.72, null);
+
+        assertFalse(RequiresGeocodingPredicate.INSTANCE.test(complete));
+        assertTrue(RequiresGeocodingPredicate.INSTANCE.test(withoutLatitude));
+        assertTrue(RequiresGeocodingPredicate.INSTANCE.test(withoutLongitude));
+        assertFalse(RequiresGeocodingPredicate.INSTANCE.test(null));
+    }
+
     private Listing listing(User owner) {
         Listing listing = new Listing();
         setField(listing, "owner", owner);
@@ -63,6 +76,13 @@ class ListingPredicateTest {
         User user = new User("user-" + id, "test", "user" + id + "@test.sk", role);
         setField(user, "id", id);
         return user;
+    }
+
+    private Address address(Double lat, Double lng) {
+        Address address = new Address("Main 1", "Kosice", "04001", "Slovakia");
+        address.setLat(lat);
+        address.setLng(lng);
+        return address;
     }
 
     private void setField(Object target, String fieldName, Object value) {
