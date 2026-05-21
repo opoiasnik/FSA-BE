@@ -21,6 +21,12 @@ public class ViewingRequest {
         this.status = ViewingStatus.PENDING;
     }
 
+    public ViewingRequest(Date requestedDate, String note) {
+        this();
+        this.requestedDate = requestedDate;
+        this.note = note;
+    }
+
     public void validateForCreation() {
         require(HasRequiredFieldsPredicate.INSTANCE.test(this),
                 RentalException.Type.VALIDATION,
@@ -82,15 +88,15 @@ public class ViewingRequest {
     }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    void setId(Long id) { this.id = id; }
 
     public Date getRequestedDate() { return requestedDate; }
-    public void setRequestedDate(Date requestedDate) { this.requestedDate = requestedDate; }
+    void setRequestedDate(Date requestedDate) { this.requestedDate = requestedDate; }
 
     public ViewingStatus getStatus() { return status; }
 
     public String getNote() { return note; }
-    public void setNote(String note) { this.note = note; }
+    void setNote(String note) { this.note = note; }
 
     public User getRequester() { return requester; }
 

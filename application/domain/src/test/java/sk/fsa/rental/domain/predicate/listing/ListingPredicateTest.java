@@ -79,10 +79,7 @@ class ListingPredicateTest {
     }
 
     private Address address(Double lat, Double lng) {
-        Address address = new Address("Main 1", "Kosice", "04001", "Slovakia");
-        address.setLat(lat);
-        address.setLng(lng);
-        return address;
+        return new Address("Main 1", "Kosice", "04001", "Slovakia", null, null, lat, lng);
     }
 
     private void setField(Object target, String fieldName, Object value) {

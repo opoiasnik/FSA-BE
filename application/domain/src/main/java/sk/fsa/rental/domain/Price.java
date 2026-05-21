@@ -33,7 +33,7 @@ public class Price {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -41,7 +41,7 @@ public class Price {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    void setCurrency(String currency) {
         this.currency = currency;
     }
 }

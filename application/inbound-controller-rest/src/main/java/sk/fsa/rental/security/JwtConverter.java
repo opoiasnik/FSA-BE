@@ -25,13 +25,12 @@ class JwtConverter extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        AuthenticatedUser principal = new AuthenticatedUser();
-        principal.setKeycloakId(source.getClaimAsString("sub"));
-        principal.setEmail(source.getClaimAsString("email"));
-        principal.setName(source.getClaimAsString("given_name"));
-        principal.setSurname(source.getClaimAsString("family_name"));
-        principal.setRole(getRole());
-        return principal;
+        return new AuthenticatedUser(
+                source.getClaimAsString("sub"),
+                source.getClaimAsString("email"),
+                source.getClaimAsString("given_name"),
+                source.getClaimAsString("family_name"),
+                getRole());
     }
 
     private UserRoleDto getRole() {

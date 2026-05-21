@@ -33,6 +33,17 @@ public class Listing {
         this.createdAt = new Date();
     }
 
+    public Listing(String title, String description, ListingType listingType,
+                   Address address, Price price, PropertyFeatures features) {
+        this();
+        this.title = title;
+        this.description = description;
+        this.listingType = listingType;
+        this.address = address;
+        this.price = price;
+        this.features = features;
+    }
+
     public void validateForCreation() {
         requireField(HasRequiredTitlePredicate.INSTANCE.test(title),
                 "title", "Listing title is required.");
@@ -106,16 +117,16 @@ public class Listing {
     }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    void setId(Long id) { this.id = id; }
 
     public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    void setTitle(String title) { this.title = title; }
 
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    void setDescription(String description) { this.description = description; }
 
     public ListingType getListingType() { return listingType; }
-    public void setListingType(ListingType listingType) { this.listingType = listingType; }
+    void setListingType(ListingType listingType) { this.listingType = listingType; }
 
     public ListingStatus getStatus() { return status; }
 
@@ -125,13 +136,13 @@ public class Listing {
     void setOwner(User owner) { this.owner = owner; }
 
     public Address getAddress() { return address; }
-    public void setAddress(Address address) { this.address = address; }
+    void setAddress(Address address) { this.address = address; }
 
     public Price getPrice() { return price; }
-    public void setPrice(Price price) { this.price = price; }
+    void setPrice(Price price) { this.price = price; }
 
     public PropertyFeatures getFeatures() { return features; }
-    public void setFeatures(PropertyFeatures features) { this.features = features; }
+    void setFeatures(PropertyFeatures features) { this.features = features; }
 
     public List<Photo> getPhotos() { return Collections.unmodifiableList(photos); }
 }

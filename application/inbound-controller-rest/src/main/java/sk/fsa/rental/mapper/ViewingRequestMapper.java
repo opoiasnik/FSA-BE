@@ -19,12 +19,12 @@ public interface ViewingRequestMapper {
         return Date.from(offsetDateTime.toInstant());
     }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "requester", ignore = true)
-    @Mapping(target = "owner", ignore = true)
-    @Mapping(target = "listing", ignore = true)
-    ViewingRequest toDomain(CreateViewingRequestDto dto);
+    default ViewingRequest toDomain(CreateViewingRequestDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        return new ViewingRequest(toDate(dto.getRequestedDate()), dto.getNote());
+    }
 
     @Mapping(source = "listing", target = "listing")
     @Mapping(source = "requester", target = "requester")

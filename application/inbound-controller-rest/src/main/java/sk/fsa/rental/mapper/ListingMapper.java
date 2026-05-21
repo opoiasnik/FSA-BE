@@ -7,10 +7,13 @@ import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
 import sk.fsa.rental.domain.ListingType;
 import sk.fsa.rental.domain.Photo;
+import sk.fsa.rental.domain.Price;
+import sk.fsa.rental.domain.PropertyFeatures;
 import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.rest.dto.*;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -26,12 +29,18 @@ public interface ListingMapper {
         return OffsetDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneOffset.UTC);
     }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "owner", ignore = true)
-    @Mapping(target = "photos", ignore = true)
-    Listing toDomain(CreateListingRequestDto dto);
+    default Listing toDomain(CreateListingRequestDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        return new Listing(
+                dto.getTitle(),
+                dto.getDescription(),
+                dto.getListingType() != null ? ListingType.valueOf(dto.getListingType().name()) : null,
+                toDomain(dto.getAddress()),
+                toDomain(dto.getPrice()),
+                toDomain(dto.getFeatures()));
+    }
 
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "owner", target = "owner")
@@ -99,13 +108,49 @@ public interface ListingMapper {
 
     AddressResponseDto toDto(sk.fsa.rental.domain.Address address);
 
-    sk.fsa.rental.domain.Address toDomain(AddressRequestDto dto);
+    default sk.fsa.rental.domain.Address toDomain(AddressRequestDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        return new sk.fsa.rental.domain.Address(
+                dto.getStreet(),
+                dto.getCity(),
+                dto.getPostalCode(),
+                dto.getCountry(),
+                dto.getDistrict(),
+                dto.getRegion(),
+                dto.getLat(),
+                dto.getLng());
+    }
 
     PriceResponseDto toDto(sk.fsa.rental.domain.Price price);
 
-    sk.fsa.rental.domain.Price toDomain(PriceRequestDto dto);
+    default sk.fsa.rental.domain.Price toDomain(PriceRequestDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        return new Price(
+                dto.getAmount() != null ? BigDecimal.valueOf(dto.getAmount()) : null,
+                dto.getCurrency());
+    }
 
     PropertyFeaturesResponseDto toDto(sk.fsa.rental.domain.PropertyFeatures features);
 
-    sk.fsa.rental.domain.PropertyFeatures toDomain(PropertyFeaturesRequestDto dto);
+    default sk.fsa.rental.domain.PropertyFeatures toDomain(PropertyFeaturesRequestDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        return new PropertyFeatures(
+                dto.getPropertyType() != null ? PropertyType.valueOf(dto.getPropertyType().name()) : null,
+                dto.getArea(),
+                dto.getRoomCount(),
+                dto.getFloor(),
+                dto.getFurnished(),
+                dto.getParkingAvailable(),
+                dto.getBalcony(),
+                dto.getElevator(),
+                dto.getPetsAllowed(),
+                dto.getEnergyClass(),
+                dto.getYearBuilt());
+    }
 }

@@ -20,6 +20,15 @@ public class Address {
         this.country = country;
     }
 
+    public Address(String street, String city, String postalCode, String country,
+                   String district, String region, Double lat, Double lng) {
+        this(street, city, postalCode, country);
+        this.district = district;
+        this.region = region;
+        this.lat = lat;
+        this.lng = lng;
+    }
+
     public void validate() {
         requireField(street != null && !street.trim().isEmpty(),
                 "address.street", "Street is required.");
@@ -48,7 +57,7 @@ public class Address {
         return street;
     }
 
-    public void setStreet(String street) {
+    void setStreet(String street) {
         this.street = street;
     }
 
@@ -56,7 +65,7 @@ public class Address {
         return city;
     }
 
-    public void setCity(String city) {
+    void setCity(String city) {
         this.city = city;
     }
 
@@ -64,7 +73,7 @@ public class Address {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode) {
+    void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 
@@ -72,19 +81,19 @@ public class Address {
         return country;
     }
 
-    public void setCountry(String country) {
+    void setCountry(String country) {
         this.country = country;
     }
 
     public String getDistrict() { return district; }
-    public void setDistrict(String district) { this.district = district; }
+    void setDistrict(String district) { this.district = district; }
 
     public String getRegion() { return region; }
-    public void setRegion(String region) { this.region = region; }
+    void setRegion(String region) { this.region = region; }
 
     public Double getLat() { return lat; }
-    public void setLat(Double lat) { this.lat = lat; }
+    void setLat(Double lat) { this.lat = lat; }
 
     public Double getLng() { return lng; }
-    public void setLng(Double lng) { this.lng = lng; }
+    void setLng(Double lng) { this.lng = lng; }
 }

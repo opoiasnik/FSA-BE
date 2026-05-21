@@ -112,7 +112,7 @@ class ListingServiceTest {
 
     private Listing listing(Long id, User owner) {
         Listing listing = new Listing();
-        listing.setId(id);
+        setField(listing, "id", id);
         setField(listing, "owner", owner);
         return listing;
     }

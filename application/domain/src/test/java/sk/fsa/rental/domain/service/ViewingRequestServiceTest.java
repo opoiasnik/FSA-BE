@@ -47,8 +47,7 @@ class ViewingRequestServiceTest {
         when(listingRepository.findById(100L)).thenReturn(Optional.of(listing));
         when(viewingRequestRepository.findByListingIdAndRequesterId(100L, 2L)).thenReturn(List.of(existing));
 
-        ViewingRequest newRequest = new ViewingRequest();
-        newRequest.setRequestedDate(date(2000L));
+        ViewingRequest newRequest = new ViewingRequest(date(2000L), null);
 
         RentalException ex = assertThrows(RentalException.class,
                 () -> service.createRequest(newRequest, 100L, requester));
@@ -65,8 +64,7 @@ class ViewingRequestServiceTest {
         Listing listing = listing(100L, owner);
         ViewingRequest rejected = request(1L, listing, requester, date(1000L));
         rejected.reject(owner);
-        ViewingRequest newRequest = new ViewingRequest();
-        newRequest.setRequestedDate(date(2000L));
+        ViewingRequest newRequest = new ViewingRequest(date(2000L), null);
         when(listingRepository.findById(100L)).thenReturn(Optional.of(listing));
         when(viewingRequestRepository.findByListingIdAndRequesterId(100L, 2L)).thenReturn(List.of(rejected));
         when(viewingRequestRepository.save(newRequest)).thenReturn(newRequest);
@@ -127,16 +125,15 @@ class ViewingRequestServiceTest {
     }
 
     private ViewingRequest request(Long id, Listing listing, User requester, Date requestedDate) {
-        ViewingRequest request = new ViewingRequest();
-        request.setId(id);
+        ViewingRequest request = new ViewingRequest(requestedDate, null);
+        setField(request, "id", id);
         request.assignParticipants(listing, requester);
-        request.setRequestedDate(requestedDate);
         return request;
     }
 
     private Listing listing(Long id, User owner) {
         Listing listing = new Listing();
-        listing.setId(id);
+        setField(listing, "id", id);
         setField(listing, "owner", owner);
         return listing;
     }

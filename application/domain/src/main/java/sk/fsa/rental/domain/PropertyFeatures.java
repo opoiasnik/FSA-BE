@@ -18,6 +18,22 @@ public class PropertyFeatures {
     public PropertyFeatures() {
     }
 
+    public PropertyFeatures(PropertyType propertyType, Double area, Integer roomCount, Integer floor,
+                            Boolean furnished, Boolean parkingAvailable, Boolean balcony,
+                            Boolean elevator, Boolean petsAllowed, String energyClass, Integer yearBuilt) {
+        this.propertyType = propertyType;
+        this.area = area;
+        this.roomCount = roomCount;
+        this.floor = floor;
+        this.furnished = furnished;
+        this.parkingAvailable = parkingAvailable;
+        this.balcony = balcony;
+        this.elevator = elevator;
+        this.petsAllowed = petsAllowed;
+        this.energyClass = energyClass;
+        this.yearBuilt = yearBuilt;
+    }
+
     public void validate() {
         require(propertyType != null, "Property type is required.");
         if (area != null) {
@@ -42,7 +58,7 @@ public class PropertyFeatures {
         return propertyType;
     }
 
-    public void setPropertyType(PropertyType propertyType) {
+    void setPropertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
     }
 
@@ -50,7 +66,7 @@ public class PropertyFeatures {
         return area;
     }
 
-    public void setArea(Double area) {
+    void setArea(Double area) {
         this.area = area;
     }
 
@@ -58,7 +74,7 @@ public class PropertyFeatures {
         return roomCount;
     }
 
-    public void setRoomCount(Integer roomCount) {
+    void setRoomCount(Integer roomCount) {
         this.roomCount = roomCount;
     }
 
@@ -66,7 +82,7 @@ public class PropertyFeatures {
         return floor;
     }
 
-    public void setFloor(Integer floor) {
+    void setFloor(Integer floor) {
         this.floor = floor;
     }
 
@@ -74,7 +90,7 @@ public class PropertyFeatures {
         return furnished;
     }
 
-    public void setFurnished(Boolean furnished) {
+    void setFurnished(Boolean furnished) {
         this.furnished = furnished;
     }
 
@@ -82,22 +98,22 @@ public class PropertyFeatures {
         return parkingAvailable;
     }
 
-    public void setParkingAvailable(Boolean parkingAvailable) {
+    void setParkingAvailable(Boolean parkingAvailable) {
         this.parkingAvailable = parkingAvailable;
     }
 
     public Boolean getBalcony() { return balcony; }
-    public void setBalcony(Boolean balcony) { this.balcony = balcony; }
+    void setBalcony(Boolean balcony) { this.balcony = balcony; }
 
     public Boolean getElevator() { return elevator; }
-    public void setElevator(Boolean elevator) { this.elevator = elevator; }
+    void setElevator(Boolean elevator) { this.elevator = elevator; }
 
     public Boolean getPetsAllowed() { return petsAllowed; }
-    public void setPetsAllowed(Boolean petsAllowed) { this.petsAllowed = petsAllowed; }
+    void setPetsAllowed(Boolean petsAllowed) { this.petsAllowed = petsAllowed; }
 
     public String getEnergyClass() { return energyClass; }
-    public void setEnergyClass(String energyClass) { this.energyClass = energyClass; }
+    void setEnergyClass(String energyClass) { this.energyClass = energyClass; }
 
     public Integer getYearBuilt() { return yearBuilt; }
-    public void setYearBuilt(Integer yearBuilt) { this.yearBuilt = yearBuilt; }
+    void setYearBuilt(Integer yearBuilt) { this.yearBuilt = yearBuilt; }
 }
