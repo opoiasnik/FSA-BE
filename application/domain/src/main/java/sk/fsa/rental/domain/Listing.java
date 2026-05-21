@@ -95,6 +95,7 @@ public class Listing {
     public void delete(User editor) {
         require(IsOwnedByPredicate.INSTANCE.test(owner, editor),
                 RentalException.Type.FORBIDDEN, "Only the owner can delete this listing.");
+        this.status = ListingStatus.DELETED;
     }
 
     public void addPhoto(Photo photo) {

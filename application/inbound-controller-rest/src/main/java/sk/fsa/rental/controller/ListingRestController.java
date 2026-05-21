@@ -150,6 +150,14 @@ public class ListingRestController implements ListingApi {
         return ResponseEntity.ok(listingMapper.toDto(listingFacade.deactivate(id, currentUser)));
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<Void> deleteListing(Long id) {
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        listingFacade.delete(id, currentUser);
+        return ResponseEntity.noContent().build();
+    }
+
     private void validatePhoto(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new RentalException(RentalException.Type.VALIDATION, "Photo file is required.", "file");

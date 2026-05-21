@@ -1073,6 +1073,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete a listing owned by the current user
+      operationId: deleteListing
+      tags:
+        - Listing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Listing deleted
+        '403':
+          description: Forbidden - not the listing owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Listing not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/listings/{id}/view:
     post:
@@ -1358,7 +1385,7 @@ components:
 
     ListingSummary:
       type: object
-      required: [ id, title, listingType, city, price ]
+      required: [ id, title, listingType, status, city, price ]
       properties:
         id:
           type: integer
@@ -1367,6 +1394,8 @@ components:
           type: string
         listingType:
           $ref: '#/components/schemas/ListingType'
+        status:
+          $ref: '#/components/schemas/ListingStatus'
         city:
           type: string
         price:
@@ -1621,6 +1650,7 @@ components:
       enum:
         - ACTIVE
         - INACTIVE
+        - DELETED
       example: INACTIVE
 
     PropertyType:

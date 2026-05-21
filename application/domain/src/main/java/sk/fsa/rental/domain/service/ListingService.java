@@ -4,6 +4,7 @@ import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
+import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.ListingType;
 import sk.fsa.rental.domain.ListingViewEvent;
 import sk.fsa.rental.domain.Photo;
@@ -70,7 +71,7 @@ public class ListingService implements ListingFacade {
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
         existing.delete(editor);
-        listingRepository.deleteById(listingId);
+        listingRepository.save(existing);
     }
 
     @Override
@@ -121,7 +122,9 @@ public class ListingService implements ListingFacade {
 
     @Override
     public List<Listing> getByOwner(Long ownerId) {
-        return listingRepository.findByOwnerId(ownerId);
+        return listingRepository.findByOwnerId(ownerId).stream()
+                .filter(listing -> listing.getStatus() != ListingStatus.DELETED)
+                .toList();
     }
 
     @Override
