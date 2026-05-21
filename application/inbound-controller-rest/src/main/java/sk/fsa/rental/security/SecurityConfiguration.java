@@ -24,6 +24,7 @@ class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**", "/actuator/prometheus").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/listings/featured").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/photos/*/cover-content").permitAll()
                         .anyRequest().authenticated()
