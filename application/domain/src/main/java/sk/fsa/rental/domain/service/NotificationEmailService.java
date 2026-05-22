@@ -23,7 +23,7 @@ public class NotificationEmailService implements NotificationEmailFacade {
     @Override
     public void messageSent(Conversation conversation, Message message, User sender) {
         User recipient = conversation.peerFor(sender);
-        if (recipient == null || !recipient.isMessageEmailNotifications()) {
+        if (recipient == null || !recipient.canReceiveMessageEmailNotifications()) {
             return;
         }
 
@@ -34,7 +34,7 @@ public class NotificationEmailService implements NotificationEmailFacade {
     @Override
     public void viewingRequestCreated(ViewingRequest viewingRequest) {
         User owner = viewingRequest.getOwner();
-        if (owner == null || !owner.isViewingRequestEmailNotifications()) {
+        if (owner == null || !owner.canReceiveViewingRequestEmailNotifications()) {
             return;
         }
 
@@ -45,7 +45,7 @@ public class NotificationEmailService implements NotificationEmailFacade {
     @Override
     public void viewingStatusChanged(ViewingRequest viewingRequest) {
         User requester = viewingRequest.getRequester();
-        if (requester == null || !requester.isViewingEmailNotifications()) {
+        if (requester == null || !requester.canReceiveViewingEmailNotifications()) {
             return;
         }
 
@@ -56,7 +56,7 @@ public class NotificationEmailService implements NotificationEmailFacade {
     @Override
     public void viewingCancelled(ViewingRequest viewingRequest) {
         User owner = viewingRequest.getOwner();
-        if (owner == null || !owner.isViewingRequestEmailNotifications()) {
+        if (owner == null || !owner.canReceiveViewingRequestEmailNotifications()) {
             return;
         }
 

@@ -1,6 +1,9 @@
 package sk.fsa.rental.domain;
 
+import sk.fsa.rental.domain.predicate.user.HasValidBioPredicate;
 import sk.fsa.rental.domain.predicate.user.HasValidEmailPredicate;
+import sk.fsa.rental.domain.predicate.user.HasValidPersonNamePredicate;
+import sk.fsa.rental.domain.predicate.user.HasValidPhonePredicate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,16 +86,40 @@ public class User {
     }
 
     public void updateProfile(String name, String surname, String email, String phone, String bio) {
-        require(name != null && !name.isBlank(), RentalException.Type.VALIDATION, "Name is required.");
-        require(HasValidEmailPredicate.INSTANCE.test(email), RentalException.Type.VALIDATION, "Valid email is required.");
-        if (!Objects.equals(this.email, email)) {
+        String normalizedName = normalize(name);
+        String normalizedSurname = normalize(surname);
+        String normalizedEmail = normalize(email);
+        String normalizedPhone = normalizeNullable(phone);
+        String normalizedBio = normalizeNullable(bio);
+
+        require(HasValidPersonNamePredicate.INSTANCE.test(normalizedName),
+                RentalException.Type.VALIDATION, "Valid name is required.", "name");
+        require(HasValidPersonNamePredicate.INSTANCE.test(normalizedSurname),
+                RentalException.Type.VALIDATION, "Valid surname is required.", "surname");
+        require(HasValidEmailPredicate.INSTANCE.test(normalizedEmail),
+                RentalException.Type.VALIDATION, "Valid email is required.", "email");
+        require(HasValidPhonePredicate.INSTANCE.test(normalizedPhone),
+                RentalException.Type.VALIDATION, "Valid phone number is required.", "phone");
+        require(HasValidBioPredicate.INSTANCE.test(normalizedBio),
+                RentalException.Type.VALIDATION, "Bio must be 1000 characters or shorter.", "bio");
+
+        if (!Objects.equals(this.email, normalizedEmail)) {
             resetEmailVerification();
         }
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.phone = phone;
-        this.bio = bio;
+        this.name = normalizedName;
+        this.surname = normalizedSurname;
+        this.email = normalizedEmail;
+        this.phone = normalizedPhone;
+        this.bio = normalizedBio;
+    }
+
+    private String normalize(String value) {
+        return value == null ? null : value.trim();
+    }
+
+    private String normalizeNullable(String value) {
+        String normalized = normalize(value);
+        return normalized == null || normalized.isBlank() ? null : normalized;
     }
 
     public void updateAvatar(Photo avatarPhoto) {
@@ -103,9 +130,29 @@ public class User {
     public void updateNotificationPreferences(boolean messageEmailNotifications,
                                               boolean viewingEmailNotifications,
                                               boolean viewingRequestEmailNotifications) {
+        boolean wantsEmailNotifications = messageEmailNotifications
+                || viewingEmailNotifications
+                || viewingRequestEmailNotifications;
+        require(emailVerified || !wantsEmailNotifications,
+                RentalException.Type.VALIDATION,
+                "Verify your email before enabling email notifications.",
+                "emailVerified");
+
         this.messageEmailNotifications = messageEmailNotifications;
         this.viewingEmailNotifications = viewingEmailNotifications;
         this.viewingRequestEmailNotifications = viewingRequestEmailNotifications;
+    }
+
+    public boolean canReceiveMessageEmailNotifications() {
+        return emailVerified && messageEmailNotifications;
+    }
+
+    public boolean canReceiveViewingEmailNotifications() {
+        return emailVerified && viewingEmailNotifications;
+    }
+
+    public boolean canReceiveViewingRequestEmailNotifications() {
+        return emailVerified && viewingRequestEmailNotifications;
     }
 
     public void startEmailVerification(String code, Date expiresAt) {
