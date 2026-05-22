@@ -52,17 +52,7 @@ public class ListingService implements ListingFacade {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        existing.update(
-                editor,
-                updatedListing.getTitle(),
-                updatedListing.getDescription(),
-                updatedListing.getListingType(),
-                updatedListing.getAddress(),
-                updatedListing.getPrice(),
-                updatedListing.getFeatures()
-        );
-
-        return listingRepository.save(existing);
+        return listingRepository.save(listingFactory.update(existing, updatedListing, editor));
     }
 
     @Override

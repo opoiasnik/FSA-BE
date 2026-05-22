@@ -53,6 +53,15 @@ public class ListingRestController implements ListingApi {
     }
 
     @Override
+    @Transactional
+    public ResponseEntity<ListingResponseDto> updateListing(Long id, CreateListingRequestDto createListingRequestDto) {
+        User currentUser = currentUserDetailService.getFullCurrentUser();
+        Listing listing = listingMapper.toDomain(createListingRequestDto);
+        Listing updated = listingFacade.update(id, listing, currentUser);
+        return ResponseEntity.ok(listingMapper.toDto(updated));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ListingSearchResponseDto> searchListings(
             String city, ListingTypeDto listingType, Double priceMin, Double priceMax,

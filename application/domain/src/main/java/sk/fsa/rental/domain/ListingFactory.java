@@ -31,6 +31,25 @@ public class ListingFactory {
         return listing;
     }
 
+    public Listing update(Listing existing, Listing updatedListing, User editor) {
+        require(existing != null,
+                RentalException.Type.VALIDATION, "Existing listing must not be null.");
+        require(updatedListing != null,
+                RentalException.Type.VALIDATION, "Updated listing must not be null.");
+
+        existing.update(
+                editor,
+                updatedListing.getTitle(),
+                updatedListing.getDescription(),
+                updatedListing.getListingType(),
+                updatedListing.getAddress(),
+                updatedListing.getPrice(),
+                updatedListing.getFeatures()
+        );
+        assignCoordinatesWhenNeeded(existing.getAddress());
+        return existing;
+    }
+
     private void assignCoordinatesWhenNeeded(Address address) {
         if (!RequiresGeocodingPredicate.INSTANCE.test(address)) {
             return;
