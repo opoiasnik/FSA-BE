@@ -1,0 +1,145 @@
+@startuml
+title Property Rental Backend - Domain Model
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+class User {
+  id
+  keycloakId
+  email
+  name
+  surname
+  role
+  updateProfile()
+  updateAvatar()
+}
+
+class Listing {
+  id
+  title
+  description
+  listingType
+  status
+  createdAt
+  validateForCreation()
+  update()
+  activate()
+  deactivate()
+  delete()
+  addPhoto()
+}
+
+class Address {
+  street
+  city
+  postalCode
+  country
+  lat
+  lng
+  validate()
+  assignCoordinates()
+}
+
+class Price {
+  amount
+  currency
+  validate()
+}
+
+class PropertyFeatures {
+  propertyType
+  area
+  roomCount
+  floor
+  furnished
+  parkingAvailable
+  balcony
+  elevator
+  petsAllowed
+  validate()
+}
+
+class Photo {
+  id
+  contentType
+  originalFilename
+  position
+  isPublicCover()
+  canBeViewedBy()
+}
+
+class Favorite {
+  id
+  validateForCreation()
+}
+
+class ViewingRequest {
+  id
+  requestedDate
+  status
+  note
+  approve()
+  reject()
+  cancel()
+  validateForCreation()
+}
+
+class Conversation {
+  id
+  createdAt
+  updatedAt
+  assignParticipants()
+  addMessage()
+  markRead()
+  unreadCountFor()
+  peerFor()
+}
+
+class Message {
+  id
+  text
+  sentAt
+  readAt
+  validateForCreation()
+  markReadBy()
+}
+
+enum UserRole {
+  USER
+  OWNER
+}
+
+enum ListingStatus {
+  ACTIVE
+  INACTIVE
+  DELETED
+}
+
+enum ViewingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+User "1" -- "0..*" Listing : owns
+Listing "1" *-- "1" Address
+Listing "1" *-- "1" Price
+Listing "1" *-- "1" PropertyFeatures
+Listing "1" *-- "0..*" Photo
+User "1" -- "0..*" Favorite
+Favorite "1" --> "1" Listing
+ViewingRequest "1" --> "1" Listing
+ViewingRequest "1" --> "1" User : requester
+ViewingRequest "1" --> "1" User : owner
+Conversation "1" --> "1" Listing
+Conversation "1" --> "1" User : owner
+Conversation "1" --> "1" User : requester
+Conversation "1" *-- "0..*" Message
+Message "1" --> "1" User : sender
+User --> UserRole
+Listing --> ListingStatus
+ViewingRequest --> ViewingStatus
+
+@enduml

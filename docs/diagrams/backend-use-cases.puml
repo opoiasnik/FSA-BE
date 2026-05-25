@@ -1,0 +1,79 @@
+@startuml
+title Property Rental Backend - Use Cases
+
+left to right direction
+skinparam shadowing false
+
+actor "User" as user
+actor "Owner" as owner
+actor "Keycloak" as keycloak
+actor "Nominatim" as nominatim
+actor "SMTP server" as smtp
+
+rectangle "Rental Backend API" {
+  usecase "Search listings" as UC_Search
+  usecase "View listing detail" as UC_Detail
+  usecase "Save favourite" as UC_Fav
+  usecase "Remove favourite" as UC_Unfav
+  usecase "Open conversation" as UC_OpenConv
+  usecase "Send message" as UC_SendMsg
+  usecase "Request viewing" as UC_RequestViewing
+  usecase "Cancel viewing" as UC_CancelViewing
+  usecase "Update profile" as UC_Profile
+  usecase "Upload avatar" as UC_Avatar
+  usecase "Verify email" as UC_VerifyEmail
+  usecase "Update notification preferences" as UC_Notif
+
+  usecase "Create listing" as UC_CreateListing
+  usecase "Edit listing" as UC_EditListing
+  usecase "Upload listing photos" as UC_Photos
+  usecase "Activate/deactivate listing" as UC_Status
+  usecase "Delete listing" as UC_DeleteListing
+  usecase "Approve/reject viewing" as UC_ProcessViewing
+  usecase "View owner statistics" as UC_Stats
+
+  usecase "Validate JWT and roles" as UC_Auth
+  usecase "Geocode address" as UC_Geocode
+  usecase "Send email notification" as UC_Email
+}
+
+user --> UC_Search
+user --> UC_Detail
+user --> UC_Fav
+user --> UC_Unfav
+user --> UC_OpenConv
+user --> UC_SendMsg
+user --> UC_RequestViewing
+user --> UC_CancelViewing
+user --> UC_Profile
+user --> UC_Avatar
+user --> UC_VerifyEmail
+user --> UC_Notif
+
+owner --> UC_CreateListing
+owner --> UC_EditListing
+owner --> UC_Photos
+owner --> UC_Status
+owner --> UC_DeleteListing
+owner --> UC_ProcessViewing
+owner --> UC_Stats
+owner --> UC_OpenConv
+owner --> UC_SendMsg
+owner --> UC_Profile
+
+UC_Fav ..> UC_Auth : include
+UC_OpenConv ..> UC_Auth : include
+UC_SendMsg ..> UC_Auth : include
+UC_RequestViewing ..> UC_Auth : include
+UC_CreateListing ..> UC_Auth : include
+UC_CreateListing ..> UC_Geocode : include
+UC_EditListing ..> UC_Geocode : include
+UC_ProcessViewing ..> UC_Email : optional
+UC_SendMsg ..> UC_Email : optional
+UC_VerifyEmail ..> UC_Email : include
+
+keycloak --> UC_Auth
+nominatim --> UC_Geocode
+smtp --> UC_Email
+
+@enduml

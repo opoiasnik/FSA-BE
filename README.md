@@ -1,360 +1,426 @@
 # Property Rental Application
 
-This application will allow users to search for apartments or houses available for rent or sale. Property owners will be able to publish property listings with descriptions, photos, structured address information and price details.
+This application will allow users to search for apartments, houses or rooms available for rent or sale. Property owners will be able to publish property listings with descriptions, photos, structured address information, price details and property features.
 
-Users will be able to browse available properties, filter them by address, price or property type and view detailed information about each listing, including selected property features such as area, number of rooms, floor, furnishing and parking availability. If a user is interested in a property, they will be able to contact the owner directly through the platform or request a property viewing.
+Users will be able to browse available properties, filter them by city, price, property type and additional features, view detailed information about each listing, save listings to favourites, contact owners through conversations and request property viewings.
 
-Property owners will also be able to manage their listings by creating, editing or removing property offers, updating their price and address information and managing property characteristics.
+Property owners will be able to manage their listings by creating, editing, activating, deactivating or deleting property offers. They will also be able to upload photos, process viewing requests, manage communication with interested users and view owner dashboard statistics.
 
 The goal of the application is to simplify the process of finding and offering accommodation through a centralized online platform.
 
-# Zber požiadaviek
+# Zber poziadaviek
 
-- **RQ01** Systém umožní používateľovi zaregistrovať sa do systému pomocou e-mailu.
-- **RQ02** Systém umožní používateľovi prihlásiť sa do systému a bude rozlišovať roly používateľov (používateľ, vlastník).
-- **RQ03** Systém umožní používateľovi vyhľadávať nehnuteľnosti dostupné na prenájom alebo predaj.
-- **RQ04** Systém umožní používateľovi filtrovať nehnuteľnosti podľa adresy, ceny alebo typu nehnuteľnosti.
-- **RQ05** Systém umožní používateľovi zobraziť detail vybranej nehnuteľnosti.
-- **RQ06** Systém zobrazí detail nehnuteľnosti vrátane popisu, fotografií, adresy, ceny a základných vlastností nehnuteľnosti.
-- **RQ07** Systém umožní používateľovi kontaktovať vlastníka nehnuteľnosti v prípade záujmu.
-- **RQ08** Systém umožní používateľovi ukladať nehnuteľnosti medzi obľúbené.
-- **RQ09** Systém umožní vlastníkovi vytvárať nové inzeráty nehnuteľností.
-- **RQ10** Systém umožní vlastníkovi upravovať existujúce inzeráty.
-- **RQ11** Systém umožní vlastníkovi odstrániť inzerát, ktorý už nie je aktuálny.
-- **RQ12** Systém umožní vlastníkovi spravovať základné informácie o svojej nehnuteľnosti.
-- **RQ13** Systém zobrazí používateľovi zoznam dostupných nehnuteľností.
-- **RQ14** Systém bude rozlišovať medzi ponukami na prenájom a ponukami na predaj.
-- **RQ15** Systém umožní používateľovi prezerať fotografie priradené k inzerátu.
-- **RQ16** Systém umožní používateľovi zobraziť kontaktné údaje vlastníka.
-- **RQ17** Systém umožní vlastníkovi pridať k inzerátu viacero fotografií.
-- **RQ18** Systém bude evidovať stav inzerátu (aktívny, neaktívny).
-- **RQ19** Systém zobrazí používateľovi iba aktívne inzeráty.
-- **RQ20** Systém umožní používateľovi požiadať o obhliadku nehnuteľnosti.
-- **RQ21** Systém umožní vlastníkovi schváliť alebo zamietnuť žiadosť o obhliadku.
-- **RQ22** Systém bude evidovať stav žiadosti o obhliadku (pending, approved, rejected, cancelled).
-- **RQ23** Systém bude evidovať adresu nehnuteľnosti ako štruktúrovaný údaj (ulica, mesto, PSČ, krajina).
-- **RQ24** Systém bude evidovať cenu nehnuteľnosti ako hodnotu a menu.
-- **RQ25** Systém bude evidovať vlastnosti nehnuteľnosti, napríklad rozlohu, počet izieb, poschodie, zariadenie a parkovanie.
-- **RQ26** Systém umožní zjednodušiť proces hľadania a ponúkania ubytovania prostredníctvom online platformy.
-# Slovník pojmov
+- **RQ01** System umozni pouzivatelovi zaregistrovat sa do systemu pomocou pouzivatelskeho mena, e-mailu a hesla.
+- **RQ02** System umozni pouzivatelovi prihlasit sa do systemu.
+- **RQ03** System bude rozlisovat roly pouzivatelov (`USER`, `OWNER`).
+- **RQ04** System umozni pouzivatelovi vyhladavat nehnutelnosti dostupne na prenajom alebo predaj.
+- **RQ05** System umozni pouzivatelovi filtrovat nehnutelnosti podla mesta, typu ponuky, ceny, typu nehnutelnosti a vlastnosti.
+- **RQ06** System umozni pouzivatelovi zoradovat vysledky podla ceny, rozlohy alebo datumu pridania.
+- **RQ07** System umozni pouzivatelovi zobrazit detail vybranej nehnutelnosti.
+- **RQ08** System zobrazi detail nehnutelnosti vratane popisu, fotografii, adresy, ceny, vlastnosti a kontaktu na vlastnika.
+- **RQ09** System umozni zobrazit polohu nehnutelnosti na mape, ak ma nehnutelnost suradnice.
+- **RQ10** System bude evidovat adresu nehnutelnosti ako strukturovany udaj (ulica, mesto, PSC, krajina, okres, region, suradnice).
+- **RQ11** System bude overovat adresu nehnutelnosti a doplnat suradnice pomocou geokodovacej sluzby.
+- **RQ12** System bude evidovat cenu nehnutelnosti ako hodnotu a menu.
+- **RQ13** System bude evidovat vlastnosti nehnutelnosti, napriklad typ, rozlohu, pocet izieb, poschodie, rok vystavby, energeticku triedu, zariadenie, parkovanie, balkon, vytah a povolenie domacich zvierat.
+- **RQ14** System umozni pouzivatelovi ulozit inzerat medzi oblubene.
+- **RQ15** System umozni pouzivatelovi odstranit inzerat zo zoznamu oblubenych.
+- **RQ16** System umozni pouzivatelovi kontaktovat vlastnika nehnutelnosti cez konverzaciu.
+- **RQ17** System umozni pouzivatelom odosielat spravy v konverzacii.
+- **RQ18** System umozni pouzivatelovi poziadat o obhliadku nehnutelnosti.
+- **RQ19** System umozni vlastnikovi schvalit alebo zamietnut ziadost o obhliadku.
+- **RQ20** System umozni pouzivatelovi zrusit vlastnu ziadost o obhliadku.
+- **RQ21** System bude evidovat stav ziadosti o obhliadku (`PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`).
+- **RQ22** System umozni vlastnikovi vytvarat nove inzeraty nehnutelnosti.
+- **RQ23** System umozni vlastnikovi upravovat existujuce inzeraty.
+- **RQ24** System umozni vlastnikovi aktivovat alebo deaktivovat vlastny inzerat.
+- **RQ25** System umozni vlastnikovi odstranit inzerat, ktory uz nie je aktualny.
+- **RQ26** System bude evidovat stav inzeratu (`ACTIVE`, `INACTIVE`, `DELETED`).
+- **RQ27** System zobrazi beznemu pouzivatelovi iba aktivne inzeraty.
+- **RQ28** System umozni vlastnikovi pridat k inzeratu viacero fotografii.
+- **RQ29** System umozni pouzivatelovi upravit osobne udaje v profile.
+- **RQ30** System umozni pouzivatelovi nahrat profilovu fotografiu.
+- **RQ31** System umozni pouzivatelovi poziadat o overenie e-mailovej adresy.
+- **RQ32** System umozni pouzivatelovi potvrdit e-mailovu adresu pomocou overovacieho kodu.
+- **RQ33** System umozni pouzivatelovi nastavit e-mailove notifikacie pre spravy a obhliadky.
+- **RQ34** System bude posielat e-mailove notifikacie pri novych spravach a zmenach obhliadok podla preferencii pouzivatela.
+- **RQ35** System zobrazi vlastnikovi dashboard so zoznamom jeho inzeratov, ziadostami o obhliadku a statistikami.
+- **RQ36** System zobrazi vlastnikovi statistiky aktivnych inzeratov, ulozeni medzi oblubene, cakajucich obhliadok a poctu zobrazeni.
+- **RQ37** System umozni vlastnikovi exportovat zoznam jeho inzeratov do CSV suboru.
 
-| Pojem | Anglický názov | Definícia |
-|-------|-----------------|-----------|
-| **Používateľ** | User | Osoba, ktorá používa systém na vyhľadávanie nehnuteľností alebo kontaktovanie vlastníkov. |
-| **Vlastník** | Owner | Používateľ s oprávnením vytvárať, upravovať a odstraňovať inzeráty nehnuteľností. |
-| **Nehnuteľnosť** | Property | Objekt určený na prenájom alebo predaj, napríklad byt, dom alebo izba. |
-| **Inzerát** | Listing | Ponuka nehnuteľnosti zverejnená v systéme s detailnými informáciami. |
-| **Prenájom** | Rental | Forma ponuky, pri ktorej je nehnuteľnosť dostupná na dočasné užívanie za poplatok. |
-| **Predaj** | Sale | Forma ponuky, pri ktorej je nehnuteľnosť určená na odkúpenie. |
-| **Adresa** | Address | Štruktúrované umiestnenie nehnuteľnosti obsahujúce ulicu, mesto, PSČ a krajinu. |
-| **Cena** | Price | Finančná hodnota nehnuteľnosti evidovaná ako suma a mena. |
-| **Typ nehnuteľnosti** | Property Type | Kategória nehnuteľnosti, napríklad byt, dom alebo izba. |
-| **Vlastnosti nehnuteľnosti** | Property Features | Súbor charakteristík nehnuteľnosti, napríklad rozloha, počet izieb, poschodie, zariadenie a parkovanie. |
-| **Popis** | Description | Textová informácia o vlastnostiach a stave nehnuteľnosti. |
-| **Fotografia** | Photo | Obrázok priradený k inzerátu, ktorý zobrazuje nehnuteľnosť. |
-| **Obľúbené** | Favorites | Zoznam inzerátov, ktoré si používateľ uložil na neskoršie zobrazenie. |
-| **Konverzácia** | Conversation | Komunikačné vlákno medzi používateľom a vlastníkom týkajúce sa konkrétneho inzerátu. |
-| **Správa** | Message | Jednotlivá textová správa odoslaná v rámci konverzácie. |
-| **Žiadosť o obhliadku** | Viewing Request | Požiadavka používateľa na obhliadku konkrétnej nehnuteľnosti v navrhnutom termíne. |
-| **Stav žiadosti o obhliadku** | Viewing Status | Informácia o tom, či je žiadosť o obhliadku čakajúca, schválená, zamietnutá alebo zrušená. |
-| **Filter** | Filter | Mechanizmus na obmedzenie výsledkov vyhľadávania podľa vybraných kritérií. |
-| **Detail inzerátu** | Listing Detail | Podrobný pohľad na vybranú nehnuteľnosť vrátane ceny, adresy, popisu, fotografie a kontaktu. |
-| **Stav inzerátu** | Listing Status | Informácia o tom, či je inzerát aktívny alebo neaktívny. |
-| **Registrácia** | Registration | Proces vytvorenia nového používateľského účtu v systéme. |
-| **Autorizácia** | Authorization | Proces overenia a prihlásenia používateľa do systému. |
-| **Test Case** | Test Case | Špecifikácia testovacieho scenára, ktorý definuje vstupné dáta, očakávaný výsledok a kroky potrebné na otestovanie funkcionality systému. |
+# Slovnik pojmov
 
-# Prípady použitia
+| Pojem | Anglicky nazov | Definicia |
+|-------|----------------|-----------|
+| **Pouzivatel** | User | Osoba, ktora pouziva system na vyhladavanie nehnutelnosti, ukladanie oblubenych inzeratov, komunikaciu s vlastnikmi alebo ziadosti o obhliadku. |
+| **Vlastnik** | Owner | Pouzivatel s opravnenim vytvarat, upravovat, aktivovat, deaktivovat a odstranovat vlastne inzeraty. |
+| **Nehnutelnost** | Property | Objekt urceny na prenajom alebo predaj, napriklad byt, dom alebo izba. |
+| **Inzerat** | Listing | Ponuka nehnutelnosti zverejnena v systeme s detailnymi informaciami. |
+| **Prenajom** | Rental | Forma ponuky, pri ktorej je nehnutelnost dostupna na docasne uzivanie za poplatok. |
+| **Predaj** | Sale | Forma ponuky, pri ktorej je nehnutelnost urcena na odkupenie. |
+| **Adresa** | Address | Strukturovane umiestnenie nehnutelnosti obsahujuci ulicu, mesto, PSC, krajinu a volitelne suradnice. |
+| **Geokodovanie** | Geocoding | Proces overenia adresy a ziskania geografickych suradnic. |
+| **Cena** | Price | Financna hodnota nehnutelnosti evidovana ako suma a mena. |
+| **Typ nehnutelnosti** | Property Type | Kategoria nehnutelnosti, napriklad byt, dom alebo izba. |
+| **Vlastnosti nehnutelnosti** | Property Features | Subor charakteristik nehnutelnosti, napriklad rozloha, pocet izieb, poschodie, zariadenie a parkovanie. |
+| **Fotografia** | Photo | Obrazok priradeny k inzeratu alebo profilu pouzivatela. |
+| **Oblubene** | Favorites | Zoznam inzeratov, ktore si pouzivatel ulozil na neskorsie zobrazenie. |
+| **Konverzacia** | Conversation | Komunikacne vlakno medzi pouzivatelom a vlastnikom tykajuce sa konkretneho inzeratu. |
+| **Sprava** | Message | Jednotliva textova sprava odoslana v ramci konverzacie. |
+| **Ziadost o obhliadku** | Viewing Request | Poziadavka pouzivatela na obhliadku konkretnej nehnutelnosti v navrhnutom termine. |
+| **Stav ziadosti o obhliadku** | Viewing Status | Informacia o tom, ci je ziadost cakajuca, schvalena, zamietnuta alebo zrusena. |
+| **Profil** | Profile | Osobne udaje pouzivatela, avatar, kontaktne udaje a nastavenia notifikacii. |
+| **Overenie e-mailu** | Email Verification | Proces potvrdenia e-mailovej adresy pomocou overovacieho kodu. |
+| **Notifikacia** | Notification | Informovanie pouzivatela o dolezitej udalosti, napriklad novej sprave alebo zmene obhliadky. |
+| **Dashboard vlastnika** | Owner Dashboard | Prehlad vlastnikovych inzeratov, obhliadok a statistik. |
+| **OpenAPI** | OpenAPI | Formalny popis REST API, z ktoreho sa generuju rozhrania a DTO triedy. |
+| **Hexagonalna architektura** | Hexagonal Architecture | Architektonicky styl, ktory oddeluje domenu od vstupnych a vystupnych adapterov. |
 
-- **UC-01** Registrácia používateľa
-- **UC-02** Prihlásenie používateľa
-- **UC-03** Vyhľadávanie nehnuteľností
-- **UC-04** Filtrovanie nehnuteľností
-- **UC-05** Zobrazenie detailu nehnuteľnosti
-- **UC-06** Kontaktovanie vlastníka nehnuteľnosti
-- **UC-07** Uloženie inzerátu medzi obľúbené
-- **UC-08** Vytvorenie nového inzerátu
-- **UC-09** Úprava existujúceho inzerátu
-- **UC-10** Odstránenie inzerátu
-- **UC-11** Pridanie fotografií k inzerátu
-- **UC-12** Zmena stavu inzerátu
-- **UC-13** Vytvorenie žiadosti o obhliadku
-- **UC-14** Spracovanie žiadosti o obhliadku
-- **UC-15** Zobrazenie vlastností nehnuteľnosti
+# Pripady pouzitia
 
-## UC-03 Vyhľadávanie nehnuteľností
+- **UC-01** Registracia pouzivatela
+- **UC-02** Prihlasenie pouzivatela
+- **UC-03** Vyhladavanie a filtrovanie nehnutelnosti
+- **UC-04** Zobrazenie detailu nehnutelnosti
+- **UC-05** Ulozenie inzeratu medzi oblubene
+- **UC-06** Kontaktovanie vlastnika nehnutelnosti
+- **UC-07** Odoslanie spravy v konverzacii
+- **UC-08** Vytvorenie noveho inzeratu
+- **UC-09** Uprava existujuceho inzeratu
+- **UC-10** Odstranenie inzeratu
+- **UC-11** Aktivacia alebo deaktivacia inzeratu
+- **UC-12** Pridanie fotografii k inzeratu
+- **UC-13** Vytvorenie ziadosti o obhliadku
+- **UC-14** Spracovanie ziadosti o obhliadku
+- **UC-15** Zrusenie ziadosti o obhliadku
+- **UC-16** Uprava profilu pouzivatela
+- **UC-17** Nahratie profilovej fotografie
+- **UC-18** Overenie e-mailovej adresy
+- **UC-19** Nastavenie e-mailovych notifikacii
+- **UC-20** Zobrazenie dashboardu vlastnika
+- **UC-21** Export inzeratov do CSV suboru
 
-**Účel**  
-Vyhľadať dostupné nehnuteľnosti určené na prenájom alebo predaj.
+## UC-03 Vyhladavanie a filtrovanie nehnutelnosti
 
-**Používateľ**  
-Používateľ
+**Ucel**  
+Vyhladat dostupne nehnutelnosti urcene na prenajom alebo predaj.
 
-**Vstupné podmienky**  
-Systém obsahuje aspoň jeden aktívny inzerát.
+**Pouzivatel**  
+Pouzivatel
 
-**Výstup**  
-Používateľ vidí zoznam nehnuteľností, ktoré zodpovedajú vyhľadávaniu.
+**Vstupne podmienky**  
+Pouzivatel je prihlaseny. System obsahuje aspon jeden aktivny inzerat.
 
-**Postup**
-
-1. Používateľ otvorí hlavnú stránku alebo sekciu nehnuteľností.  
-   Systém zobrazí dostupné aktívne inzeráty.
-
-2. Používateľ zadá hľadaný výraz.  
-   Hľadaný výraz môže byť napríklad názov mesta, ulice alebo typ nehnuteľnosti.
-
-3. Používateľ potvrdí vyhľadávanie.
-
-4. Systém spracuje zadaný výraz.
-
-5. Systém vyhľadá zodpovedajúce aktívne inzeráty.
-
-6. Systém zobrazí zoznam nájdených nehnuteľností.
-
-**Alternatívny scenár**
-
-2a. Používateľ nezadá žiadny hľadaný výraz.  
-Systém zobrazí všetky aktívne inzeráty.
-
-5a. Systém nenájde žiadne zodpovedajúce nehnuteľnosti.  
-Systém zobrazí informáciu, že neboli nájdené žiadne výsledky.
-
-3a. Používateľ zruší vyhľadávanie.  
-Systém ponechá aktuálny zoznam inzerátov bez zmeny.
-
-## UC-06 Kontaktovanie vlastníka nehnuteľnosti
-
-**Účel**  
-Odoslať správu vlastníkovi vybranej nehnuteľnosti v prípade záujmu.
-
-**Používateľ**  
-Používateľ
-
-**Vstupné podmienky**  
-Používateľ je prihlásený do systému.  
-Vybraná nehnuteľnosť existuje a má aktívny inzerát.
-
-**Výstup**  
-Vlastník dostane správu od používateľa týkajúcu sa vybranej nehnuteľnosti.
+**Vystup**  
+Pouzivatel vidi zoznam nehnutelnosti, ktore zodpovedaju zvolenym filtrom.
 
 **Postup**
 
-1. Používateľ otvorí detail vybranej nehnuteľnosti.  
-   Systém zobrazí detail inzerátu vrátane základných informácií a možnosti kontaktovať vlastníka.
+1. Pouzivatel otvori sekciu nehnutelnosti.
+2. System zobrazi dostupne aktivne inzeraty.
+3. Pouzivatel zada mesto, cenu, typ ponuky alebo dalsie filtre.
+4. Pouzivatel potvrdi vyhladavanie.
+5. System spracuje filtre, zoradenie a strankovanie.
+6. System zobrazi vysledky vyhladavania.
 
-2. Používateľ zvolí možnosť „Kontaktovať vlastníka“.
+**Alternativny scenar**
 
-3. Systém zobrazí formulár na odoslanie správy.
+3a. Pouzivatel nezada ziadny filter.  
+System zobrazi vsetky aktivne inzeraty.
 
-4. Používateľ zadá text správy.
+6a. System nenajde ziadne zodpovedajuce nehnutelnosti.  
+System zobrazi informaciu, ze neboli najdene ziadne vysledky.
 
-5. Používateľ odošle správu.
+## UC-06 Kontaktovanie vlastnika nehnutelnosti
 
-6. Systém overí vyplnenie povinných údajov.
+**Ucel**  
+Vytvorit alebo otvorit konverzaciu s vlastnikom vybranej nehnutelnosti.
 
-7. Systém vytvorí alebo použije existujúcu konverzáciu pre daný inzerát.
+**Pouzivatel**  
+Pouzivatel
 
-8. Systém uloží správu do systému.
+**Vstupne podmienky**  
+Pouzivatel je prihlaseny. Inzerat existuje a nepatri prihlasenemu pouzivatelovi.
 
-9. Systém sprístupní správu vlastníkovi v rámci konverzácie.
-
-10. Systém zobrazí potvrdenie o úspešnom odoslaní správy.
-
-**Alternatívny scenár**
-
-2a. Používateľ nie je prihlásený.  
-Systém vyzve používateľa na prihlásenie.
-
-6a. Používateľ nevyplní text správy.  
-Systém zobrazí chybové hlásenie a správu neodošle.
-
-5a. Používateľ zruší odoslanie správy.  
-Systém zavrie formulár a používateľ zostáva na detaile nehnuteľnosti.
-
-## UC-08 Vytvorenie nového inzerátu
-
-**Účel**  
-Vytvoriť nový inzerát nehnuteľnosti určený na prenájom alebo predaj.
-
-**Používateľ**  
-Vlastník
-
-**Vstupné podmienky**  
-Vlastník je prihlásený do systému.
-
-**Výstup**  
-V systéme pribudne nový inzerát nehnuteľnosti.
+**Vystup**  
+Pouzivatel je presmerovany do konverzacie s vlastnikom.
 
 **Postup**
 
-1. Vlastník otvorí sekciu správy inzerátov.  
-   Systém zobrazí zoznam jeho existujúcich inzerátov a možnosť vytvoriť nový inzerát.
+1. Pouzivatel otvori detail vybranej nehnutelnosti.
+2. System zobrazi detail inzeratu a moznost kontaktovat vlastnika.
+3. Pouzivatel zvoli moznost kontaktovat vlastnika.
+4. System vytvori alebo najde existujucu konverzaciu.
+5. System presmeruje pouzivatela do sekcie sprav.
 
-2. Vlastník zvolí možnosť „Pridať inzerát“.
+**Alternativny scenar**
 
-3. Systém zobrazí formulár na zadanie údajov o nehnuteľnosti.
+3a. Pouzivatel nie je prihlaseny.  
+System vyzve pouzivatela na prihlasenie.
 
-4. Vlastník zadá názov inzerátu.
+4a. Pouzivatel sa pokusi kontaktovat vlastnika vlastneho inzeratu.  
+System akciu nepovoli.
 
-5. Vlastník zadá popis nehnuteľnosti.
+## UC-08 Vytvorenie noveho inzeratu
 
-6. Vlastník zadá adresu nehnuteľnosti.
+**Ucel**  
+Vytvorit novy inzerat nehnutelnosti urceny na prenajom alebo predaj.
 
-7. Vlastník zadá cenu vrátane meny.
+**Pouzivatel**  
+Vlastnik
 
-8. Vlastník vyberie typ nehnuteľnosti.
+**Vstupne podmienky**  
+Vlastnik je prihlaseny do systemu.
 
-9. Vlastník zadá vlastnosti nehnuteľnosti, napríklad rozlohu, počet izieb, poschodie, zariadenie a parkovanie.
-
-10. Vlastník zvolí, či ide o prenájom alebo predaj.
-
-11. Vlastník môže pridať fotografie nehnuteľnosti.
-
-12. Vlastník potvrdí vytvorenie inzerátu.
-
-13. Systém overí vyplnenie povinných údajov.
-
-14. Systém uloží nový inzerát do databázy.
-
-15. Systém zobrazí vytvorený inzerát vlastníkovi.
-
-**Alternatívny scenár**
-
-11a. Vlastník nevloží fotografie.  
-Systém vytvorí inzerát aj bez fotografií, ak sú ostatné povinné údaje vyplnené.
-
-13a. Niektorý povinný údaj nie je vyplnený.  
-Systém zobrazí chybové hlásenie a neuloží inzerát.
-
-12a. Vlastník zruší vytváranie inzerátu.  
-Systém nevytvorí nový inzerát a vlastník zostáva v sekcii správy inzerátov.
-
-## UC-09 Úprava existujúceho inzerátu
-
-**Účel**  
-Upraviť údaje existujúceho inzerátu.
-
-**Používateľ**  
-Vlastník
-
-**Vstupné podmienky**  
-Vlastník je prihlásený do systému.  
-Inzerát existuje a patrí prihlásenému vlastníkovi.
-
-**Výstup**  
-Údaje inzerátu sú v systéme aktualizované.
+**Vystup**  
+V systeme pribudne novy inzerat nehnutelnosti.
 
 **Postup**
 
-1. Vlastník otvorí sekciu správy inzerátov.  
-   Systém zobrazí zoznam jeho inzerátov.
+1. Vlastnik otvori formular na vytvorenie inzeratu.
+2. Vlastnik zada nazov a popis inzeratu.
+3. Vlastnik zada adresu nehnutelnosti.
+4. System overi adresu a doplni suradnice pomocou geokodovania.
+5. Vlastnik zada cenu a menu.
+6. Vlastnik zada vlastnosti nehnutelnosti.
+7. Vlastnik prida fotografie.
+8. Vlastnik potvrdi vytvorenie inzeratu.
+9. System overi vyplnenie povinnych udajov.
+10. System ulozi novy inzerat do databazy.
+11. System zobrazi potvrdenie o uspesnom vytvoreni.
 
-2. Vlastník vyberie konkrétny inzerát.
+**Alternativny scenar**
 
-3. Vlastník zvolí možnosť „Upraviť inzerát“.
+4a. Adresu sa nepodari overit.  
+System zobrazi chybove hlasenie pri adrese.
 
-4. Systém zobrazí formulár s aktuálnymi údajmi inzerátu.
+7a. Vlastnik neprida ziadnu fotografiu.  
+System zobrazi chybove hlasenie a inzerat nepublikuje.
 
-5. Vlastník upraví požadované údaje.
+9a. Niektory povinny udaj nie je vyplneny.  
+System zobrazi chybove hlasenie a neulozi inzerat.
 
-6. Vlastník potvrdí zmeny.
+## UC-09 Uprava existujuceho inzeratu
 
-7. Systém overí správnosť údajov.
+**Ucel**  
+Upravit udaje existujuceho inzeratu.
 
-8. Systém uloží zmeny do databázy.
+**Pouzivatel**  
+Vlastnik
 
-9. Systém zobrazí aktualizovaný detail inzerátu.
+**Vstupne podmienky**  
+Vlastnik je prihlaseny do systemu. Inzerat existuje a patri prihlasenemu vlastnikovi.
 
-**Alternatívny scenár**
-
-7a. Niektorý povinný údaj nie je vyplnený správne.  
-Systém zobrazí chybové hlásenie a zmeny neuloží.
-
-6a. Vlastník zruší úpravu inzerátu.  
-Systém neuloží žiadne zmeny a vlastník zostáva na detaile inzerátu.
-
-## UC-07 Uloženie inzerátu medzi obľúbené
-
-**Účel**  
-Uložiť vybraný inzerát medzi obľúbené pre neskoršie zobrazenie.
-
-**Používateľ**  
-Používateľ
-
-**Vstupné podmienky**  
-Používateľ je prihlásený do systému.  
-Inzerát existuje a je aktívny.
-
-**Výstup**  
-Vybraný inzerát je uložený v zozname obľúbených používateľa.
+**Vystup**  
+Udaje inzeratu su v systeme aktualizovane.
 
 **Postup**
 
-1. Používateľ otvorí detail inzerátu.  
-   Systém zobrazí detail nehnuteľnosti a možnosť uložiť ju medzi obľúbené.
+1. Vlastnik otvori dashboard.
+2. Vlastnik vyberie konkretny inzerat.
+3. Vlastnik zvoli moznost upravit inzerat.
+4. System zobrazi formular s aktualnymi udajmi.
+5. Vlastnik upravi pozadovane udaje.
+6. Vlastnik potvrdi zmeny.
+7. System overi spravnost udajov.
+8. System ulozi zmeny do databazy.
+9. System zobrazi potvrdenie o uspesnej uprave.
 
-2. Používateľ zvolí možnosť „Pridať medzi obľúbené“.
+**Alternativny scenar**
 
-3. Systém overí, či už inzerát nie je uložený medzi obľúbenými.
+7a. Niektory povinny udaj nie je vyplneny spravne.  
+System zobrazi chybove hlasenie a zmeny neulozi.
 
-4. Systém uloží inzerát do zoznamu obľúbených.
+## UC-13 Vytvorenie ziadosti o obhliadku
 
-5. Systém zobrazí potvrdenie o úspešnom uložení.
+**Ucel**  
+Vytvorit ziadost o obhliadku vybranej nehnutelnosti.
 
-**Alternatívny scenár**
+**Pouzivatel**  
+Pouzivatel
 
-2a. Používateľ nie je prihlásený.  
-Systém vyzve používateľa na prihlásenie.
+**Vstupne podmienky**  
+Pouzivatel je prihlaseny. Vybrany inzerat existuje, je aktivny a nepatri prihlasenemu pouzivatelovi.
 
-3a. Inzerát už je uložený medzi obľúbenými.  
-Systém zobrazí informáciu, že inzerát je už v zozname obľúbených.
-
-## UC-13 Vytvorenie žiadosti o obhliadku
-
-**Účel**  
-Vytvoriť žiadosť o obhliadku vybranej nehnuteľnosti.
-
-**Používateľ**  
-Používateľ
-
-**Vstupné podmienky**  
-Používateľ je prihlásený do systému.  
-Vybraný inzerát existuje a je aktívny.
-
-**Výstup**  
-V systéme pribudne nová žiadosť o obhliadku so stavom pending.
+**Vystup**  
+V systeme pribudne nova ziadost o obhliadku so stavom `PENDING`.
 
 **Postup**
 
-1. Používateľ otvorí detail vybranej nehnuteľnosti.  
-   Systém zobrazí detail inzerátu a možnosť požiadať o obhliadku.
+1. Pouzivatel otvori detail vybranej nehnutelnosti.
+2. System zobrazi moznost poziadat o obhliadku.
+3. Pouzivatel zvoli moznost poziadat o obhliadku.
+4. System zobrazi formular ziadosti o obhliadku.
+5. Pouzivatel zada navrhovany termin.
+6. Pouzivatel moze pridat poznamku.
+7. Pouzivatel odosle ziadost.
+8. System overi vyplnenie povinnych udajov.
+9. System ulozi ziadost so stavom `PENDING`.
+10. System spristupni ziadost vlastnikovi nehnutelnosti.
 
-2. Používateľ zvolí možnosť „Požiadať o obhliadku“.
+**Alternativny scenar**
 
-3. Systém zobrazí formulár žiadosti o obhliadku.
+5a. Pouzivatel nezada termin obhliadky.  
+System ziadost neodosle.
 
-4. Používateľ zadá navrhovaný termín obhliadky.
+8a. Pouzivatel sa pokusi poziadat o obhliadku vlastneho inzeratu.  
+System akciu nepovoli.
 
-5. Používateľ môže pridať poznámku k žiadosti.
+## UC-14 Spracovanie ziadosti o obhliadku
 
-6. Používateľ odošle žiadosť.
+**Ucel**  
+Schvalit alebo zamietnut ziadost o obhliadku.
 
-7. Systém overí vyplnenie povinných údajov.
+**Pouzivatel**  
+Vlastnik
 
-8. Systém uloží žiadosť o obhliadku so stavom pending.
+**Vstupne podmienky**  
+Vlastnik je prihlaseny. Ziadost sa tyka jeho inzeratu a je v stave `PENDING`.
 
-9. Systém sprístupní žiadosť vlastníkovi nehnuteľnosti.
+**Vystup**  
+Ziadost ma stav `APPROVED` alebo `REJECTED`.
 
-10. Systém zobrazí potvrdenie o úspešnom odoslaní žiadosti.
+**Postup**
 
-**Alternatívny scenár**
+1. Vlastnik otvori zoznam ziadosti o obhliadku.
+2. System zobrazi ziadosti tykajuce sa jeho inzeratov.
+3. Vlastnik vyberie ziadost.
+4. Vlastnik zvoli schvalenie alebo zamietnutie.
+5. System overi, ze prihlaseny pouzivatel je vlastnikom inzeratu.
+6. System zmeni stav ziadosti.
+7. System ulozi aktualizovanu ziadost.
 
-2a. Používateľ nie je prihlásený.  
-Systém vyzve používateľa na prihlásenie.
+## UC-16 Uprava profilu pouzivatela
 
-7a. Používateľ nezadá termín obhliadky.  
-Systém zobrazí chybové hlásenie a žiadosť neuloží.
+**Ucel**  
+Aktualizovat osobne a kontaktne udaje pouzivatela.
 
-6a. Používateľ zruší odoslanie žiadosti.  
-Systém zavrie formulár a používateľ zostáva na detaile nehnuteľnosti.
+**Pouzivatel**  
+Pouzivatel, Vlastnik
+
+**Vstupne podmienky**  
+Pouzivatel je prihlaseny.
+
+**Vystup**  
+Profil pouzivatela je aktualizovany.
+
+**Postup**
+
+1. Pouzivatel otvori profil.
+2. Pouzivatel upravi meno, priezvisko, e-mail, telefon alebo bio.
+3. Pouzivatel ulozi zmeny.
+4. System validuje udaje.
+5. System ulozi profil.
+6. System zobrazi aktualizovane udaje.
+
+## UC-18 Overenie e-mailovej adresy
+
+**Ucel**  
+Overit e-mailovu adresu pouzivatela.
+
+**Pouzivatel**  
+Pouzivatel, Vlastnik
+
+**Vstupne podmienky**  
+Pouzivatel je prihlaseny a e-mailova adresa este nie je overena.
+
+**Vystup**  
+E-mailova adresa je oznacena ako overena.
+
+**Postup**
+
+1. Pouzivatel otvori profil.
+2. Pouzivatel poziada o overenie e-mailu.
+3. System odosle overovaci kod na e-mail.
+4. Pouzivatel zada kod do formulara.
+5. System overi kod.
+6. System oznaci e-mailovu adresu ako overenu.
+
+## UC-20 Zobrazenie dashboardu vlastnika
+
+**Ucel**  
+Zobrazit vlastnikovi prehlad jeho inzeratov, ziadosti o obhliadku a statistik.
+
+**Pouzivatel**  
+Vlastnik
+
+**Vstupne podmienky**  
+Vlastnik je prihlaseny.
+
+**Vystup**  
+Vlastnik vidi dashboard so svojimi datami.
+
+**Postup**
+
+1. Vlastnik otvori dashboard.
+2. System nacita vlastnikove inzeraty.
+3. System nacita ziadosti o obhliadku.
+4. System nacita statistiky.
+5. System zobrazi prehlad vlastnikovi.
+
+# Technicka realizacia backendu
+
+Backend je rozdeleny na moduly:
+
+| Modul | Zodpovednost |
+|-------|--------------|
+| `application/domain` | Domenove objekty, sluzby, fasady, repository porty, factories, predicates a domenove testy. |
+| `application/api-spec` | OpenAPI kontrakt a generovane API/DTO triedy. |
+| `application/inbound-controller-rest` | REST controllery, MapStruct mappers, security a exception handling. |
+| `application/outbound-repository-jpa` | JPA adaptery, Spring Data repository, ORM mapping a SMTP adapter. |
+| `application/outbound-geocoding-rest` | REST adapter pre Nominatim geocoding. |
+| `application/springboot` | Spring Boot aplikacia, konfiguracia beanov, Liquibase changelogy a ArchUnit testy. |
+
+# OpenAPI
+
+OpenAPI kontrakt sa nachadza v subore:
+
+```text
+application/api-spec/src/main/resources/openapi/rental-api.yaml
+```
+
+# UML diagramy
+
+PlantUML zdrojove kody diagramov su v priecinku:
+
+```text
+docs/diagrams
+```
+
+| Subor | Obsah |
+|-------|-------|
+| `backend-hexagonal-architecture.puml` | Moduly a zavislosti hexagonalnej architektury backendu. |
+| `backend-domain-model.puml` | Domenovy model a vztahy medzi hlavnymi objektmi. |
+| `backend-use-cases.puml` | Use-case diagram funkcii systemu. |
+| `backend-viewing-request-sequence.puml` | Sekvencny diagram vytvorenia ziadosti o obhliadku. |
+
+# Spustenie
+
+## Lokalne zavislosti
+
+```sh
+docker compose up -d
+```
+
+## Backend aplikacia
+
+```sh
+mvn spring-boot:run -pl application/springboot -am
+```
+
+## Testy
+
+```sh
+mvn test
+```
+
+# Testovanie
+
+System je overeny pomocou:
+
+- domenovych testov (`ListingTest`, `UserTest`, `ViewingRequestTest`),
+- testov domenovych sluzieb (`ListingServiceTest`, `ViewingRequestServiceTest`),
+- testu factory (`ListingFactoryTest`),
+- testov predicate pravidiel (`ListingPredicateTest`),
+- testu Nominatim geocoding adaptera,
+- ArchUnit testu hexagonalnej architektury.

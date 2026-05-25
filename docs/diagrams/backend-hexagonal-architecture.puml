@@ -1,0 +1,81 @@
+@startuml
+title Property Rental Backend - Hexagonal Architecture
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+left to right direction
+
+package "application/api-spec" as APISPEC {
+  component "rental-api.yaml" as openapi
+  component "Generated API interfaces" as api
+  component "Generated DTO classes" as dto
+}
+
+package "application/inbound-controller-rest" as INBOUND {
+  component "REST Controllers" as controllers
+  component "MapStruct Mappers" as mappers
+  component "Security\nCurrentUserDetailService\nJwtConverter" as security
+  component "GlobalExceptionHandler" as errors
+}
+
+package "application/domain" as DOMAIN {
+  component "Entities\nListing, User, ViewingRequest,\nConversation, Message, Photo" as entities
+  component "Factories\nListingFactory, PhotoFactory,\nConversationFactory" as factories
+  component "Facades" as facades
+  component "Services" as services
+  component "Repository Ports" as ports
+  component "Predicates" as predicates
+}
+
+package "application/outbound-repository-jpa" as JPA {
+  component "JPA Repository Adapters" as jpaAdapters
+  component "Spring Data Repositories" as springData
+  database "PostgreSQL" as db
+}
+
+package "application/outbound-geocoding-rest" as GEO {
+  component "NominatimGeocodingAdapter" as geoAdapter
+  cloud "Nominatim API" as nominatim
+}
+
+package "application/springboot" as BOOT {
+  component "RentalApplication" as app
+  component "Bean Configuration" as config
+  component "Liquibase Changelogs" as liquibase
+}
+
+controllers --> api : implements
+controllers --> mappers
+controllers --> facades
+controllers --> security
+controllers --> errors
+mappers --> dto
+mappers --> entities
+api --> dto
+openapi ..> api : generates
+openapi ..> dto : generates
+
+facades <|.. services
+services --> entities
+services --> factories
+services --> ports
+services --> predicates
+factories --> predicates
+factories --> ports
+
+jpaAdapters ..|> ports
+jpaAdapters --> springData
+springData --> db
+
+geoAdapter ..|> services : GeocodingService
+geoAdapter --> nominatim
+
+app --> config
+config --> facades
+config --> ports
+config --> jpaAdapters
+config --> geoAdapter
+liquibase --> db
+
+@enduml
