@@ -1,5 +1,6 @@
 package sk.fsa.rental.domain.service;
 
+import sk.fsa.rental.domain.Conversation;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.ListingSearchFilters;
@@ -17,6 +18,7 @@ import sk.fsa.rental.domain.facade.ListingFacade;
 import sk.fsa.rental.domain.predicate.listing.IsListingActivePredicate;
 import sk.fsa.rental.domain.predicate.listing.IsListingVisibleToPredicate;
 import sk.fsa.rental.domain.predicate.listing.IsOwnedByPredicate;
+import sk.fsa.rental.domain.repository.ConversationRepository;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.ListingViewEventRepository;
 
@@ -28,14 +30,17 @@ public class ListingService implements ListingFacade {
     private static final int FEATURED_LISTINGS_LIMIT = 5;
 
     private final ListingRepository listingRepository;
+    private final ConversationRepository conversationRepository;
     private final ListingFactory listingFactory;
     private final ListingViewEventRepository listingViewEventRepository;
     private final PhotoFactory photoFactory;
 
-    public ListingService(ListingRepository listingRepository, ListingFactory listingFactory,
+    public ListingService(ListingRepository listingRepository, ConversationRepository conversationRepository,
+                          ListingFactory listingFactory,
                           ListingViewEventRepository listingViewEventRepository,
                           PhotoFactory photoFactory) {
         this.listingRepository = listingRepository;
+        this.conversationRepository = conversationRepository;
         this.listingFactory = listingFactory;
         this.listingViewEventRepository = listingViewEventRepository;
         this.photoFactory = photoFactory;
@@ -62,6 +67,7 @@ public class ListingService implements ListingFacade {
 
         existing.delete(editor);
         listingRepository.save(existing);
+        notifyListingConversations(existing, "This listing has been deleted by the owner.");
     }
 
     @Override
@@ -79,7 +85,9 @@ public class ListingService implements ListingFacade {
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
         listing.deactivate(editor);
-        return listingRepository.save(listing);
+        Listing saved = listingRepository.save(listing);
+        notifyListingConversations(saved, "This listing has been deactivated by the owner.");
+        return saved;
     }
 
     @Override
@@ -163,6 +171,17 @@ public class ListingService implements ListingFacade {
         if (!valid) {
             throw new RentalException(type, message);
         }
+    }
+
+    private void notifyListingConversations(Listing listing, String text) {
+        if (listing == null || listing.getId() == null || listing.getOwner() == null) {
+            return;
+        }
+        List<Conversation> conversations = conversationRepository.findByListingId(listing.getId());
+        conversations.forEach(conversation -> {
+            conversation.addMessage(listing.getOwner(), text);
+            conversationRepository.save(conversation);
+        });
     }
 
 }

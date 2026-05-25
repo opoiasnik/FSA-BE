@@ -32,6 +32,11 @@ public class JpaConversationRepositoryAdapter implements ConversationRepository 
     }
 
     @Override
+    public List<Conversation> findByListingId(Long listingId) {
+        return conversationSpringDataRepository.findByListingId(listingId);
+    }
+
+    @Override
     public List<Conversation> findByParticipantId(Long participantId) {
         return conversationSpringDataRepository.findByOwnerIdOrRequesterIdOrderByUpdatedAtDesc(participantId, participantId);
     }

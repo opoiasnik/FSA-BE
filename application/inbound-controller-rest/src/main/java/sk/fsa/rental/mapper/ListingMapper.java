@@ -11,6 +11,7 @@ import sk.fsa.rental.domain.Price;
 import sk.fsa.rental.domain.PropertyFeatures;
 import sk.fsa.rental.domain.PropertyType;
 import sk.fsa.rental.domain.SortBy;
+import sk.fsa.rental.domain.User;
 import sk.fsa.rental.rest.dto.*;
 
 import java.math.BigDecimal;
@@ -45,6 +46,16 @@ public interface ListingMapper {
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "owner", target = "owner")
     ListingResponseDto toDto(Listing listing);
+
+    @Mapping(target = "avatarUrl", expression = "java(toAvatarUrl(user))")
+    UserDto toDto(User user);
+
+    default String toAvatarUrl(User user) {
+        if (user == null || user.getAvatarPhoto() == null || user.getAvatarPhoto().getId() == null) {
+            return null;
+        }
+        return "/api/photos/" + user.getAvatarPhoto().getId() + "/content";
+    }
 
     @Mapping(source = "address.city", target = "city")
     @Mapping(target = "coverPhoto", expression = "java(toCoverPhoto(listing))")

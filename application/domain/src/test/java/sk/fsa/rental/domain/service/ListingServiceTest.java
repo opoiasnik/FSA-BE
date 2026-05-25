@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sk.fsa.rental.domain.Conversation;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingFactory;
 import sk.fsa.rental.domain.ListingViewEvent;
@@ -12,10 +13,12 @@ import sk.fsa.rental.domain.PhotoFactory;
 import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.UserRole;
+import sk.fsa.rental.domain.repository.ConversationRepository;
 import sk.fsa.rental.domain.repository.ListingRepository;
 import sk.fsa.rental.domain.repository.ListingViewEventRepository;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,6 +33,8 @@ class ListingServiceTest {
 
     @Mock
     private ListingRepository listingRepository;
+    @Mock
+    private ConversationRepository conversationRepository;
     @Mock
     private ListingFactory listingFactory;
     @Mock
@@ -70,11 +75,29 @@ class ListingServiceTest {
         Listing listing = listing(100L, owner);
         when(listingRepository.findById(100L)).thenReturn(Optional.of(listing));
         when(listingRepository.save(listing)).thenReturn(listing);
+        when(conversationRepository.findByListingId(100L)).thenReturn(List.of());
 
         Listing saved = service.deactivate(100L, owner);
 
         assertEquals(listing, saved);
         verify(listingRepository).save(listing);
+    }
+
+    @Test
+    void deactivateAddsStatusMessageToListingConversations() {
+        User owner = user(1L, UserRole.OWNER);
+        User requester = user(2L, UserRole.USER);
+        Listing listing = listing(100L, owner);
+        Conversation conversation = conversation(listing, requester);
+        when(listingRepository.findById(100L)).thenReturn(Optional.of(listing));
+        when(listingRepository.save(listing)).thenReturn(listing);
+        when(conversationRepository.findByListingId(100L)).thenReturn(List.of(conversation));
+
+        service.deactivate(100L, owner);
+
+        assertEquals("This listing has been deactivated by the owner.",
+                conversation.getMessages().getFirst().getText());
+        verify(conversationRepository).save(conversation);
     }
 
     @Test
@@ -121,6 +144,12 @@ class ListingServiceTest {
         User user = new User("user-" + id, "test", "user" + id + "@test.sk", role);
         setField(user, "id", id);
         return user;
+    }
+
+    private Conversation conversation(Listing listing, User requester) {
+        Conversation conversation = new Conversation();
+        conversation.assignParticipants(listing, requester);
+        return conversation;
     }
 
     private void setField(Object target, String fieldName, Object value) {

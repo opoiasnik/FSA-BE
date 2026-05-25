@@ -8,5 +8,6 @@ import java.util.Optional;
 
 interface ConversationSpringDataRepository extends JpaRepository<Conversation, Long> {
     Optional<Conversation> findByListingIdAndOwnerIdAndRequesterId(Long listingId, Long ownerId, Long requesterId);
+    List<Conversation> findByListingId(Long listingId);
     List<Conversation> findByOwnerIdOrRequesterIdOrderByUpdatedAtDesc(Long ownerId, Long requesterId);
 }
