@@ -36,8 +36,11 @@ public class Photo {
     }
 
     public boolean canBeViewedBy(User requester) {
-        if (requester == null || listing == null) {
+        if (requester == null) {
             return false;
+        }
+        if (listing == null) {
+            return true;
         }
         if (IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), requester)) {
             return true;
