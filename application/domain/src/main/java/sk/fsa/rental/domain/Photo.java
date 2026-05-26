@@ -36,10 +36,13 @@ public class Photo {
     }
 
     public boolean canBeViewedBy(User requester) {
-        return requester != null
-                && (listing == null
-                || UserRole.USER.equals(requester.getRole())
-                || IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), requester));
+        if (requester == null || listing == null) {
+            return false;
+        }
+        if (IsOwnedByPredicate.INSTANCE.test(listing.getOwner(), requester)) {
+            return true;
+        }
+        return ListingStatus.ACTIVE.equals(listing.getStatus());
     }
 
     public String getAltText() { return altText; }

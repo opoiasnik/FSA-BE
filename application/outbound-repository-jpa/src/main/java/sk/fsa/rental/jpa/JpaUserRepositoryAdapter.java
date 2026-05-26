@@ -1,5 +1,6 @@
 package sk.fsa.rental.jpa;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.repository.UserRepository;
@@ -17,7 +18,15 @@ public class JpaUserRepositoryAdapter implements UserRepository {
 
     @Override
     public User save(User user) {
-        return userSpringDataRepository.save(user);
+        try {
+            return userSpringDataRepository.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            if (user.getKeycloakId() == null || user.getKeycloakId().isBlank()) {
+                throw ex;
+            }
+            return userSpringDataRepository.findByKeycloakId(user.getKeycloakId())
+                    .orElseThrow(() -> ex);
+        }
     }
 
     @Override

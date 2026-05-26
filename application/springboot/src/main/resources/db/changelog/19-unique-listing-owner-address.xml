@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="19-unique-listing-owner-address" author="oleh">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="uq_listing_owner_address_identity"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="listing" indexName="uq_listing_owner_address_identity" unique="true">
+            <column name="owner_id"/>
+            <column name="address_street"/>
+            <column name="address_city"/>
+            <column name="address_postal_code"/>
+            <column name="address_country"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

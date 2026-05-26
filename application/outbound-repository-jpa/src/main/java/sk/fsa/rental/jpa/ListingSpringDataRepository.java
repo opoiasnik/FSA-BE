@@ -2,7 +2,6 @@ package sk.fsa.rental.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingStatus;
 
@@ -14,5 +13,10 @@ interface ListingSpringDataRepository extends JpaRepository<Listing, Long>, JpaS
 
     List<Listing> findByOwnerId(Long ownerId);
 
-    boolean existsByOwnerIdAndAddress(Long ownerId, Address address);
+    boolean existsByOwnerIdAndAddressIdentity(
+            Long ownerId,
+            String addressStreet,
+            String addressCity,
+            String addressPostalCode,
+            String addressCountry);
 }

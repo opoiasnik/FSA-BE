@@ -191,6 +191,8 @@ public class User {
 
     public Long getId() { return id; }
 
+    public String getKeycloakId() { return keycloakId; }
+
     public String getName() { return name; }
 
     public String getSurname() { return surname; }
