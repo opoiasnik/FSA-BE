@@ -390,9 +390,9 @@ docs/diagrams
 | Subor | Obsah |
 |-------|-------|
 | `backend-hexagonal-architecture.puml` | Moduly a zavislosti hexagonalnej architektury backendu. |
-| `backend-domain-model.puml` | Domenovy model a vztahy medzi hlavnymi objektmi. |
+| `backend-domain-model.puml` | Domenovy model a vztahy medzi hlavnymi objektmi v style class diagramu. |
+| `backend-domain-model.png` | Vyrenderovana aktualna verzia domenoveho modelu. |
 | `backend-use-cases.puml` | Use-case diagram funkcii systemu. |
-| `backend-viewing-request-sequence.puml` | Sekvencny diagram vytvorenia ziadosti o obhliadku. |
 
 # Spustenie
 

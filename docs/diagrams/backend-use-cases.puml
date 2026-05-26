@@ -13,6 +13,7 @@ actor "SMTP server" as smtp
 rectangle "Rental Backend API" {
   usecase "Search listings" as UC_Search
   usecase "View listing detail" as UC_Detail
+  usecase "Record listing view" as UC_RecordView
   usecase "Save favourite" as UC_Fav
   usecase "Remove favourite" as UC_Unfav
   usecase "Open conversation" as UC_OpenConv
@@ -39,6 +40,7 @@ rectangle "Rental Backend API" {
 
 user --> UC_Search
 user --> UC_Detail
+user --> UC_RecordView
 user --> UC_Fav
 user --> UC_Unfav
 user --> UC_OpenConv
@@ -62,10 +64,25 @@ owner --> UC_SendMsg
 owner --> UC_Profile
 
 UC_Fav ..> UC_Auth : include
+UC_Unfav ..> UC_Auth : include
+UC_Search ..> UC_Auth : include
+UC_Detail ..> UC_Auth : include
+UC_RecordView ..> UC_Auth : include
 UC_OpenConv ..> UC_Auth : include
 UC_SendMsg ..> UC_Auth : include
 UC_RequestViewing ..> UC_Auth : include
+UC_CancelViewing ..> UC_Auth : include
+UC_Profile ..> UC_Auth : include
+UC_Avatar ..> UC_Auth : include
+UC_VerifyEmail ..> UC_Auth : include
+UC_Notif ..> UC_Auth : include
 UC_CreateListing ..> UC_Auth : include
+UC_EditListing ..> UC_Auth : include
+UC_Photos ..> UC_Auth : include
+UC_Status ..> UC_Auth : include
+UC_DeleteListing ..> UC_Auth : include
+UC_ProcessViewing ..> UC_Auth : include
+UC_Stats ..> UC_Auth : include
 UC_CreateListing ..> UC_Geocode : include
 UC_EditListing ..> UC_Geocode : include
 UC_ProcessViewing ..> UC_Email : optional

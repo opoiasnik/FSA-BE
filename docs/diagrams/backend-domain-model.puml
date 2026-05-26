@@ -1,145 +1,288 @@
 @startuml
-title Property Rental Backend - Domain Model
+title Property Rental Domain Model
 
-skinparam classAttributeIconSize 0
+left to right direction
+
 skinparam shadowing false
-
-class User {
-  id
-  keycloakId
-  email
-  name
-  surname
-  role
-  updateProfile()
-  updateAvatar()
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 90
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor White
+  BorderColor #333333
+  ArrowColor #333333
 }
 
-class Listing {
-  id
-  title
-  description
-  listingType
-  status
-  createdAt
-  validateForCreation()
-  update()
-  activate()
-  deactivate()
-  delete()
-  addPhoto()
+package "Persistence" as Persistence {
+  interface UserRepository {
+    +save(user: User): User
+    +findByKeycloakId(keycloakId: String): Optional<User>
+  }
+
+  interface ListingRepository {
+    +save(listing: Listing): Listing
+    +findById(id: Long): Optional<Listing>
+    +findByOwnerId(ownerId: Long): List<Listing>
+    +search(filters: ListingSearchFilters): ListingSearchResult
+    +findTopViewed(filters: ListingSearchFilters): List<Listing>
+  }
+
+  interface FavoriteRepository {
+    +save(favorite: Favorite): Favorite
+    +findByUserIdAndListingId(userId: Long, listingId: Long): Optional<Favorite>
+    +findByUserId(userId: Long): List<Favorite>
+    +deleteById(id: Long): void
+  }
+
+  interface ConversationRepository {
+    +save(conversation: Conversation): Conversation
+    +findById(id: Long): Optional<Conversation>
+    +findByListingId(listingId: Long): List<Conversation>
+    +findByParticipantId(participantId: Long): List<Conversation>
+  }
+
+  interface ViewingRequestRepository {
+    +save(viewingRequest: ViewingRequest): ViewingRequest
+    +findById(id: Long): Optional<ViewingRequest>
+    +findByRequesterId(requesterId: Long): List<ViewingRequest>
+    +findByOwnerId(ownerId: Long): List<ViewingRequest>
+    +findByListingId(listingId: Long): List<ViewingRequest>
+  }
+
+  interface PhotoRepository {
+    +save(photo: Photo): Photo
+    +findById(id: Long): Optional<Photo>
+  }
+
+  interface ListingViewEventRepository {
+    +save(event: ListingViewEvent): ListingViewEvent
+    +countByListingId(listingId: Long): long
+    +countByOwnerId(ownerId: Long): long
+  }
+
+  interface EmailSenderRepository {
+    +send(to: String, subject: String, body: String): void
+  }
 }
 
-class Address {
-  street
-  city
-  postalCode
-  country
-  lat
-  lng
-  validate()
-  assignCoordinates()
+package "User Management" as UserManagement {
+  class User {
+    -id: Long
+    -keycloakId: String
+    -name: String
+    -surname: String
+    -email: String
+    -phone: String
+    -bio: String
+    -emailVerified: boolean
+    -role: UserRole
+    +updateProfile(...): void
+    +updateAvatar(avatarPhoto: Photo): void
+    +updateNotificationPreferences(...): void
+    +startEmailVerification(...): void
+    +verifyEmail(...): void
+  }
+
+  enum UserRole {
+    USER
+    OWNER
+  }
+
+  class Favorite {
+    -id: Long
+    -createdAt: Date
+    +validateForCreation(): void
+  }
 }
 
-class Price {
-  amount
-  currency
-  validate()
+package "Listing Management" as ListingManagement {
+  class Listing {
+    -id: Long
+    -title: String
+    -description: String
+    -listingType: ListingType
+    -status: ListingStatus
+    -createdAt: Date
+    +validateForCreation(): void
+    +update(...): void
+    +activate(editor: User): void
+    +deactivate(editor: User): void
+    +delete(editor: User): void
+    +addPhoto(photo: Photo): void
+  }
+
+  class ListingFactory {
+    +create(listing: Listing, owner: User): Listing
+    +update(existing: Listing, updated: Listing, editor: User): Listing
+  }
+
+  class PhotoFactory {
+    +create(data: byte[], contentType: String, originalFilename: String, altText: String, position: Integer): Photo
+  }
+
+  class Address {
+    -street: String
+    -city: String
+    -postalCode: String
+    -country: String
+    -district: String
+    -region: String
+    -lat: Double
+    -lng: Double
+    +validate(): void
+    +assignCoordinates(coordinates: Coordinates): void
+  }
+
+  class Price {
+    -amount: BigDecimal
+    -currency: String
+    +validate(): void
+  }
+
+  class PropertyFeatures {
+    -propertyType: PropertyType
+    -area: Double
+    -roomCount: Integer
+    -floor: Integer
+    -furnished: Boolean
+    -parkingAvailable: Boolean
+    -balcony: Boolean
+    -elevator: Boolean
+    -petsAllowed: Boolean
+    -energyClass: String
+    -yearBuilt: Integer
+    +validate(): void
+  }
+
+  class Photo {
+    -id: Long
+    -altText: String
+    -contentType: String
+    -originalFilename: String
+    -position: Integer
+    -data: byte[]
+    +isPublicCover(): boolean
+    +canBeViewedBy(requester: User): boolean
+  }
+
+  class ListingViewEvent {
+    -id: Long
+    -listingId: Long
+    -ownerId: Long
+    -viewedAt: Date
+  }
+
+  class Coordinates <<record>> {
+    +lat(): double
+    +lng(): double
+  }
+
+  enum ListingType {
+    RENT
+    SALE
+  }
+
+  enum ListingStatus {
+    ACTIVE
+    INACTIVE
+    DELETED
+  }
+
+  enum PropertyType {
+    APARTMENT
+    HOUSE
+    ROOM
+  }
 }
 
-class PropertyFeatures {
-  propertyType
-  area
-  roomCount
-  floor
-  furnished
-  parkingAvailable
-  balcony
-  elevator
-  petsAllowed
-  validate()
+package "Communication & Viewing" as CommunicationViewing {
+  class ConversationFactory {
+    +create(listing: Listing, requester: User, initialMessage: String): Conversation
+  }
+
+  class Conversation {
+    -id: Long
+    -createdAt: Date
+    -updatedAt: Date
+    +assignParticipants(listing: Listing, requester: User): void
+    +addMessage(sender: User, text: String): Message
+    +markRead(reader: User): void
+    +unreadCountFor(user: User): int
+    +peerFor(user: User): User
+  }
+
+  class Message {
+    -id: Long
+    -text: String
+    -sentAt: Date
+    -readAt: Date
+    +markReadBy(reader: User): void
+  }
+
+  class ViewingRequest {
+    -id: Long
+    -requestedDate: Date
+    -status: ViewingStatus
+    -note: String
+    +assignParticipants(listing: Listing, requester: User): void
+    +approve(editor: User): void
+    +reject(editor: User): void
+    +cancel(editor: User): void
+  }
+
+  enum ViewingStatus {
+    PENDING
+    APPROVED
+    REJECTED
+    CANCELLED
+  }
 }
 
-class Photo {
-  id
-  contentType
-  originalFilename
-  position
-  isPublicCover()
-  canBeViewedBy()
-}
+UserRepository ..> User
+ListingRepository ..> Listing
+FavoriteRepository ..> Favorite
+ConversationRepository ..> Conversation
+ViewingRequestRepository ..> ViewingRequest
+PhotoRepository ..> Photo
+ListingViewEventRepository ..> ListingViewEvent
 
-class Favorite {
-  id
-  validateForCreation()
-}
+ListingFactory ..> Listing : creates
+PhotoFactory ..> Photo : creates
+ConversationFactory ..> Conversation : creates
 
-class ViewingRequest {
-  id
-  requestedDate
-  status
-  note
-  approve()
-  reject()
-  cancel()
-  validateForCreation()
-}
+User "1" --> "0..*" Listing : ownedListings
+User "1" --> "0..*" Favorite : favorites
+User "1" --> "0..1" Photo : avatarPhoto
+User --> UserRole : role
 
-class Conversation {
-  id
-  createdAt
-  updatedAt
-  assignParticipants()
-  addMessage()
-  markRead()
-  unreadCountFor()
-  peerFor()
-}
+Favorite "0..*" --> "1" User : user
+Favorite "0..*" --> "1" Listing : listing
 
-class Message {
-  id
-  text
-  sentAt
-  readAt
-  validateForCreation()
-  markReadBy()
-}
+Listing "1" *-- "1" Address : address
+Listing "1" *-- "1" Price : price
+Listing "1" *-- "1" PropertyFeatures : features
+Listing "1" *-- "0..*" Photo : photos
+Photo "0..*" --> "0..1" Listing : listing
+Listing --> ListingType : type
+Listing --> ListingStatus : status
+PropertyFeatures --> PropertyType : type
+Address ..> Coordinates
 
-enum UserRole {
-  USER
-  OWNER
-}
+Conversation "0..*" --> "1" Listing : listing
+Conversation "0..*" --> "1" User : owner
+Conversation "0..*" --> "1" User : requester
+Conversation "1" *-- "0..*" Message : messages
+Message "0..*" --> "1" Conversation : conversation
+Message "0..*" --> "1" User : sender
 
-enum ListingStatus {
-  ACTIVE
-  INACTIVE
-  DELETED
-}
+ViewingRequest "0..*" --> "1" Listing : listing
+ViewingRequest "0..*" --> "1" User : owner
+ViewingRequest "0..*" --> "1" User : requester
+ViewingRequest --> ViewingStatus : status
 
-enum ViewingStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  CANCELLED
-}
-
-User "1" -- "0..*" Listing : owns
-Listing "1" *-- "1" Address
-Listing "1" *-- "1" Price
-Listing "1" *-- "1" PropertyFeatures
-Listing "1" *-- "0..*" Photo
-User "1" -- "0..*" Favorite
-Favorite "1" --> "1" Listing
-ViewingRequest "1" --> "1" Listing
-ViewingRequest "1" --> "1" User : requester
-ViewingRequest "1" --> "1" User : owner
-Conversation "1" --> "1" Listing
-Conversation "1" --> "1" User : owner
-Conversation "1" --> "1" User : requester
-Conversation "1" *-- "0..*" Message
-Message "1" --> "1" User : sender
-User --> UserRole
-Listing --> ListingStatus
-ViewingRequest --> ViewingStatus
+ListingViewEvent "0..*" ..> "1" Listing : listingId
+ListingViewEvent "0..*" ..> "1" User : ownerId
 
 @enduml
