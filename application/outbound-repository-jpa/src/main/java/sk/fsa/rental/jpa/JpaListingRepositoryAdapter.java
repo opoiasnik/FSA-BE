@@ -52,7 +52,7 @@ public class JpaListingRepositoryAdapter implements ListingRepository {
 
     @Override
     public boolean existsByOwnerIdAndAddress(Long ownerId, Address address) {
-        return listingSpringDataRepository.existsByOwnerIdAndAddressIdentity(
+        return listingSpringDataRepository.existsByOwnerIdAndAddressStreetAndAddressCityAndAddressPostalCodeAndAddressCountry(
                 ownerId,
                 address.getStreet(),
                 address.getCity(),

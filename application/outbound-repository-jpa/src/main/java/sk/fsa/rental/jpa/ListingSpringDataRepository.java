@@ -13,10 +13,7 @@ interface ListingSpringDataRepository extends JpaRepository<Listing, Long>, JpaS
 
     List<Listing> findByOwnerId(Long ownerId);
 
-    boolean existsByOwnerIdAndAddressIdentity(
-            Long ownerId,
-            String addressStreet,
-            String addressCity,
-            String addressPostalCode,
-            String addressCountry);
+    boolean existsByOwnerIdAndAddressStreetAndAddressCityAndAddressPostalCodeAndAddressCountry(
+            Long ownerId, String addressStreet, String addressCity,
+            String addressPostalCode, String addressCountry);
 }
