@@ -58,7 +58,7 @@ management:
 logging:
   level:
     sk.fsa.rental: DEBUG
-    org.springframework.security: DEBUG
+    org.springframework.security: INFO
 
 ---
 spring:

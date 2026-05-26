@@ -12,13 +12,12 @@ import sk.fsa.rental.rest.api.UserApi;
 import sk.fsa.rental.rest.dto.UpdateUserProfileRequestDto;
 import sk.fsa.rental.rest.dto.UserDto;
 import sk.fsa.rental.security.CurrentUserDetailService;
+import sk.fsa.rental.validation.PhotoUploadValidator;
 
 import java.io.IOException;
 
 @RestController
 public class UserRestController implements UserApi {
-
-    private static final long MAX_PHOTO_SIZE_BYTES = 10L * 1024L * 1024L;
 
     private final UserFacade userFacade;
     private final UserMapper userMapper;
@@ -56,7 +55,7 @@ public class UserRestController implements UserApi {
     @Override
     @Transactional
     public ResponseEntity<UserDto> uploadUserAvatar(MultipartFile file) {
-        validatePhoto(file);
+        PhotoUploadValidator.validate(file);
         User currentUser = currentUserDetailService.getFullCurrentUser();
         try {
             User updated = userFacade.updateAvatar(
@@ -68,19 +67,6 @@ public class UserRestController implements UserApi {
             return ResponseEntity.ok(userMapper.toDto(updated));
         } catch (IOException ex) {
             throw new RentalException(RentalException.Type.VALIDATION, "Unable to read uploaded avatar.", "file");
-        }
-    }
-
-    private void validatePhoto(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new RentalException(RentalException.Type.VALIDATION, "Photo file is required.", "file");
-        }
-        if (file.getSize() > MAX_PHOTO_SIZE_BYTES) {
-            throw new RentalException(RentalException.Type.VALIDATION, "Photo must be 10 MB or smaller.", "file");
-        }
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new RentalException(RentalException.Type.VALIDATION, "Only image files can be uploaded.", "file");
         }
     }
 }

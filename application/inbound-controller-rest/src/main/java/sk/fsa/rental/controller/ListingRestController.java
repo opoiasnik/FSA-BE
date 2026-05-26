@@ -23,14 +23,13 @@ import sk.fsa.rental.rest.dto.ListingTypeDto;
 import sk.fsa.rental.rest.dto.PhotoResponseDto;
 import sk.fsa.rental.rest.dto.PropertyTypeDto;
 import sk.fsa.rental.security.CurrentUserDetailService;
+import sk.fsa.rental.validation.PhotoUploadValidator;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
 public class ListingRestController implements ListingApi {
-
-    private static final long MAX_PHOTO_SIZE_BYTES = 10L * 1024L * 1024L;
 
     private final ListingFacade listingFacade;
     private final ListingMapper listingMapper;
@@ -98,7 +97,7 @@ public class ListingRestController implements ListingApi {
             Long listingId,
             MultipartFile file,
             String altText) {
-        validatePhoto(file);
+        PhotoUploadValidator.validate(file);
         User currentUser = currentUserDetailService.getFullCurrentUser();
         try {
             Photo photo = listingFacade.addPhoto(
@@ -167,16 +166,4 @@ public class ListingRestController implements ListingApi {
         return ResponseEntity.noContent().build();
     }
 
-    private void validatePhoto(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new RentalException(RentalException.Type.VALIDATION, "Photo file is required.", "file");
-        }
-        if (file.getSize() > MAX_PHOTO_SIZE_BYTES) {
-            throw new RentalException(RentalException.Type.VALIDATION, "Photo must be 10 MB or smaller.", "file");
-        }
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new RentalException(RentalException.Type.VALIDATION, "Only image files can be uploaded.", "file");
-        }
-    }
 }

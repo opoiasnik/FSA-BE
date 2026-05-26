@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Coordinates;
 import sk.fsa.rental.domain.service.GeocodingService;
@@ -46,6 +47,10 @@ public class NominatimGeocodingAdapter implements GeocodingService {
             }
 
             NominatimResult first = results[0];
+            if (first.lat() == null || first.lon() == null) {
+                LOG.warn("Nominatim result has missing coordinates. Query: {}, result: {}", query, first.displayName());
+                return Optional.empty();
+            }
             if (!addressMatcher.matches(address, first.address())) {
                 LOG.warn("Nominatim result does not match requested address. Query: {}, result: {}", query, first.displayName());
                 return Optional.empty();
@@ -54,8 +59,8 @@ public class NominatimGeocodingAdapter implements GeocodingService {
             return Optional.of(new Coordinates(
                     Double.parseDouble(first.lat()),
                     Double.parseDouble(first.lon())));
-        } catch (Exception e) {
-            LOG.warn("Geocoding failed for query '{}': {}", query, e.getMessage());
+        } catch (RestClientException | NumberFormatException e) {
+            LOG.warn("Geocoding failed for query '{}'", query, e);
             return Optional.empty();
         }
     }

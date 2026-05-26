@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import sk.fsa.rental.domain.Photo;
+import sk.fsa.rental.domain.RentalException;
 import sk.fsa.rental.domain.User;
 import sk.fsa.rental.domain.facade.PhotoFacade;
 import sk.fsa.rental.rest.api.PhotoApi;
@@ -38,6 +39,9 @@ public class PhotoRestController implements PhotoApi {
 
     private ResponseEntity<Resource> toImageResponse(Photo photo) {
         byte[] data = photo.getData();
+        if (data == null || data.length == 0) {
+            throw new RentalException(RentalException.Type.NOT_FOUND, "Photo content not found.");
+        }
         String contentType = photo.getContentType() != null
                 ? photo.getContentType()
                 : MediaType.APPLICATION_OCTET_STREAM_VALUE;

@@ -26,8 +26,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
+        var fieldError = ex.getBindingResult().getFieldErrors().stream().findFirst();
+        String message = fieldError
+                .map(error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid value")
+                .orElse("Invalid request body");
+        String field = fieldError.map(error -> error.getField()).orElse(null);
         return new ResponseEntity<>(
-                createError("VALIDATION", "Invalid request body"),
+                createError("VALIDATION", message, field),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -39,8 +44,8 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<ErrorResponseDto> handleThrowable(Throwable ex, WebRequest request) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleException(Exception ex, WebRequest request) {
         LoggerFactory.getLogger(GlobalExceptionHandler.class).error("Global error occurred", ex);
         return new ResponseEntity<>(
                 createError("INTERNAL_ERROR", "Unexpected internal error"),

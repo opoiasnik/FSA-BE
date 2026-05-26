@@ -1,6 +1,7 @@
 package sk.fsa.rental.security;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -34,12 +35,7 @@ class JwtConverter extends AbstractAuthenticationToken {
     }
 
     private UserRoleDto getRole() {
-        Map<String, Object> realmAccess = source.getClaimAsMap("realm_access");
-        if (realmAccess == null || realmAccess.get("roles") == null) return null;
-
-        @SuppressWarnings("unchecked")
-        List<String> roles = (List<String>) realmAccess.get("roles");
-        return findRole(roles).orElse(null);
+        return findRole(extractRoles(source)).orElse(null);
     }
 
     private Optional<UserRoleDto> findRole(List<String> roles) {
@@ -51,16 +47,23 @@ class JwtConverter extends AbstractAuthenticationToken {
     }
 
     private static Collection<? extends GrantedAuthority> toAuthorities(Jwt source) {
+        return extractRoles(source).stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .toList();
+    }
+
+    private static List<String> extractRoles(Jwt source) {
         Map<String, Object> realmAccess = source.getClaimAsMap("realm_access");
         if (realmAccess == null || realmAccess.get("roles") == null) {
             return List.of();
         }
 
-        @SuppressWarnings("unchecked")
-        List<String> roles = (List<String>) realmAccess.get("roles");
-
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .toList();
+        Object roles = realmAccess.get("roles");
+        if (roles instanceof List<?> roleList) {
+            return roleList.stream()
+                    .map(Object::toString)
+                    .toList();
+        }
+        throw new BadJwtException("Invalid realm_access.roles claim");
     }
 }
