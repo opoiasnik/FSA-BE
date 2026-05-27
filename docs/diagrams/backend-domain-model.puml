@@ -74,15 +74,28 @@ package "User Management" as UserManagement {
     -name: String
     -surname: String
     -email: String
+    -createdAt: Date
     -phone: String
     -bio: String
     -emailVerified: boolean
+    -emailVerificationCode: String
+    -emailVerificationExpiresAt: Date
+    -messageEmailNotifications: boolean
+    -viewingEmailNotifications: boolean
+    -viewingRequestEmailNotifications: boolean
     -role: UserRole
+    +assignKeycloakId(keycloakId: String): void
     +updateProfile(...): void
     +updateAvatar(avatarPhoto: Photo): void
     +updateNotificationPreferences(...): void
-    +startEmailVerification(...): void
-    +verifyEmail(...): void
+    +addToFavorites(listing: Listing): Favorite
+    +removeFromFavorites(listingId: Long): Favorite
+    +startEmailVerification(code: String, expiresAt: Date): void
+    +verifyEmail(code: String, verifiedAt: Date): void
+    +isEmailVerificationPending(): boolean
+    +canReceiveMessageEmailNotifications(): boolean
+    +canReceiveViewingEmailNotifications(): boolean
+    +canReceiveViewingRequestEmailNotifications(): boolean
   }
 
   enum UserRole {
@@ -226,6 +239,7 @@ package "Communication & Viewing" as CommunicationViewing {
     -requestedDate: Date
     -status: ViewingStatus
     -note: String
+    +validateForCreation(): void
     +assignParticipants(listing: Listing, requester: User): void
     +approve(editor: User): void
     +reject(editor: User): void
