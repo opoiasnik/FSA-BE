@@ -101,7 +101,7 @@
             <many-to-one name="owner" target-entity="sk.fsa.rental.domain.User">
                 <join-column name="owner_id" nullable="false"/>
             </many-to-one>
-            <one-to-many name="photos" target-entity="sk.fsa.rental.domain.Photo" mapped-by="listing">
+            <one-to-many name="photos" target-entity="sk.fsa.rental.domain.Photo" mapped-by="listing" orphan-removal="true">
                 <cascade>
                     <cascade-all/>
                 </cascade>

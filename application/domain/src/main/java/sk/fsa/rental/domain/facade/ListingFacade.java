@@ -14,7 +14,7 @@ public interface ListingFacade {
 
     Listing create(Listing listing, User owner);
 
-    Listing update(Long listingId, Listing updatedListing, User editor);
+    Listing update(Long listingId, Listing updatedListing, User editor, List<Long> photoIdsToKeep);
 
     void delete(Long listingId, User editor);
 

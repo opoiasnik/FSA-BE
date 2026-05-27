@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class Listing {
     private Long id;
@@ -103,6 +104,23 @@ public class Listing {
                 RentalException.Type.VALIDATION, "Photo cannot be null.");
         photo.setListing(this);
         photos.add(photo);
+    }
+
+    /**
+     * Removes photos whose IDs are not in {@code keepIds} and re-normalises
+     * positions so that position 0 is always the cover photo.
+     * Passing an empty list removes all photos.
+     * Passing {@code null} is a no-op (nothing changes).
+     */
+    public void removePhotosNotIn(List<Long> keepIds) {
+        if (keepIds == null) {
+            return;
+        }
+        Set<Long> keep = new java.util.HashSet<>(keepIds);
+        photos.removeIf(photo -> photo.getId() != null && !keep.contains(photo.getId()));
+        for (int i = 0; i < photos.size(); i++) {
+            photos.get(i).setPosition(i);
+        }
     }
 
     private void require(boolean valid, RentalException.Type type, String message) {

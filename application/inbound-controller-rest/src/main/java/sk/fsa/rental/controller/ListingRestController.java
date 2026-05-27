@@ -56,7 +56,7 @@ public class ListingRestController implements ListingApi {
     public ResponseEntity<ListingResponseDto> updateListing(Long id, CreateListingRequestDto createListingRequestDto) {
         User currentUser = currentUserDetailService.getFullCurrentUser();
         Listing listing = listingMapper.toDomain(createListingRequestDto);
-        Listing updated = listingFacade.update(id, listing, currentUser);
+        Listing updated = listingFacade.update(id, listing, currentUser, createListingRequestDto.getPhotoIdsToKeep());
         return ResponseEntity.ok(listingMapper.toDto(updated));
     }
 

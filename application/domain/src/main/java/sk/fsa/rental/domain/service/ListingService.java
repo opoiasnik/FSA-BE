@@ -53,11 +53,13 @@ public class ListingService implements ListingFacade {
     }
 
     @Override
-    public Listing update(Long listingId, Listing updatedListing, User editor) {
+    public Listing update(Long listingId, Listing updatedListing, User editor, List<Long> photoIdsToKeep) {
         Listing existing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new RentalException(RentalException.Type.NOT_FOUND, "Listing not found."));
 
-        return listingRepository.save(listingFactory.update(existing, updatedListing, editor));
+        listingFactory.update(existing, updatedListing, editor);
+        existing.removePhotosNotIn(photoIdsToKeep);
+        return listingRepository.save(existing);
     }
 
     @Override

@@ -1305,6 +1305,15 @@ components:
           $ref: '#/components/schemas/PriceRequest'
         features:
           $ref: '#/components/schemas/PropertyFeaturesRequest'
+        photoIdsToKeep:
+          type: array
+          items:
+            type: integer
+            format: int64
+          description: >
+            IDs of existing photos to keep on update.
+            Photos not in this list will be removed.
+            Omit or pass null to keep all existing photos unchanged.
 
     CreateViewingRequest:
       type: object
