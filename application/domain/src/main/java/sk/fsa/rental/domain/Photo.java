@@ -55,9 +55,7 @@ public class Photo {
     public byte[] getData() { return Arrays.copyOf(data, data.length); }
     public Listing getListing() { return listing; }
 
-    // called by Listing.addPhoto() to wire the relationship
     void setListing(Listing listing) { this.listing = listing; }
 
-    // called by Listing.removePhotosNotIn() to re-normalize positions after deletion
     void setPosition(Integer position) { this.position = position; }
 }

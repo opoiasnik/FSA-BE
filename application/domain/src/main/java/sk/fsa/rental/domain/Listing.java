@@ -106,18 +106,17 @@ public class Listing {
         photos.add(photo);
     }
 
-    /**
-     * Removes photos whose IDs are not in {@code keepIds} and re-normalises
-     * positions so that position 0 is always the cover photo.
-     * Passing an empty list removes all photos.
-     * Passing {@code null} is a no-op (nothing changes).
-     */
     public void removePhotosNotIn(List<Long> keepIds) {
         if (keepIds == null) {
             return;
         }
         Set<Long> keep = new java.util.HashSet<>(keepIds);
         photos.removeIf(photo -> photo.getId() != null && !keep.contains(photo.getId()));
+        photos.sort((a, b) -> {
+            int posA = (a.getId() != null) ? keepIds.indexOf(a.getId()) : Integer.MAX_VALUE;
+            int posB = (b.getId() != null) ? keepIds.indexOf(b.getId()) : Integer.MAX_VALUE;
+            return Integer.compare(posA, posB);
+        });
         for (int i = 0; i < photos.size(); i++) {
             photos.get(i).setPosition(i);
         }
