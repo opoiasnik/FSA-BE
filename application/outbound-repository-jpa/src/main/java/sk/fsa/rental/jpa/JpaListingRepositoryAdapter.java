@@ -9,7 +9,6 @@ import sk.fsa.rental.domain.Address;
 import sk.fsa.rental.domain.Listing;
 import sk.fsa.rental.domain.ListingSearchFilters;
 import sk.fsa.rental.domain.ListingSearchResult;
-import sk.fsa.rental.domain.ListingStatus;
 import sk.fsa.rental.domain.SortBy;
 import sk.fsa.rental.domain.repository.ListingRepository;
 
@@ -36,18 +35,8 @@ public class JpaListingRepositoryAdapter implements ListingRepository {
     }
 
     @Override
-    public List<Listing> findByStatus(ListingStatus status) {
-        return listingSpringDataRepository.findByStatus(status);
-    }
-
-    @Override
     public List<Listing> findByOwnerId(Long ownerId) {
         return listingSpringDataRepository.findByOwnerId(ownerId);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        listingSpringDataRepository.deleteById(id);
     }
 
     @Override

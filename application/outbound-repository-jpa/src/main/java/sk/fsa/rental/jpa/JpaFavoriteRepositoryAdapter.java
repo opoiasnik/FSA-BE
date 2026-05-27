@@ -5,7 +5,6 @@ import sk.fsa.rental.domain.Favorite;
 import sk.fsa.rental.domain.repository.FavoriteRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class JpaFavoriteRepositoryAdapter implements FavoriteRepository {
@@ -19,11 +18,6 @@ public class JpaFavoriteRepositoryAdapter implements FavoriteRepository {
     @Override
     public Favorite save(Favorite favorite) {
         return favoriteSpringDataRepository.save(favorite);
-    }
-
-    @Override
-    public Optional<Favorite> findByUserIdAndListingId(Long userId, Long listingId) {
-        return favoriteSpringDataRepository.findByUserIdAndListingId(userId, listingId);
     }
 
     @Override

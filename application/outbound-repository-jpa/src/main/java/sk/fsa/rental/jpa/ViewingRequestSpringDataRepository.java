@@ -8,6 +8,5 @@ import java.util.List;
 interface ViewingRequestSpringDataRepository extends JpaRepository<ViewingRequest, Long> {
     List<ViewingRequest> findByRequesterId(Long requesterId);
     List<ViewingRequest> findByOwnerId(Long ownerId);
-    List<ViewingRequest> findByListingId(Long listingId);
     List<ViewingRequest> findByListingIdAndRequesterId(Long listingId, Long requesterId);
 }
