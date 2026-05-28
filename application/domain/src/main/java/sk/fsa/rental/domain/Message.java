@@ -38,7 +38,7 @@ public class Message {
     public void markReadBy(User reader) {
         require(reader != null && reader.getId() != null,
                 RentalException.Type.UNAUTHORIZED, "Reader is required.");
-        if (!sender.getId().equals(reader.getId())) {
+        if (!sender.getId().equals(reader.getId()) && readAt == null) {
             readAt = new Date();
         }
     }
