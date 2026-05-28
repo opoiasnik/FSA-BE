@@ -25,20 +25,22 @@ package "Persistence" as Persistence {
     +save(listing: Listing): Listing
     +findById(id: Long): Optional<Listing>
     +findByOwnerId(ownerId: Long): List<Listing>
+    +existsByOwnerIdAndAddress(ownerId: Long, address: Address): boolean
     +search(filters: ListingSearchFilters): ListingSearchResult
     +findTopViewed(filters: ListingSearchFilters): List<Listing>
   }
 
   interface FavoriteRepository {
     +save(favorite: Favorite): Favorite
-    +findByUserIdAndListingId(userId: Long, listingId: Long): Optional<Favorite>
     +findByUserId(userId: Long): List<Favorite>
     +deleteById(id: Long): void
+    +countByListingOwnerId(ownerId: Long): long
   }
 
   interface ConversationRepository {
     +save(conversation: Conversation): Conversation
     +findById(id: Long): Optional<Conversation>
+    +findByListingIdAndOwnerIdAndRequesterId(listingId: Long, ownerId: Long, requesterId: Long): Optional<Conversation>
     +findByListingId(listingId: Long): List<Conversation>
     +findByParticipantId(participantId: Long): List<Conversation>
   }
@@ -48,7 +50,7 @@ package "Persistence" as Persistence {
     +findById(id: Long): Optional<ViewingRequest>
     +findByRequesterId(requesterId: Long): List<ViewingRequest>
     +findByOwnerId(ownerId: Long): List<ViewingRequest>
-    +findByListingId(listingId: Long): List<ViewingRequest>
+    +findByListingIdAndRequesterId(listingId: Long, requesterId: Long): List<ViewingRequest>
   }
 
   interface PhotoRepository {
@@ -60,6 +62,7 @@ package "Persistence" as Persistence {
     +save(event: ListingViewEvent): ListingViewEvent
     +countByListingId(listingId: Long): long
     +countByOwnerId(ownerId: Long): long
+    +findByOwnerIdAndViewedAtAfter(ownerId: Long, since: Date): List<ListingViewEvent>
   }
 
   interface EmailSenderRepository {
@@ -187,6 +190,41 @@ package "Listing Management" as ListingManagement {
     -viewedAt: Date
   }
 
+  class ListingSearchFilters <<record>> {
+    +city(): String
+    +listingType(): ListingType
+    +propertyType(): PropertyType
+    +priceMin(): Double
+    +priceMax(): Double
+    +roomCount(): Integer
+    +areaMin(): Double
+    +areaMax(): Double
+    +furnished(): Boolean
+    +parkingAvailable(): Boolean
+    +balcony(): Boolean
+    +petsAllowed(): Boolean
+    +energyClass(): String
+    +sortBy(): SortBy
+    +page(): int
+    +size(): int
+  }
+
+  class ListingSearchResult <<record>> {
+    +content(): List<Listing>
+    +page(): int
+    +size(): int
+    +totalElements(): long
+    +totalPages(): int
+  }
+
+  class OwnerStats <<record>> {
+    +activeListings(): long
+    +savedByUsers(): long
+    +pendingViewingRequests(): long
+    +totalViews(): long
+    +viewsTrend(): List<Long>
+  }
+
   class Coordinates <<record>> {
     +lat(): double
     +lng(): double
@@ -207,6 +245,14 @@ package "Listing Management" as ListingManagement {
     APARTMENT
     HOUSE
     ROOM
+  }
+
+  enum SortBy {
+    NEWEST
+    PRICE_ASC
+    PRICE_DESC
+    AREA_ASC
+    AREA_DESC
   }
 }
 
@@ -252,6 +298,11 @@ package "Communication & Viewing" as CommunicationViewing {
     REJECTED
     CANCELLED
   }
+
+  class EmailMessage {
+    -subject: String
+    -body: String
+  }
 }
 
 UserRepository ..> User
@@ -261,6 +312,7 @@ ConversationRepository ..> Conversation
 ViewingRequestRepository ..> ViewingRequest
 PhotoRepository ..> Photo
 ListingViewEventRepository ..> ListingViewEvent
+EmailSenderRepository ..> EmailMessage
 
 ListingFactory ..> Listing : creates
 PhotoFactory ..> Photo : creates
@@ -283,6 +335,10 @@ Listing --> ListingType : type
 Listing --> ListingStatus : status
 PropertyFeatures --> PropertyType : type
 Address ..> Coordinates
+ListingSearchFilters --> ListingType : listingType
+ListingSearchFilters --> PropertyType : propertyType
+ListingSearchFilters --> SortBy : sortBy
+ListingSearchResult "1" --> "0..*" Listing : content
 
 Conversation "0..*" --> "1" Listing : listing
 Conversation "0..*" --> "1" User : owner
